@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta name="GENERATOR" content="JustSystems Homepage Builder Version 21.0.5.0 for Windows" />
+<link rel="stylesheet" href="rpsm.css" type="text/css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="d3.v3.min.js" charset="utf-8"></script>
+<script src="anime.min.js"></script>
+<script type="text/javascript" src="rpsm.js"></script>
+<!--
+exp1.html    (some starting script)
+rps.html
+Q.html       
+-->
+<SCRIPT>
+  // hey dude
+  //var ctrlFrm = parent.document.getElementById("Ctrl_Frame");
+  var __paced__     = 0;   //  wait 1 second.
+  var __free__      = 1;
+  var __AI__        = 0;
+  var __RNG__       = 1;
+  
+  var paced_or_free = __free__;   // not used right now
+  var AI_or_RNG     = __AI__;
+
+  var JorE    = __ENGLISH__
+  var stopped = false;
+  var refractory_period = false;
+  var refr_period_dur = 2000;
+  var refractory_period_start = -1;
+
+  var N = 2;
+  var Match;
+
+  var nextpageURL = "rps.html";     //  
+  var url_after_blocks = "default_bye.html";
+
+  //  things to change in practiceMode:
+  //  MatchTo is set to 10
+  //  to_block is set to 1
+  //  block is set to 0
+
+  var callingPage = "rps.html";
+  var practiceMode    = JSON.parse((getSessionStorage("PracticeMode", false)));
+  var realtimeResults = parseInt(getSessionStorage("RealtimeResults", __CWTL__));
+  var MatchTo         = parseInt(getSessionStorage("MatchTo", 30));
+  var to_block        = parseInt(getSessionStorage("to_block", 1));
+  var block           = parseInt(getSessionStorage("block", 0));
+  console.log("block   " + block);
+  block += 1;
+  sessionStorage.setItem("block", block);
+
+  var AImach           = parseInt(getSessionStorage("AImach", __PRC__));
+  if ((block == to_block) && (!practiceMode))
+  {
+    var nextpageURL        = getSessionStorage("url_after_blocks", "default_bye_html");
+  }
+
+  if (practiceMode)
+  {
+    real_MatchTo = MatchTo;
+    MatchTo = 10;
+    sessionStorage.setItem("block", block-1);
+    var __block           = parseInt(getSessionStorage("block", 0));
+  }
+
+
+  console.log("to_block   " + to_block);
+  //console.log("nextpageURL   " + nextpageURL);
+  //console.log("AImach   " + AImach);
+
+  var paced_or_free = __free__;
+
+  <!-- if (ctrlFrm != null) -->
+  <!-- { -->
+  <!--     prmfrm = ctrlFrm.contentWindow.document.getElementById("param_form"); -->
+  <!--     MatchTo  = prmfrm.MatchTo.value;	// 勝負が決まるまでの勝ち数 -->
+  <!--     Match   = MatchTo; -->
+  <!--     AI_or_RNG = prmfrm.AI_or_RNG.value; -->
+  <!--     N = prmfrm.N.value; -->
+  <!-- } -->
+</SCRIPT>
+
+<title>sRock-Paper-Scissor</title>
+</head>
+<!--<body onload="Reset();set_lang(__ENGLISH__);" style="font-family:Optima,Arial" id="game">-->
+<body onload="Reset();set_lang(__ENGLISH__);" style="font-family:Optima,Arial" id="game">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+		     js.src = '';
+  fjs.parentNode.insertBefore(js, fjs);
+		    }(document, 'script', 'facebook-jssdk'));
+
+var charfield = document.getElementById("game");
+charfield.onkeypress = function(e) {  
+    var e=window.event || e;
+    var nowtm = new Date();
+    //alert(e.keyCode);
+
+    refractory_period =  (paced_or_free == __paced__) && (nowtm.getTime() - refractory_period_start < refr_period_dur);
+    //console.log((nowtm.getTime() - refractory_period_start))
+    if (!stopped)
+    {
+	if( e.keyCode == 49)
+	{
+	    if (!refractory_period)	    
+	    {
+		RPS(1, 1);
+	    }
+	}
+	else if( e.keyCode == 50)
+	{
+	    if (!refractory_period)
+	    {
+		RPS(2, 1);
+	    }
+	}
+	else if( e.keyCode == 51)
+	{
+	    if (!refractory_period)
+	    {
+		RPS(3, 1);
+	    }
+	}
+	// else if( e.keyCode == 32)  // space
+	// {
+	//     console.log("here")
+	//     if (nowtm.getTime() - refractory_period_start > refr_period_dur)
+	//     {
+	// 	console.log("refractory end")		
+	// 	refractory_period = false;    //  
+	//     }
+	// }
+    }
+    
+}
+</script>
+
+<div class="title">
+  <table bgcolor="#ffffff">
+    <tbody>
+      <tr>
+        <td align="center" height="36" bgcolor="#ccccff" width="350"><font size="+1"><b><font size="+0"><font id="titleFONT" size="+2">AI じゃんけんマシン</font></font></b></font></td>
+
+      </tr>
+    </tbody>
+    <!--
+  </table>
+  <table bgcolor="#ffffff">
+    <tbody>
+      <tr>
+  <td align="center" height="36"><A href="javascript:lang(__JAPANESE__);">日本語</A>
+    <A href="javascript:lang(__ENGLISH__);">English</A>
+  </td>
+      </tr>
+    </tbody>
+    </table>
+-->
+  
+</div>
+<table>
+  <tbody>
+      <tr>
+        <td bgcolor="#ffffcc" width="637" height="45"><font size="-1" id="descFONT">このじゃんけんマシンはあなたが手を選ぶ前に次の手を決めています．じゃんけんを繰り返すうちにあなたの手の癖を読み取って徐々に強くなっていきます．最初に40回勝ったほうが優勝です．勝負しましょう．</font>&#160;</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="instruction"></div>
+<div id="results" width="600" height="30"></div>
+<div id="rps" class="clearfix">
+<div class="machine_buttons">
+	<img src="mr.jpg" class="m_rock" value="グー" />
+  <img src="ms.jpg" class="m_scissors" value="チョキ" />
+	<img src="mp.jpg" class="m_paper" value="パー" />  
+
+</div>
+<div class="m_copy">
+	<img src="mp.jpg" class="m_paper_copy" />
+	<img src="ms.jpg" class="m_scissors_copy" />
+	<img src="mr.jpg" class="m_rock_copy" />
+</div>
+<div id="battle_field" class="clearfix">
+<div class="bf-text-top"><font id="perHandFONT" color="#ff00ff" size="-1">マシンの手</font></div>
+<div class="bf-text-bottom"><font id="instrFONT" color="#0000ff" size="-1">あなたの手<BR>(クリックまたは数字キーで<BR>選んでください)</font></div>
+<div id="hands">
+	<div id="win"><img src="win.png" /></div>
+</div>
+<div id="final_result">
+</div>
+<div id="final_result2">
+<form name="retry">
+<!--<input type="button" style="font:80pt Arial;" value="Continue" onclick="location.reload()" />
+<!--//location.replace("/other_page.html") for different page-->
+</form>
+</div>
+<!--<div id="final_result3">
+</div>-->
+</div>
+<div class="buttons" id="userbuttons">
+   <input class="rock" type="image" value="グー" onclick="if( !stopped ) {RPS(1, 0);}" src="rk.jpg" />
+   <input class="scissors" type="image" value="チョキ" onclick="if( !stopped ) {RPS(2, 0);}" src="sk.jpg" />
+   <input class="paper" type="image" value="パー" onclick="if( !stopped ) {RPS(3, 0);}" src="pk.jpg" />
+</div>
+<div class="copy">
+	<img src="r.jpg" class="rock_copy" />
+	<img src="s.jpg" class="scissors_copy" />
+	<img src="p.jpg" class="paper_copy" />
+</div>
+</div>
+<div id="graph"></div>
+
+<!--
+<div id="bar" width="600" height="30"></div>
+-->
+<div class="footer"></div>
+<!--<input type="button" style="font:10.5pt Arial;" value="Reset" onclick="Reset()" /> -->
+</body>
+</html>

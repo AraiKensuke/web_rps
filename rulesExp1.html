@@ -1,0 +1,53 @@
+<HTML>
+<link rel="stylesheet" href="exp1.css" type="text/css" />
+<SCRIPT src="rpsm.js"></SCRIPT>
+
+<SCRIPT>
+      var MatchTo=20;
+
+      //mach1 = machines[Math.floor(Math.random()*machines.length)];
+      //mach2 = machines[Math.floor(Math.random()*machines.length)];
+      mach1 = machines[__MC2__];//Math.floor(Math.random()*machines.length)];
+      mach2 = machines[__MC2__];//Math.floor(Math.random()*machines.length)];
+      realtimeResults = __NGAMES__;
+
+      console.log("mach1  " + mach1);
+      console.log("mach2  " + mach2);
+      sessionStorage.setItem("block", 0);
+      sessionStorage.setItem("to_block", 2);
+      sessionStorage.setItem("MatchTo", MatchTo);
+      sessionStorage.setItem("url_after_blocks", "QDifferentAIs.html");
+      sessionStorage.setItem("mach1", mach1);
+      sessionStorage.setItem("mach2", mach2);
+      sessionStorage.setItem("RealtimeResults", realtimeResults);
+
+  function setGameNums()
+  {
+      document.getElementById("ngames1").innerHTML = MatchTo;
+      document.getElementById("ngames2").innerHTML = MatchTo;
+      document.getElementById("ngames3").innerHTML = MatchTo;
+  }
+
+  function nextpage(dopractice)
+  {
+      sessionStorage.setItem("PracticeMode", dopractice);
+      document.location="rps.html";
+  }
+
+</SCRIPT>
+<BODY>
+        <p id="p1">We ask that you play 2 rounds of repeated RPS lasting <SPAN id="ngames1">100</SPAN> games each, against a bot - a computerized, artificial intelligence RPS player - that tries to learn your tendencies.  Please try to hard to outsmart and outplay the bot to the best of your ability.  After 2 rounds, we will ask you some questions regarding how you felt about your opponents.<BR><BR>
+You can go straight to the 2 rounds, or you can first practice playing RPS against the computer in short, 10 game rounds, and then go on to the 2 rounds when you're ready.
+</p>
+
+<BR><BR>
+<CENTER>
+<TABLE><TR><TD>
+	    <A href="javascript:nextpage(false);"><IMG src="skip_practice.jpg" height=40/></A></TD></TR>
+  <TR><TD>
+	    <A href="javascript:nextpage(true);"><IMG src="practice_round.jpg" height=40/></A>
+</TR></TABLE>
+</CENTER>
+
+</BODY>
+</HTML>
