@@ -1,0 +1,157 @@
+function Youwin(win,lose){
+    var youwin = document.getElementById("final_result");
+    //youwin.innerHTML = '<img src="youwon.png">';
+    youwin.innerHTML = '<img src="nextround.jpg">';
+    youwin.style.display="inline";
+    
+    var res = "Wins: "+results[0][game]+", Losses: "+results[1][game]+", Ties: "+results[2][game];
+    var temp = sessionStorage.getItem('result1');
+    if (temp == null) {sessionStorage.setItem('result1', res);}
+    else {sessionStorage.setItem('result2', res);}
+	
+    //document.getElementById("final_result3").innerHTML = 'あなたのIQは'+ (110 + (win-lose)*2) +'くらいかな？';
+    var retry = document.getElementById("final_result2")
+    retry.style.display = "inline";
+    //var iq = document.getElementById("final_result3")
+    //iq.style.display = "inline";
+    var resultTimeline = anime.timeline();
+    resultTimeline.add({
+	targets: '#final_result2',
+	opacity:0.0,
+	duration: 0,
+	translateX:0
+    });
+    /*    
+	  resultTimeline.add({
+		translateY: -80,
+		targets: '#final_result3',
+		opacity:0.0,
+		duration: 0,
+		translateX:0
+	});
+*/
+    resultTimeline.add({
+	targets: '#final_result',
+	translateY: 0,
+	translateX:0,
+	scale: 3,
+	opacity:0.0,
+	duration: 1,
+	easing: 'easeInOutQuart'
+    });
+    resultTimeline.add({
+	targets: '#final_result',
+	scale: 1,
+	opacity:1.0,
+	duration: 100,
+	easing: 'easeInOutQuart'
+    });
+    /*
+      resultTimeline.add({
+      targets: '#final_result2, #final_result3',
+      opacity:1.0,
+      duration: 50,
+      easing: 'easeInOutQuart'
+      });
+    */
+    resultTimeline.add({
+	targets: '#final_result2',
+	opacity:1.0,
+	duration: 50,
+	easing: 'easeInOutQuart'
+    });
+    /*
+      resultTimeline.add({
+      targets: '#final_result2, #final_result3',
+      opacity:1.0,
+      duration: 50,
+      easing: 'easeInOutQuart'
+      });
+*/
+    resultTimeline.add({
+	targets: '#final_result2',
+	opacity:1.0,
+	duration: 50,
+	easing: 'easeInOutQuart'
+    });
+
+    if (!practiceMode)
+    {   // don't send 
+	send_php();
+    }
+    if (practiceMode)
+    {
+	MatchTo = real_MatchTo;
+	nextpageURL = callingPage;
+	sessionStorage.setItem("PracticeMode", false);
+    }
+    setTimeout(() => {  location.href=nextpageURL; }, 5000);
+}
+
+function Youlose(win,lose){
+    var youlose = document.getElementById("final_result")
+    //youlose.innerHTML = '<img src="youvelost.png">';
+    youlose.innerHTML = '<img src="fin.png">';
+    youlose.style.display="inline";
+	
+    var res = "Wins: "+results[0][game]+", Losses: "+results[1][game]+", Ties: "+results[2][game];
+    var temp = sessionStorage.getItem('result1');
+    if (temp == null) {sessionStorage.setItem('result1', res);}
+    else {sessionStorage.setItem('result2', res);}
+
+    //document.getElementById("final_result3").innerHTML = 'あなたのIQは'+ (110 + (win-lose)*2) +'くらいかな？';
+    var retry = document.getElementById("final_result2")
+    retry.style.display = "inline";
+    //var iq = document.getElementById("final_result3")
+    //iq.style.display = "inline";
+    var resultTimeline = anime.timeline();
+    resultTimeline.add({
+	targets: '#final_result2',
+	opacity:0.0,
+	duration: 0,
+	translateX:0
+    });
+    /*
+      resultTimeline.add({
+      translateY: -80,
+      targets: '#final_result3',
+      opacity:0.0,
+      duration: 0,
+      translateX:0
+      });
+    */
+    resultTimeline.add({
+	targets: '#final_result',
+	translateY: 0,
+	translateX:0,
+	scale: 3,
+	opacity:0.0,
+	duration: 1,
+	easing: 'easeInOutQuart'
+    });
+    resultTimeline.add({
+	targets: '#final_result',
+	scale: 1,
+	opacity:1.0,
+	duration: 100,
+	easing: 'easeInOutQuart'
+    });
+    resultTimeline.add({
+	targets: '#final_result2, #final_result',
+	opacity:1.0,
+	duration: 50,
+	easing: 'easeInOutQuart'
+    });
+
+    if (!practiceMode)
+    {   // don't send 
+	send_php();
+    }
+    if (practiceMode)
+    {
+	MatchTo = real_MatchTo;
+	nextpageURL = callingPage;
+	sessionStorage.setItem("PracticeMode", false);
+    }
+    setTimeout(() => {  location.href=nextpageURL; }, 5000);
+}

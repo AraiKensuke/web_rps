@@ -52,7 +52,7 @@ Q.html
   block += 1;
   sessionStorage.setItem("block", block);
 
-  var AImach           = parseInt(getSessionStorage("AImach", __PRC__));
+  var AImach           = parseInt(getSessionStorage("mach" + block, __PRC__));
   if ((block == to_block) && (!practiceMode))
   {
     var nextpageURL        = getSessionStorage("url_after_blocks", "default_bye_html");
@@ -64,6 +64,10 @@ Q.html
     MatchTo = 10;
     sessionStorage.setItem("block", block-1);
     var __block           = parseInt(getSessionStorage("block", 0));
+    var bottomDIV = parent.document.getElementById("bottom");
+  //bottomDIV.style.visibility = "visible";
+  //bottomDIV.style.opacity=0.4;
+  //bottomDIV.innerHTML="<BR><BR><BR><H1>PRACTICE</H1>";
   }
 
 
@@ -83,10 +87,12 @@ Q.html
   <!-- } -->
 </SCRIPT>
 
-<title>sRock-Paper-Scissor</title>
+<title>Rock-Paper-Scissor</title>
 </head>
 <!--<body onload="Reset();set_lang(__ENGLISH__);" style="font-family:Optima,Arial" id="game">-->
 <body onload="Reset();set_lang(__ENGLISH__);" style="font-family:Optima,Arial" id="game">
+<div id="top" style="position:absolute;z-index:1000;width:200;height:200;"></DIV>
+<div id="bottom" style="position:absolute;z-index:900;width:400;height:500;visibility:hidden;background-color:#CCCCCC"></DIV>
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
@@ -140,7 +146,6 @@ charfield.onkeypress = function(e) {
     
 }
 </script>
-
 <div class="title">
   <table bgcolor="#ffffff">
     <tbody>
