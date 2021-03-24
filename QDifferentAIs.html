@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="rpsm.js"></script>
+<SCRIPT>
+    savedirname = getSessionStorage("savedirname", "");
+
+    function getradioval(name, default_val)
+    {
+        radios = document.getElementsByName(name);
+
+        for (i = 0; i < radios.length; i++ )
+        {
+            if (radios[i].checked)
+            {
+                return radios[i].value;
+            }
+        } 
+        return default_val;
+    }
+
+    function sethidden()
+    {
+        document.getElementsByName("savedirname")[0].value=savedirname;
+    }
+
+			/*
+    function dosubmit()
+    {
+        same_diff_dont_know = getradioval("q6", "None selected");
+        sessionStorage.setItem("q6", same_diff_dont_know);
+	alert("b4 submitted");
+        document.forms[0].submit();
+	alert("submitted");
+        document.location.href='exp1_results.html';
+    }
+*/
+
+</SCRIPT>
+    <head>
+        <meta charset = "utf-8">
+        <title>Questions</title>
+    </head>
+
+    <style>
+
+      table td {
+      width: 170px;
+      overflow: visible;
+      display: inline-block;
+      white-space: nowrap;
+      }
+        input[type=text] {
+            width: 60%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        input[type=button] {
+            width: 10%;
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        h1 {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        p {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        label {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        body {	font-family: 'Console', Monaco, monospace;
+	margin-top: 40px; 
+	margin-left: 100px;  
+	margin-right: 100px;  
+	margin-bottom: 100px;  
+	background-color: rgb(255, 255, 255);
+	}
+
+    </style>
+        <body onload="javascript:sethidden();">
+	  <CENTER>
+        <h1>Questions</h1></CENTER>
+
+        <form name="questionform" action="exp1_save_questionnaire.php" method="post">
+	  <INPUT type="hidden" name="savedirname" value="">
+            <p>1. <U>Are you familiar with the game of rock paper scissors?</U></p>
+	    <TABLE>
+	      <TR><TD>
+            <input type="radio" name="q1" value="yes"> 
+            <label>Yes</label></TD>
+		<TD>
+            <input type="radio" name="q1" value="no">
+            <label>No</label></TD></TR></TABLE>
+
+            <p>2. <U>How many times have you tried this on-line experiment?</U></p>
+	    <TABLE><TR><TD>
+            <input type="radio" name="q2" value="0"> 
+            <label>0 (1st time)</label></TD>
+		<TD>
+            <input type="radio" name="q2" value="1">
+            <label>1</label></TD>
+		<TD>
+            <input type="radio" name="q2" value="2">
+            <label>2</label></TD>
+		<TD>
+            <input type="radio" name="q2" value="3+">
+            <label>3+</label></TD>
+		</TR></TABLE>
+
+            <p>3. <U>Were you focused or distracted while playing the game?</U></p>
+	    <TABLE><TR><TD>
+            <input type="radio" name="q3" value="focused"> 
+            <label>Focused</label></TD>
+		<TD>
+            <input type="radio" name="q3" value="distracted">
+            <label>Distracted</label></TD>
+		</TR></TABLE>
+
+            <p>4. <U>Do you think you followed rules like "don't repeat a hand after a loss" in choosing next move?</U></p>
+	    <TABLE><TR><TD>
+            <input type="radio" name="q4" value="yes"> 
+            <label>Yes</label></TD>
+		<TD>
+            <input type="radio" name="q4" value="no">
+            <label>No</label></TD></TR>
+	      </TABLE>
+
+            <p>5. <U>Which AI do you think was more difficult?</U></p>
+	    <TABLE><TR><TD>
+            <input type="radio" name="q5" value="first"> 
+            <label>First AI</label>
+	    </TD><TD>
+            <input type="radio" name="q5" value="second">
+            <label>Second AI</label>
+	    </TD><TD>
+            <input type="radio" name="q5" value="same">
+            <label>Same</label>
+	    </TD></TR></TABLE>
+
+            <p>6. <U>Humans generally aren't good at generating random moves, and we might rely on certain heuristic rules like "don't repeat a hand after a loss".  AIs try to learn and exploit these tendencies, and the rules or tendencies we exhibit might also be constantly changing.  Different AI bots go about learning and exploiting a player's tendencies in different ways, which players might perceive as differing playing style.  We kept the style of the AI the same during each of the rounds you played, but we it may have changed from round 1 to round 2, Do you think the two AIs you played against had the same or different playing styles?</U></p>
+	    <TABLE><TR><TD>
+            <input type="radio" name="q6" value="same"> 
+            <label>Same</label>
+	    </TD><TD>
+            <input type="radio" name="q6" value="different">
+            <label>Different</label>
+	    </TD><TD>
+            <input type="radio" name="q6" value="not sure">
+            <label>Don't know</label>
+	    </TD></TR>
+	      </TABLE>
+	    <BR><BR>
+	    <CENTER>
+	      <INPUT type="image" src="SubmitAndViewResults" alt="Submit And View Results"/></CENTER>
+	    <!--<A href="javascript:dosubmit();"><IMG src="SubmitAndViewResults"/></A>--></CENTER>
+        </form>
+
+    </body>
+</html>

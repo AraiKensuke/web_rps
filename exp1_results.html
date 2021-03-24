@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="rpsm.js"></script>
+<SCRIPT>
+function setval()
+{
+  var same_diff        = getSessionStorage("q6", "");
+  var AImach1        = parseInt(getSessionStorage("mach1", ""));
+  var AImach2        = parseInt(getSessionStorage("mach2", ""));
+
+  document.getElementById("qres").innerHTML = same_diff;
+  document.getElementById("AImach1").innerHTML = info_machines[AImach1];
+  document.getElementById("AImach2").innerHTML = info_machines[AImach2];
+
+  var our_response = "Better luck next time!";
+  if ((same_diff == "same") && (AImach1 == AImach2))
+{
+      our_response = "Same AI machines were used, you're very perceptive!";
+}
+
+ else if ((same_diff == "different") && (AImach1 != AImach2))
+  {
+      our_response = "Different AI machines were used, you're very perceptive!";
+  }
+  document.getElementById("our_response").innerHTML = our_response;
+}
+</SCRIPT>
+    <head>
+        <meta charset = "utf-8">
+        <title>Questions</title>
+    </head>
+
+    <style>
+
+      table td {
+      width: 170px;
+      overflow: visible;
+      display: inline-block;
+      white-space: nowrap;
+      }
+        input[type=text] {
+            width: 60%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        input[type=button] {
+            width: 10%;
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        h1 {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        p {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        label {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        body {	font-family: 'Console', Monaco, monospace;
+	margin-top: 40px; 
+	margin-left: 100px;  
+	margin-right: 100px;  
+	margin-bottom: 100px;  
+	background-color: rgb(255, 255, 255);
+	}
+
+    </style>
+    <body onload="javascript:setval();">
+      Your answer to "do you think AIs in round 1 and 2 are different?": <SPAN id="qres" style="font-weight: bold; font-size:22px"></SPAN>.
+      <BR>
+      The AI machine used in round 1: <SPAN id="AImach1" style="font-weight: bold; font-size:22px"></SPAN>.
+      <BR>
+      The AI machine used in round 2: <SPAN id="AImach2" style="font-weight: bold; font-size:22px"></SPAN>.
+      <BR><BR>
+      <SPAN id="our_response" style="font-weight: bold; font-size:40px"></SPAN>.
+
+    </body>
+</html>

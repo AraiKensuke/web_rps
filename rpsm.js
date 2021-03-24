@@ -7,8 +7,8 @@ javascript code:  中村和輝 2018/03/01.
  */
 
 /* player : プレイヤーの直前の手
- * record[3][N] : 過去のプレイヤーの手(3行(rsp)x列)
- * weight[3][3][N] : 重み関数3*N行列
+ * prc_record[3][N] : 過去のプレイヤーの手(3行(rsp)x列)
+ * prc_weight[3][3][N] : 重み関数3*N行列
  * pred[3] : 予測ユニットの入力
  */
 var graph_height = 440;
@@ -18,7 +18,7 @@ var game;		// 現在のゲーム数
 var predhand;	// 次の予測手
 var rec_hands="";	// 記録用
 var rec_inp_methd="";	// 記録用
-var rec_per_hands="";	// 記録用
+var rec_AI_hands="";	// 記録用
 var rec_times="";	// 記録用
 var results=[];	// [0]勝ち、[1]負け、[2]あいこ
 
@@ -26,26 +26,27 @@ var results=[];	// [0]勝ち、[1]負け、[2]あいこ
 //  paced or free  x 2
 //  AI or RNG      x 2
 
-var wait_next    = 7000
+var wait_next    = 3000
 var update_evry  = 1
 var n_rps_plyd   = 0
 var __JAPANESE__ = 0
 var __ENGLISH__  = 1
-var more=[];
 var pred=[];
-var weight=[];
-var ini_weight="";
-var fin_weight="";
-var record=[];
+var prc_weight=[];
+var ini_prc_weight="";
+var fin_prc_weight="";
+var ini_MC_cndprob="";
+var fin_MC_cndprob="";
+
+var prc_record=[];
 var time_now, last_time_now;
 var theDate = new Date();
 var startDate = new Date();
 last_time_now = theDate.getTime()
-var save_continue = false
 
 var rps_probs = [];
 var method = "blk1";
-var N = 2;    // perceptron order
+var prc_N = 2;    // perceptron order
 
 var blk = "1";
 var count = "0";
@@ -60,6 +61,15 @@ var __NGAMES__  = 0;   // running number of games played
 var __CWTL__ = 1;      // cumulative win, tie, lose
 
 var machines = [__MC__, __MC2__, __PRC__, __RND__];
+var s_machines = ["frequentist", 
+		  "overgeneralized frequentist", 
+		  "perceptron", "random"];
+var info_machines = ["1-step frequentist", "1-step greedy frequentist",
+		     "multistep perceptron", "random"];
+//"The AI looks at previous game.  If human played R and AI played S there, it looks back into its record of all previous games where human played R and AI played S, and then looks to see how often human next played R, P or S.  The AI then predicts human move in proportion to how frequently that move followed human-R and AI-S.",
+//		     "The AI looks at previous game.  If human played R and AI played S there, it looks back into its record of all previous games where human played R and AI played S, and then looks to see how often human next played R, P or S.  The AI then predicts human move that's dependent on how frequently that move followed human-R and AI-S, but in a more 'greedy' fashion, ie it strongly favors moves that are more likely, even if the frequency is very close to the 2nd most likely.",
+//		     "Perceptron looks at several previous games, and ", "random"];
+
 var realtimeResultsInfo = [__NGAMES__, __CWTL__];
 
 class MarkovChain {
@@ -187,7 +197,7 @@ function getSessionStorage(key, default_value)
     {
 	return sessionStorage.getItem(key);
     }
-    console.log(key + "not found ");
+    console.log("sessionkey " + key + " not found ");
     return default_value;
 }
 
@@ -235,7 +245,7 @@ function set_lang(jore)
 		elemTITLE.innerHTML = "AI rock-scissors-paper [PRACTICE MODE]"
 	    }
 	elemINSTR.innerHTML = "Your move<BR>click buttons or use keys 123"
-	elemPERHF.innerHTML = "Perceptron move"
+	elemPERHF.innerHTML = "AI move"
 	elemDescF.innerHTML = "The first to hit <B><U>" + MatchTo + "</U></B> wins is the winner!"
 
 	if (realtimeResults == __CWTL__)
@@ -326,50 +336,34 @@ function prettyArray3D(arr){
 
 
 //初期化
-function Reset(){
-    /*
-    for(var i=0;i<3;i++){
-	results[i]=new Array();
-	results[i][0]=0;
-    }
-    for(var i=0;i<3;i++){
-	weight[i] = new Array();
-	for(var j=0;j<3;j++){
-	    record[j] = new Array();
-	    weight[i][j] = new Array();
-	    for(var k=0;k<N;k++){
-		record[j][k] = 0;
-		weight[i][j][k] = Math.random() * 4 - 2.0;
-		ini_weight += String(weight[i][j][k]) + " ";
-	    }
-	}
-    }
-*/
-    
+function Reset(){    
     stopped = false;
-    save_continue = false;
     //console.log("In Reset()")    
-    ini_weight="";
-	fin_weight="";
-	rps_probs=[];
-	//method_num = Math.floor(Math.random() * 3);
-	//console.log("Method chosen: " + String(method_num));
+    ini_prc_weight="";
+    fin_prc_weight="";
+    ini_MC_cndprob="";
+    fin_MC_cndprob="";
 
+    rps_probs=[];
+    //method_num = Math.floor(Math.random() * 3);
+    //console.log("Method chosen: " + String(method_num));
 
     for(var i=0;i<3;i++){
 	results[i]=new Array();
 	results[i][0]=0;
-	weight[i] = new Array();
+	prc_weight[i] = new Array();
 	
 	for(var j=0;j<3;j++){
-	    record[j] = new Array();
-	    weight[i][j] = new Array();
+	    prc_record[j] = new Array();
+	    prc_weight[i][j] = new Array();
+	    	    ini_MC_cndprob
+	    ini_MC_cndprob += "0.333333" + "0.333333" + "0.333333 ";
 
-	    //   initially, don't set the weights farther back in time
-	    for(var k=0;k<N;k++){
-		record[j][k] = 0;    
-		weight[i][j][k] = (k < 2) ? Math.random() * 4 - 2.0 : 0;
-		ini_weight += String(weight[i][j][k]) + " ";
+	    //   initially, don't set the prc_weights farther back in time
+	    for(var k=0;k<prc_N;k++){
+		prc_record[j][k] = 0;    
+		prc_weight[i][j][k] = (k < 2) ? Math.random() * 4 - 2.0 : 0;
+		ini_prc_weight += String(prc_weight[i][j][k]) + " ";
 	    }
 	}
 	pred[i] = 0;
@@ -379,69 +373,17 @@ function Reset(){
     //Match = Number(document.form.match.value);
     game=0;
     rec_hands="";   
-    rec_per_hands="";
+    rec_AI_hands="";
     document.getElementById("final_result").innerHTML = '';
     //document.getElementById("final_result3").innerHTML = '';
     // 適当な値を相手の手の初期値として指定
     //var plhand = Math.floor( Math.random() * 3 + 1 );
     plhand_prev = 1;  //start with goo
-    //var pre = perceptron(plhand);
-    /* (pre+1)%3+1はパーセプトロンの予測手predに対して勝つ「手」
-       pre=1(グー)   :(pre+1)%3+1=3(パー)
-       pre=2(チョキ) :(pre+1)%3+1=1(グー)
-       pre=3(パー)   :(pre+1)%3+1=2(チョキ)*/
-    //predhand=(pre+1)%3+1;
-    
-    //rec_hands += String(plhand) + " "
-    //rec_per_hands += String(predhand) + " "
-    //rec_times += "0 "
-    
-    //var resultTimeline = anime.timeline();
-	// 描画の初期化
-
-	//UNCOMMENT THIS AND REDRAW_GRAPH CALLS TO SHOW GRAPH
-    // var wrap = d3.select('#graph');
-    // wrap.select("svg").remove(); // initialization
-    // var svg = wrap.append("svg").attr("width",graph_base+graph_width).attr("height",graph_height);
-    // svg.append("rect").attr("x", graph_base).attr("y", 0).attr("width", graph_width).attr("height", graph_height).attr("fill","#ffffff").attr("stroke","#000000").attr("stroke-width",5);
-    // //svg.append("line").attr("x1", graph_base).attr("x2", graph_base+graph_width).attr("y1", graph_height*0.1).attr("y2",graph_height*0.1).attr("stroke","#ff0055").attr("stroke-width",2);
-    // // ラベル
-    // svg.append("line").attr("x1", graph_base+graph_width*0.1).attr("x2", graph_base+graph_width*0.3).attr("y1", graph_height*0.2).attr("y2",graph_height*0.2).attr("stroke","#00A0E9").attr("stroke-width",8);
-    
-    // if (JorE == __JAPANESE__)
-    // {
-	// svg.append("text").text("あなたの勝ち").attr("x",graph_base+graph_width*0.3+10).attr("y",graph_height*0.2).attr({'dy': ".35em", 'fill': "black" });
-	// svg.append("line").attr("x1", graph_base+graph_width*0.1).attr("x2", graph_base+graph_width*0.3).attr("y1", graph_height*0.2+20).attr("y2",graph_height*0.2+20).attr("stroke","#E60012").attr("stroke-width",8);
-	// svg.append("text").text("マシンの勝ち").attr("x",graph_base+graph_width*0.3+10).attr("y",graph_height*0.2+20).attr({'dy': ".35em", 'fill': "black" });
-	// svg.append("line").attr("x1", graph_base+graph_width*0.1).attr("x2", graph_base+graph_width*0.3).attr("y1", graph_height*0.2+40).attr("y2",graph_height*0.2+40).attr("stroke","#ffD700").attr("stroke-width",8);
-	// svg.append("text").text("　　あいこ　").attr("x",graph_base+graph_width*0.3+10).attr("y",graph_height*0.2+40).attr({'dy': ".35em", 'fill': "black" });
-	
-	// svg.append("text").text("0").attr("x",graph_base-20).attr("y",graph_height-10).attr({'dy': ".35em", 'fill': "black" });
-	// document.getElementById("results").innerHTML = "<font color='#6970e9'>勝ち:0回</font>、<font color='#e9473f'>負け:0回</font>、<font color='#319e34'>あいこ:0回</font>";
-    // }
-    // else
-    // {
-	// svg.append("text").text("Your wins").attr("x",graph_base+graph_width*0.3+10).attr("y",graph_height*0.2).attr({'dy': ".35em", 'fill': "black" });
-	// svg.append("line").attr("x1", graph_base+graph_width*0.1).attr("x2", graph_base+graph_width*0.3).attr("y1", graph_height*0.2+20).attr("y2",graph_height*0.2+20).attr("stroke","#E60012").attr("stroke-width",8);
-	// svg.append("text").text("AI wins").attr("x",graph_base+graph_width*0.3+10).attr("y",graph_height*0.2+20).attr({'dy': ".35em", 'fill': "black" });
-	// svg.append("line").attr("x1", graph_base+graph_width*0.1).attr("x2", graph_base+graph_width*0.3).attr("y1", graph_height*0.2+40).attr("y2",graph_height*0.2+40).attr("stroke","#ffD700").attr("stroke-width",8);
-	// svg.append("text").text("　Ties  ").attr("x",graph_base+graph_width*0.3+10).attr("y",graph_height*0.2+40).attr({'dy': ".35em", 'fill': "black" });
-	
-	// svg.append("text").text("0").attr("x",graph_base-20).attr("y",graph_height-10).attr({'dy': ".35em", 'fill': "black" });
-	// document.getElementById("results").innerHTML = "<font color='#6970e9'>Wins: 0</font>、<font color='#e9473f'>Losses: 0</font>、<font color='#319e34'>Ties: 0</font>";
-    // }
 
     /* 勝敗表示を消す */
     var win_elem = document.getElementById("win");
     win_elem.style.opacity = 0;
     
-    // resultTimeline.add({
-    // 	targets: '#win',
-    // 	duration: 1,
-    // 	opacity: 0,
-    // 	easing: 'easeInOutQuart'
-    // });
-    /* マシンの手をもどす */
 
     do1st = anime.timeline()
     do1st.add({	
@@ -450,23 +392,6 @@ function Reset(){
     	scale: 1, duration: 1, easing: 'linear'
     });
     
-    // resultTimeline.add({
-    // 	targets: '.m_rock_copy, .m_scissors_copy, .m_paper_copy',
-    // 	translateY: 0,
-    // 	translateX:0,
-    // 	scale: 1,
-    // 	duration: 1,
-    // 	easing: 'easeInOutQuart'
-    // });
-    // /* プレイヤーの出した手を戻す */
-    // resultTimeline.add({
-    // 	targets: '.rock_copy, .scissors_copy, .paper_copy',
-    // 	translateY: 0,
-    // 	translateX:0,
-    // 	scale: 1,
-    // 	duration: 1,
-    // 	easing: 'easeInOutQuart'
-    // });
     var retry = document.getElementById("final_result2")
     retry.style.display = "none";
     //var iq = document.getElementById("final_result3")
@@ -531,7 +456,7 @@ function RPS(plhand, key_or_mouse) {
 
     rec_inp_methd += String(key_or_mouse) + " ";
     rec_hands += String(plhand) + " ";
-    rec_per_hands += String(predhand) + " ";
+    rec_AI_hands += String(predhand) + " ";
     rec_times += String(time_now - last_time_now) + " ";
     last_time_now = time_now;
 	ShowResults(plhand,predhand);    
@@ -624,7 +549,7 @@ function ShowResults(plhand,predhand,resultTimeline){
     case 0:
 	resultTimeline.add({
 	    targets: '#win',
-	    duration: 200,
+	    duration: 100,
 	    opacity: 0,
 	    easing: 'easeInOutQuart'
 	});
@@ -642,7 +567,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	resultTimeline.add({
 	    targets: '#win',
 	    offset: '-=100',
-	    duration: 200,
+	    duration: 100,
 	    opacity: 1,
 	    easing: 'easeInOutQuart'
 	});
@@ -660,7 +585,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	resultTimeline.add({
 	    targets: '#win',
 	    offset: '-=100',
-	    duration: 200,
+	    duration: 100,
 	    opacity: 1,
 	    easing: 'easeInOutQuart'
 	});
@@ -701,65 +626,42 @@ function ShowResults(plhand,predhand,resultTimeline){
 	redraw_graph(Ymax);
     }
 
-	game++;
-	if (n_rps_plyd >= MatchTo){
-		stopped = true;
-		// fin_weightを更新
-		var prec=[];
-		for(var i=0;i<3;i++) prec[i]=-1;
-		prec[plhand-1] = 1;
-		fin_weight = ""
+    game++;
+    if (n_rps_plyd >= MatchTo){
+	stopped = true;
+	// fin_prc_weightを更新
+	var prec=[];
+	for(var i=0;i<3;i++) prec[i]=-1;
+	prec[plhand-1] = 1;
+	
+	/* 各予測ユニットの入力と相手の新しい手のコードの符号が
+	   一致していない場合に誤り訂正学習を行う */
 
-		/* 各予測ユニットの入力と相手の新しい手のコードの符号が
-		一致していない場合に誤り訂正学習を行う */
-		for(var i=0;i<3;i++){
-			for(var j=0;j<3;j++){
-			for(var k=0;k<N;k++){
-				fin_weight += String(weight[i][j][k]) + " ";
-			}
-			}
+	if (AImach == __PRC__)
+	{		    
+	    for(var i=0;i<3;i++){
+		for(var j=0;j<3;j++){
+		    for(var k=0;k<prc_N;k++)
+		    {
+			fin_prc_weight += String(prc_weight[i][j][k]) + " ";
+		    }
 		}
-	        You_win_or_lose(results[0][game],results[1][game]);
+	    }
+	}
+	else
+	{
+	    int_state = model.internal_state[model.internal_state.length-1]
+
+	    for(var i=0;i<3;i++){
+		for(var j=0;j<3;j++){
+		    fin_MC_cprobs += int_state[3*i+j][0].toFixed(4) + " " + int_state[3*i+j][2].toFixed(4) + int_state[3*i+j][4].toFixed(4) + " ";
+		}
+	    }
 	}
 
-    // if(results[0][game]>=MatchTo){
-	// stopped = true;
-	// // fin_weightを更新
-	// var prec=[];
-	// for(var i=0;i<3;i++) prec[i]=-1;
-	// prec[plhand-1] = 1;
-	// fin_weight = ""
 
-	// /* 各予測ユニットの入力と相手の新しい手のコードの符号が
-	//    一致していない場合に誤り訂正学習を行う */
-	// for(var i=0;i<3;i++){
-	//     for(var j=0;j<3;j++){
-	// 	for(var k=0;k<N;k++){
-	// 	    fin_weight += String(weight[i][j][k]) + " ";
-	// 	}
-	//     }
-	// }
-	// Youwin(results[0][game],results[1][game]);
-    // }
-    // else if(results[1][game]>=MatchTo){
-	// stopped = true;
-	// // fin_weightを更新
-	// var prec=[];
-	// fin_weight = ""	
-	// for(var i=0;i<3;i++) prec[i]=-1;
-	// prec[plhand-1] = 1;
-
-	// /* 各予測ユニットの入力と相手の新しい手のコードの符号が
-	//    一致していない場合に誤り訂正学習を行う */
-	// for(var i=0;i<3;i++){
-	//     for(var j=0;j<3;j++){
-	// 	for(var k=0;k<N;k++){
-	// 	    fin_weight += String(weight[i][j][k]) + " ";
-	// 	}
-	//     }
-	// }
-	// Youlose(results[0][game],results[1][game]);
-    // }
+	You_win_or_lose(results[0][game],results[1][game]);
+    }
 }
 
 function redraw_graph(Ymax)
@@ -813,76 +715,71 @@ function redraw_graph(Ymax)
 
 function AI(player){
     //  'player' hand
-	//perceptron
-	if (AImach==__PRC__) {
-	    console.log("perceptron");
-		var prec=[];
-		for(var i=0;i<3;i++) prec[i]=-1;
-		prec[player-1] = 1;
-
-		if (n_rps_plyd % update_evry == 0){
-		for(var i=0;i<3;i++){
-			if(prec[i]*pred[i] <= 0){
-				for(var j=0;j<3;j++){
-					for(var k=0;k<N;k++){
-						weight[i][j][k] += prec[i]*record[j][k];
-					}
-				}
+    //perceptron
+    if (AImach==__PRC__) {
+	var prec=[];
+	for(var i=0;i<3;i++) prec[i]=-1;
+	prec[player-1] = 1;
+	
+	if (n_rps_plyd % update_evry == 0){
+	    for(var i=0;i<3;i++){
+		if(prec[i]*pred[i] <= 0){
+		    for(var j=0;j<3;j++){
+			for(var k=0;k<prc_N;k++){
+			    prc_weight[i][j][k] += prec[i]*prc_record[j][k];
 			}
+		    }
 		}
-		}
-		n_rps_plyd += 1
-		for(var i=0;i<3;i++){
-			record[i].unshift(prec[i]);
-			record[i].pop();
-		}
-		for(var i=0;i<3;i++) pred[i]=0;
-		for(var i=0;i<3;i++){
-			for(var j=0;j<3;j++){
-				for(var k=0;k<N;k++){
-					pred[i] += weight[i][j][k]*record[j][k];
-				}
-			}
-		}
-		var maxval=pred[0];
-		var maxnum = 0;
-		for(var i=1;i<3;i++){
-			if(pred[i]>=maxval){
-				maxval = pred[i];
-				maxnum = i;
-			}
-		}
-		return(maxnum+1);
-
+	    }
 	}
-
-	//Markov Chain
-	else {
-	    console.log("predict is   " + predict);
-		if (predict==0) {
-			var rnd = Math.random(); 
-			if (rnd < 0.333333) predict=1;
-			else if (rnd < 0.6666666) predict=2;
-			else predict=3;
+	n_rps_plyd += 1
+	for(var i=0;i<3;i++){
+	    prc_record[i].unshift(prec[i]);
+	    prc_record[i].pop();
+	}
+	for(var i=0;i<3;i++) pred[i]=0;
+	for(var i=0;i<3;i++){
+	    for(var j=0;j<3;j++){
+		for(var k=0;k<prc_N;k++){
+		    pred[i] += prc_weight[i][j][k]*prc_record[j][k];
 		}
-	
-		pair2 = pair1;
-		if (n_rps_plyd % update_evry == 0) {
-			if (pair2 != '') {
-				predict = model.predict(pair2);
-				model.update_matrix(pair2, player); 
-			}	
-		}
-		n_rps_plyd += 1;
-	
-		var predictNum = parseInt(predict, 10);
-		var mChoice = (predictNum+1) % 3 + 1;
-		pair1 = String(mChoice) + String(player);
-	
-		return(predictNum);
+	    }
+	}
+	var maxval=pred[0];
+	var maxnum = 0;
+	for(var i=1;i<3;i++){
+	    if(pred[i]>=maxval){
+		maxval = pred[i];
+		maxnum = i;
+	    }
+	}
+	return(maxnum+1);
+    }
 
+    //Markov Chain
+    else {
+	if (predict==0) {
+	    var rnd = Math.random(); 
+	    if (rnd < 0.333333) predict=1;
+	    else if (rnd < 0.6666666) predict=2;
+	    else predict=3;
 	}
 	
+	pair2 = pair1;
+	if (n_rps_plyd % update_evry == 0) {
+	    if (pair2 != '') {
+		predict = model.predict(pair2);
+		model.update_matrix(pair2, player); 
+	    }	
+	}
+	n_rps_plyd += 1;
+	
+	var predictNum = parseInt(predict, 10);
+	var mChoice = (predictNum+1) % 3 + 1;
+	pair1 = String(mChoice) + String(player);
+	
+	return(predictNum);
+    }
 }
 
 function goon()
@@ -925,7 +822,17 @@ function You_win_or_lose(win,lose){
 	    }
 	else
 	    {
-		youwin.innerHTML = '<img src="nextround.jpg">';
+		if (block == to_block)
+		{
+		    youwin.innerHTML = '<img src="toquestionnaire.jpg">';
+		}
+		else
+		{
+		    youwin.innerHTML = '<img src="nextround.jpg">';
+		}
+
+		
+
 	    }
     }
     youwin.style.display="inline";
@@ -1029,7 +936,6 @@ function You_win_or_lose(win,lose){
     }
 }
 
-
 function send_php(){
     // console.log("**************** send_php")
     // r_ini_weight = ini_weight.replace(/ /g, "\n")
@@ -1039,7 +945,7 @@ function send_php(){
     // console.log(r_rec_hands)
 
     // console.log(rec_hands)
-    // console.log(rec_per_hands)
+    // console.log(rec_AI_hands)
     // console.log(rec_inp_methd)
 // phpへの値の受け渡し
 
@@ -1051,47 +957,78 @@ function send_php(){
     var min   = startDate.getMinutes().toString().padStart(2, "0");
     var sec   = startDate.getSeconds().toString().padStart(2, "0");  
 	
-	if ((blk=="1"&&flag=="0") || (count=="1"&&flag=="1")) {
-		d = yr + mon + day + "-" + hr + min + "-" + sec;
-		sessionStorage.setItem('d', d);
-		uniq_fname = d + "-" + method;
-	} else {
-		var d = sessionStorage.getItem('d');
-    	uniq_fname = d + "-" + method;
-	}
-	
-	method1 = sessionStorage.getItem('method1');
-	if (method1==null){
-		sessionStorage.setItem('method1', method);
-		console.log(sessionStorage.getItem('method1'));
-	} else {
-		sessionStorage.setItem('method2', method);
-		console.log(sessionStorage.getItem('method2'));
-	}
-	console.log(uniq_fname);
-	
-	
+    d = yr + mon + day + "-" + hr + min + "-" + sec;
 
-    $.ajax({
-	type: 'POST',
-	url: '../rpsm_sam.php',
-	dataType:'text',
-	data: {
-	    unique_filename : uniq_fname,
-	    name1 : rec_hands,
-    	    name2 : rec_per_hands,
-    	    name3 : rec_times,
-	    name4 : rec_inp_methd,	          
-      	    name5 : ini_weight,
-	    name6 : fin_weight,
-	    name7 : paced_or_free,
-	    name8 : AI_or_RNG,
-	    name9: rps_probs,
-	    name10: method,
-	    name11 : N
-	},
-	success: function(data) {
-	    //location.href = "./test.php";
+    savedirname = getSessionStorage("savedirname", d);
+    if (savedirname == d)
+	{   //  savedirname is the default name
+	    sessionStorage.setItem("savedirname", d);
 	}
-    });
+
+    if (AImach == __PRC__)
+    {
+	$.ajax({
+	    type: 'POST',
+	    url: php_backend,
+	    dataType:'text',
+	    data: {
+		savedirname : savedirname,
+		rec_hands : rec_hands,
+    		rec_AI_hands : rec_AI_hands,
+    		rec_times : rec_times,
+		rec_input_method : rec_inp_methd,	          
+      		ini_weight : ini_prc_weight,
+		fin_weight : fin_prc_weight,
+		AImach :  AImach,
+		block  : block,
+		N : prc_N
+	    },
+	    success: function(data) {
+		//location.href = "./test.php";
+	    }
+	});
+    }
+    else if ((AImach == __MC__) || (AImach == __MC2__))
+    {
+	$.ajax({
+	    type: 'POST',
+	    url: php_backend,
+	    dataType:'text',
+	    data: {
+		savedirname : savedirname,
+		rec_hands : rec_hands,
+    		rec_AI_hands : rec_AI_hands,
+    		rec_times : rec_times,
+		rec_input_method : rec_inp_methd,	          
+      		ini_cprob : ini_prc_cprob,
+		fin_cprob : fin_prc_cprob,
+		AImach :  AImach,
+		block : block,
+                decay : model.decay
+	    },
+	    success: function(data) {
+		//location.href = "./test.php";
+	    }
+	});
+    }
+    else
+    {
+	$.ajax({
+	    type: 'POST',
+	    url: php_backend,
+	    dataType:'text',
+	    data: {
+		savedirname : savedirname,
+		rec_hands : rec_hands,
+    		rec_AI_hands : rec_AI_hands,
+    		rec_times : rec_times,
+		rec_input_method : rec_inp_methd,	          
+		AImach :  AImach,
+		block : block,
+	    },
+	    success: function(data) {
+		//location.href = "./test.php";
+	    }
+	});
+    }
 }
