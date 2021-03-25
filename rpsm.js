@@ -235,7 +235,7 @@ function set_lang(jore)
 
 	elemINSTR.innerHTML = "Your move<BR>click buttons or use keys 123"
 	elemPERHF.innerHTML = "AI move"
-	elemDescF.innerHTML = "The first to hit <B><U>" + MatchTo + "</U></B> wins is the winner!"
+	elemDescF.innerHTML = "Play <B><U>" + MatchTo + "</U></B> games!"
 
 	if (realtimeResults == __CWTL__)
 	{
@@ -244,7 +244,6 @@ function set_lang(jore)
 	}
 	else if (realtimeResults == __NGAMES__)
 	{
-	    //console.log("NGAMES");
 	    elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";
 	}
 
@@ -588,7 +587,7 @@ function ShowResults(plhand,predhand,resultTimeline){
     }
     else if (realtimeResults == __NGAMES__)
     {
-	document.getElementById("results").innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"</font>";
+	document.getElementById("results").innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";
     }
     
     var Ymax = 0;

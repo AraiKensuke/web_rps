@@ -9,18 +9,25 @@ function setval()
   var which_difficult        = getSessionStorage("q5", "");
   var AImach1        = parseInt(getSessionStorage("mach1", ""));
   var AImach2        = parseInt(getSessionStorage("mach2", ""));
-  var won1           = getSessionStorage("bl1win", "");
-  var los1           = getSessionStorage("bl1lose", "");
-  var tie1           = getSessionStorage("bl1tie", "");
-  var won2           = getSessionStorage("bl2win", "");
-  var los2           = getSessionStorage("bl2lose", "");
-  var tie2           = getSessionStorage("bl2tie", "");
+  var won1           = parseInt(getSessionStorage("bl1win", ""));
+  var los1           = parseInt(getSessionStorage("bl1lose", ""));
+  var tie1           = parseInt(getSessionStorage("bl1tie", ""));
+  var won2           = parseInt(getSessionStorage("bl2win", ""));
+  var los2           = parseInt(getSessionStorage("bl2lose", ""));
+  var tie2           = parseInt(getSessionStorage("bl2tie", ""));
 
   document.getElementById("qres").innerHTML = sim_diff;
   document.getElementById("AImach1").innerHTML = info_machines[AImach1];
   document.getElementById("AImach2").innerHTML = info_machines[AImach2];
-  document.getElementById("round1").innerHTML = "won " + won1 + ", tied " + tie1 + ", lost " + los1;
-  document.getElementById("round2").innerHTML = "won " + won2 + ", tied " + tie2 + ", lost " + los2;
+  ltgteq1 = "=";
+  if (won1 > los1) { ltgteq1 = ">";}
+  else if (won1 < los1) { ltgteq1 = "<";}
+  ltgteq2 = "=";
+  if (won2 > los2) { ltgteq2 = ">";}
+  else if (won2 < los2) { ltgteq2 = "<";}
+
+  document.getElementById("round1").innerHTML = "won " + won1 + " " + ltgteq1 + " lost " + los1 + ", tied " + tie1;
+  document.getElementById("round2").innerHTML = "won " + won2 + " " + ltgteq2 + " lost " + los2 + ", tied " + tie2;
   if ((which_difficult == "first") || (which_difficult == "second"))
   {
     document.getElementById("difficulty").innerHTML = which_difficult + " round was more difficult";
@@ -105,7 +112,7 @@ console.log(our_response);
     </style>
     <body onload="javascript:setval();">
       In the first round, you <SPAN id="round1" style="font-weight: bold; font-size:22px"></SPAN>.<BR>
-      In the second round, you <SPAN id="round2" style="font-weight: bold; font-size:22px"></SPAN>.
+      In the second round, you <SPAN id="round2" style="font-weight: bold; font-size:22px"></SPAN>.<BR>
       You felt <SPAN id="difficulty" style="font-weight: bold; font-size:22px"></SPAN>.
       <BR><BR>
 
