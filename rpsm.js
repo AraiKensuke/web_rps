@@ -26,7 +26,7 @@ var results=[];	// [0]勝ち、[1]負け、[2]あいこ
 //  paced or free  x 2
 //  AI or RNG      x 2
 
-var wait_next    = 3000
+var wait_next    = 8000
 var update_evry  = 1
 var n_rps_plyd   = 0
 var __JAPANESE__ = 0
@@ -122,7 +122,6 @@ class MarkovChain {
     }
 
     update_matrix(pair, input) {
-	console.log(pair);
 	for (var i = 1; i < 4; i++) {
 	    this.matrix[pair][String(i)]['n_obs'] = this.decay * this.matrix[pair][String(i)]['n_obs'];
 	}
@@ -139,7 +138,6 @@ class MarkovChain {
 	}
 
 	this.internal_state[this.internal_state.length] = this.to_9x6s(this.internal_state);
-	console.log(this.internal_state.length);
     }
 
     predict(pair) {
@@ -217,25 +215,6 @@ function set_lang(jore)
     
     if( JorE == __JAPANESE__ )
     {
-	document.title = "AI じゃんけんマシン";
-	elemTITLE.innerHTML = "AI じゃんけんマシン"
-	elemINSTR.innerHTML = "あなたの手<BR>(クリックまたは数字キーで<BR>選んでください)"
-	elemPERHF.innerHTML = "マシンの手"
-	elemDescF.innerHTML = "このじゃんけんマシンはあなたが手を選ぶ前に次の手を決めています。じゃんけんを繰り返すうちにあなたの手の癖を読み取って徐々に強くなっていきます。最初に40回勝ったほうが優勝です。勝負しましょう。"
-	if (realtimeResults == __CWTL__)
-	{
-
-	    alert("CWTL");
-	    elemResuF.innerHTML = "<font color='#6970e9'>勝ち:"+results[0][game]+"回</font>、<font color='#e9473f'>負け:"+results[1][game]+"回</font>、<font color='#319e34'>あいこ:"+results[2][game]+"回</font>";
-	}
-	else if (realtimeResults == __NGAMES__)
-	{
-	    //console.log("NGAMES");
-	    //alert("NGAMES");
-	    elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"</font>";
-	}
-
-	elemAnnoF.innerHTML = "【お願い】　ジャンケンの手を研究するためにデータを集めていますのでご協力お願いします．ゲームの最後に出てくる「OK」をおしていただければ我々はデータを得ることが出来ます．個人データは流出しません．<br /> <br />【参考文献】 <a href=\"https://www.iwanami.co.jp/book/b264786.html\">篠本 滋「情報処理概論 - 予測とシミュレーション」（岩波書店）</a>6．5節「じゃんけんマシンを作ってみよう」 pp101-107。 <a href=\"http://www.ton.scphys.kyoto-u.ac.jp/~shino/janken_iphone/\">スマホ版アプリ</a>。<a href=\"c.html\"> Cプログラム</a>。 ウェブアプリに関するお問い合わせやコメントは<a href=\"mailto:shinomoto@scphys.kyoto-u.ac.jp?Subject=janken\">篠本 滋</a>までご連絡ください。"
     }
     else
     {
@@ -266,7 +245,7 @@ function set_lang(jore)
 	else if (realtimeResults == __NGAMES__)
 	{
 	    //console.log("NGAMES");
-	    elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"</font>";
+	    elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";
 	}
 
 	
@@ -658,7 +637,6 @@ function ShowResults(plhand,predhand,resultTimeline){
 	    }
 	}
 
-
 	You_win_or_lose(results[0][game],results[1][game]);
     }
 }
@@ -834,9 +812,6 @@ function You_win_or_lose(win,lose){
 		{
 		    youwin.innerHTML = '<img src="nextround.jpg">';
 		}
-
-		
-
 	    }
     }
     youwin.style.display="inline";
@@ -936,6 +911,14 @@ function You_win_or_lose(win,lose){
     if (!practiceMode)
     {   // don't send 
 	send_php();
+	//win = results[0][results]
+	//sessionStorage.setItem("bl" + block + "wins", 
+	win = results[0][game]
+	lose = results[1][game]
+	tie = results[2][game]
+	sessionStorage.setItem("bl" + block + "win", win);
+	sessionStorage.setItem("bl" + block + "lose", lose);
+	sessionStorage.setItem("bl" + block + "tie", tie);
 	setTimeout(() => {  location.href=nextpageURL; }, wait_next);
     }
 }

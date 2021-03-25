@@ -6,30 +6,47 @@
 function setval()
 {
   var sim_diff        = getSessionStorage("q6", "");
+  var which_difficult        = getSessionStorage("q5", "");
   var AImach1        = parseInt(getSessionStorage("mach1", ""));
   var AImach2        = parseInt(getSessionStorage("mach2", ""));
+  var won1           = getSessionStorage("bl1win", "");
+  var los1           = getSessionStorage("bl1lose", "");
+  var tie1           = getSessionStorage("bl1tie", "");
+  var won2           = getSessionStorage("bl2win", "");
+  var los2           = getSessionStorage("bl2lose", "");
+  var tie2           = getSessionStorage("bl2tie", "");
 
   document.getElementById("qres").innerHTML = sim_diff;
   document.getElementById("AImach1").innerHTML = info_machines[AImach1];
   document.getElementById("AImach2").innerHTML = info_machines[AImach2];
+  document.getElementById("round1").innerHTML = "won " + won1 + ", tied " + tie1 + ", lost " + los1;
+  document.getElementById("round2").innerHTML = "won " + won2 + ", tied " + tie2 + ", lost " + los2;
+  if ((which_difficult == "first") || (which_difficult == "second"))
+  {
+    document.getElementById("difficulty").innerHTML = which_difficult + " round was more difficult";
+  }
+  else
+  {
+    document.getElementById("difficulty").innerHTML = " both rounds were similarly difficult";
+  }
 
   var our_response = "Better luck next time!";
   if ((sim_diff == "similar") && (AImach1 == AImach2))
 {
-      our_response = "Same AI machines were used, you're very perceptive!";
+      our_response = "In fact, same AI machines were used.  You're very perceptive!";
 }
 
  else if ((sim_diff == "different") && (AImach1 != AImach2))
   {
-      our_response = "Different AI machines were used, you're very perceptive!";
+      our_response = "In fact, different AI machines were used.  You're very perceptive!";
   }
  else if ((sim_diff == "different") && (AImach1 == AImach2))
   {
-      our_response = "Same AI machines were used.  Better luck next time?!";
+      our_response = "In fact, same AI machines were used.  Better luck next time?!";
   }
  else if ((sim_diff == "similar") && (AImach1 != AImach2))
   {
-      our_response = "Different AI machines were used.  Better luck next time?!";
+      our_response = "In fact, different AI machines were used.  Better luck next time?!";
   }
  else if (sim_diff == "not sure")
   {
@@ -87,6 +104,11 @@ console.log(our_response);
 
     </style>
     <body onload="javascript:setval();">
+      In the first round, you <SPAN id="round1" style="font-weight: bold; font-size:22px"></SPAN>.<BR>
+      In the second round, you <SPAN id="round2" style="font-weight: bold; font-size:22px"></SPAN>.
+      You felt <SPAN id="difficulty" style="font-weight: bold; font-size:22px"></SPAN>.
+      <BR><BR>
+
       Your answer to <B>"do you think AIs in round 1 and 2 are different?"</B>: <SPAN id="qres" style="font-weight: bold; font-size:22px"></SPAN>.
       <BR>
       The <B>AI machine</B> used in <B>round 1</B>: <SPAN id="AImach1" style="font-weight: bold; font-size:22px"></SPAN>.
