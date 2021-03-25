@@ -5,16 +5,16 @@
 <SCRIPT>
 function setval()
 {
-  var same_diff        = getSessionStorage("q6", "");
+  var sim_diff        = getSessionStorage("q6", "");
   var AImach1        = parseInt(getSessionStorage("mach1", ""));
   var AImach2        = parseInt(getSessionStorage("mach2", ""));
 
-  document.getElementById("qres").innerHTML = same_diff;
+  document.getElementById("qres").innerHTML = sim_diff;
   document.getElementById("AImach1").innerHTML = info_machines[AImach1];
   document.getElementById("AImach2").innerHTML = info_machines[AImach2];
 
   var our_response = "Better luck next time!";
-  if ((same_diff == "same") && (AImach1 == AImach2))
+  if ((same_diff == "similar") && (AImach1 == AImach2))
 {
       our_response = "Same AI machines were used, you're very perceptive!";
 }
@@ -80,6 +80,6 @@ function setval()
       The AI machine used in round 2: <SPAN id="AImach2" style="font-weight: bold; font-size:22px"></SPAN>.
       <BR><BR>
       <SPAN id="our_response" style="font-weight: bold; font-size:40px"></SPAN>.
-
+      <H2>Thanks for participating in the experiment, and feel free to try again!  We would definitely appreciate it!  If you do, please indicate that it is not your first time anymore.</H2>
     </body>
 </html>
