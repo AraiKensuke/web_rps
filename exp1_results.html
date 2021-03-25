@@ -14,15 +14,29 @@ function setval()
   document.getElementById("AImach2").innerHTML = info_machines[AImach2];
 
   var our_response = "Better luck next time!";
-  if ((same_diff == "similar") && (AImach1 == AImach2))
+  if ((sim_diff == "similar") && (AImach1 == AImach2))
 {
       our_response = "Same AI machines were used, you're very perceptive!";
 }
 
- else if ((same_diff == "different") && (AImach1 != AImach2))
+ else if ((sim_diff == "different") && (AImach1 != AImach2))
   {
       our_response = "Different AI machines were used, you're very perceptive!";
   }
+ else if ((sim_diff == "different") && (AImach1 == AImach2))
+  {
+      our_response = "Same AI machines were used.  Better luck next time?!";
+  }
+ else if ((sim_diff == "similar") && (AImach1 != AImach2))
+  {
+      our_response = "Different AI machines were used.  Better luck next time?!";
+  }
+ else if (sim_diff == "not sure")
+  {
+      our_response = "Perhaps try again?";
+  }
+console.log(our_response);
+
   document.getElementById("our_response").innerHTML = our_response;
 }
 </SCRIPT>
@@ -73,13 +87,14 @@ function setval()
 
     </style>
     <body onload="javascript:setval();">
-      Your answer to "do you think AIs in round 1 and 2 are different?": <SPAN id="qres" style="font-weight: bold; font-size:22px"></SPAN>.
+      Your answer to <B>"do you think AIs in round 1 and 2 are different?"</B>: <SPAN id="qres" style="font-weight: bold; font-size:22px"></SPAN>.
       <BR>
-      The AI machine used in round 1: <SPAN id="AImach1" style="font-weight: bold; font-size:22px"></SPAN>.
+      The <B>AI machine</B> used in <B>round 1</B>: <SPAN id="AImach1" style="font-weight: bold; font-size:22px"></SPAN>.
       <BR>
-      The AI machine used in round 2: <SPAN id="AImach2" style="font-weight: bold; font-size:22px"></SPAN>.
+      The <B>AI machine</B> used in <B>round 2</B>: <SPAN id="AImach2" style="font-weight: bold; font-size:22px"></SPAN>.
       <BR><BR>
-      <SPAN id="our_response" style="font-weight: bold; font-size:40px"></SPAN>.
-      <H2>Thanks for participating in the experiment, and feel free to try again!  We would definitely appreciate it!  If you do, please indicate that it is not your first time anymore.</H2>
+      <SPAN id="our_response" style="font-weight: bold; font-size:30px;color:#FF0000"></SPAN>.
+      <BR><BR><BR><BR><BR><BR>
+      <H2>We appreciate your participation in the repeated RPS experiment!  If you enjoyed it and want to try again, we would be appreciate further participation.  If you do, please indicate that it is not your first time participating in the questionnaire.  Thank you!</H2>
     </body>
 </html>

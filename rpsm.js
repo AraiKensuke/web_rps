@@ -122,6 +122,7 @@ class MarkovChain {
     }
 
     update_matrix(pair, input) {
+	console.log(pair);
 	for (var i = 1; i < 4; i++) {
 	    this.matrix[pair][String(i)]['n_obs'] = this.decay * this.matrix[pair][String(i)]['n_obs'];
 	}
@@ -239,11 +240,20 @@ function set_lang(jore)
     else
     {
 	document.title = "AI rock-scissors-paper";
-	elemTITLE.innerHTML = "AI rock-scissors-paper"
-	if (practiceMode)
+	if (!practiceMode)
+	{
+	    tit = "AI rock-scissor-paper";
+	    if (to_block > 1)
 	    {
-		elemTITLE.innerHTML = "AI rock-scissors-paper [PRACTICE MODE]"
+		tit += " round " + block + "/" + to_block;
 	    }
+	}
+	else
+	{
+	    tit = "AI rock-scissors-paper [PRACTICE MODE]"
+	}
+	    elemTITLE.innerHTML = tit;
+
 	elemINSTR.innerHTML = "Your move<BR>click buttons or use keys 123"
 	elemPERHF.innerHTML = "AI move"
 	elemDescF.innerHTML = "The first to hit <B><U>" + MatchTo + "</U></B> wins is the winner!"
@@ -433,18 +443,7 @@ function RPS(plhand, key_or_mouse) {
 
     /* 次の手のパーセプトロン予測を前もって行う */
 	var pre;
-    if (AI_or_RNG == __AI__) {
-		// if (AImach == "2") {pre=AI(plhand_prev);}
-		// //for perceptron
-		// else {pre=AI(plhand);}/* predhand　は次の予測手(1,2,3) */
-		// //changed from prev to current plhand for MC
-	pre = AI(plhand_prev);
-    } else {
-		var rnd = Math.random();
-		if (rnd < 0.333333) {pre=1;}
-		else if (rnd < 0.6666666){pre=2;}
-		else{pre=3;}	
-    }
+    pre = AI(plhand_prev);
     plhand_prev = plhand
     //console.log("************\n" + prettyArray2D(record) + "\n\n" + prettyArray3D(weight))
 	       
@@ -648,13 +647,13 @@ function ShowResults(plhand,predhand,resultTimeline){
 		}
 	    }
 	}
-	else
+	else if ((AImach == __MC__) || (AImach == __MC2__))
 	{
 	    int_state = model.internal_state[model.internal_state.length-1]
 
 	    for(var i=0;i<3;i++){
 		for(var j=0;j<3;j++){
-		    fin_MC_cprobs += int_state[3*i+j][0].toFixed(4) + " " + int_state[3*i+j][2].toFixed(4) + int_state[3*i+j][4].toFixed(4) + " ";
+		    fin_MC_cndprob += int_state[3*i+j][0].toFixed(4) + " " + int_state[3*i+j][2].toFixed(4) + int_state[3*i+j][4].toFixed(4) + " ";
 		}
 	    }
 	}
@@ -716,6 +715,8 @@ function redraw_graph(Ymax)
 function AI(player){
     //  'player' hand
     //perceptron
+    n_rps_plyd += 1
+
     if (AImach==__PRC__) {
 	var prec=[];
 	for(var i=0;i<3;i++) prec[i]=-1;
@@ -732,7 +733,7 @@ function AI(player){
 		}
 	    }
 	}
-	n_rps_plyd += 1
+
 	for(var i=0;i<3;i++){
 	    prc_record[i].unshift(prec[i]);
 	    prc_record[i].pop();
@@ -757,14 +758,8 @@ function AI(player){
     }
 
     //Markov Chain
-    else {
-	if (predict==0) {
-	    var rnd = Math.random(); 
-	    if (rnd < 0.333333) predict=1;
-	    else if (rnd < 0.6666666) predict=2;
-	    else predict=3;
-	}
-	
+    else if ((AImach==__MC__) || (AImach == __MC2__))
+    {
 	pair2 = pair1;
 	if (n_rps_plyd % update_evry == 0) {
 	    if (pair2 != '') {
@@ -772,13 +767,22 @@ function AI(player){
 		model.update_matrix(pair2, player); 
 	    }	
 	}
-	n_rps_plyd += 1;
 	
 	var predictNum = parseInt(predict, 10);
 	var mChoice = (predictNum+1) % 3 + 1;
 	pair1 = String(mChoice) + String(player);
 	
 	return(predictNum);
+    }
+    else
+    {
+
+	var rnd = Math.random(); 
+	if (rnd < 0.333333) predict=1;
+	else if (rnd < 0.6666666) predict=2;
+	else predict=3;
+	
+	return predict;
     }
 }
 
@@ -1000,8 +1004,8 @@ function send_php(){
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
 		rec_input_method : rec_inp_methd,	          
-      		ini_cprob : ini_prc_cprob,
-		fin_cprob : fin_prc_cprob,
+      		ini_cprob : ini_MC_cndprob,
+		fin_cprob : fin_MC_cndprob,
 		AImach :  AImach,
 		block : block,
                 decay : model.decay
