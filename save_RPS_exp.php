@@ -13,6 +13,7 @@
         }
     }
 
+    $exptname         = getVal("exptname", "");
     $savedirname      = getVal("savedirname", "");
     $rec_hands        = getVal("rec_hands", "");
     $rec_AI_hands     = getVal("rec_AI_hands", "");
@@ -21,7 +22,7 @@
     $AImach           = getVal("AImach", "");
     $block            = getVal("block", "");
 
-    $out_dirname = "../DATA/exp1/" . $savedirname;
+    $out_dirname = "../DATA/" . $exptname . "/" . $savedirname;
     if (!is_dir($out_dirname))
     {   
         mkdir($out_dirname);

@@ -26,7 +26,7 @@ var results=[];	// [0]勝ち、[1]負け、[2]あいこ
 //  paced or free  x 2
 //  AI or RNG      x 2
 
-var wait_next    = 8000
+var wait_next    = 5000
 var update_evry  = 1
 var n_rps_plyd   = 0
 var __JAPANESE__ = 0
@@ -43,6 +43,7 @@ var time_now, last_time_now;
 var theDate = new Date();
 var startDate = new Date();
 last_time_now = theDate.getTime()
+var exptname;
 
 var rps_probs = [];
 var method = "blk1";
@@ -61,6 +62,7 @@ var __NGAMES__  = 0;   // running number of games played
 var __CWTL__ = 1;      // cumulative win, tie, lose
 
 var machines = [__MC__, __MC2__, __PRC__, __RND__];
+//var machines = [__MC__, __PRC__];
 var s_machines = ["frequentist", 
 		  "overgeneralized frequentist", 
 		  "perceptron", "random"];
@@ -784,34 +786,40 @@ function practiceagain()
 function You_win_or_lose(win,lose){
     console.log("You_win_or_lose");
     var youwin = document.getElementById("final_result");
-    if (realtimeResults)
+    if (practiceMode)
     {
-	if (win > lose) {imgsrc = "youwon.png";} else {imgsrc = "youlost.png";}
-	youwin.innerHTML = '<img src="' + imgsrc + '">';
+	var pgo = document.getElementById("top");
+	
+	pgo.innerHTML = '<BR><BR><BR><BR><BR><BR><BR><BR><CENTER><A href="javascript:goon();"><img src="done_practicing.jpg" height=30/></A><BR><BR><BR><A href="javascript:practiceagain();"><img src="more_practice.jpg" height=30/></A></CENTER><BR>';
+	pgo.style.backgroundColor="grey";
+	pgo.style.height=600;
+	pgo.style.width=500;
+	pgo.style.opacity=0.98;
     }
-    else
-    {
-	if (practiceMode)
+    else{
+	if (realtimeResults)
+	{
+	    if (block == to_block)
 	    {
-		var pgo = document.getElementById("top");
-
-		pgo.innerHTML = '<BR><BR><BR><BR><BR><BR><BR><BR><CENTER><A href="javascript:goon();"><img src="done_practicing.jpg" height=30/></A><BR><BR><BR><A href="javascript:practiceagain();"><img src="more_practice.jpg" height=30/></A></CENTER><BR>';
-		pgo.style.backgroundColor="grey";
-		pgo.style.height=600;
-		pgo.style.width=500;
-		pgo.style.opacity=0.98;
+		if (win > lose) {imgsrc = "youwin_done.jpg";} else {imgsrc = "youlost_done.jpg";}
 	    }
+	    else
+	    {
+		if (win > lose) {imgsrc = "youwin.jpg";} else {imgsrc = "youlost.jpg";}
+	    }
+	    youwin.innerHTML = '<img style="opacity:0.75;" src="' + imgsrc + '">';
+	}
 	else
+	{
+	    if (block == to_block)
 	    {
-		if (block == to_block)
-		{
-		    youwin.innerHTML = '<img src="toquestionnaire.jpg">';
-		}
-		else
-		{
-		    youwin.innerHTML = '<img src="nextround.jpg">';
-		}
+		youwin.innerHTML = '<img style="opacity:0.75;" src="toquestionnaire.jpg"/>';
 	    }
+	    else
+	    {
+		youwin.innerHTML = '<img style="opacity:0.75;" src="nextround.jpg"/>';
+	    }
+	}
     }
     youwin.style.display="inline";
     
@@ -958,6 +966,7 @@ function send_php(){
 	    url: php_backend,
 	    dataType:'text',
 	    data: {
+		exptname : exptname,
 		savedirname : savedirname,
 		rec_hands : rec_hands,
     		rec_AI_hands : rec_AI_hands,
@@ -981,6 +990,7 @@ function send_php(){
 	    url: php_backend,
 	    dataType:'text',
 	    data: {
+		exptname : exptname,
 		savedirname : savedirname,
 		rec_hands : rec_hands,
     		rec_AI_hands : rec_AI_hands,
@@ -1004,6 +1014,7 @@ function send_php(){
 	    url: php_backend,
 	    dataType:'text',
 	    data: {
+		exptname : exptname,
 		savedirname : savedirname,
 		rec_hands : rec_hands,
     		rec_AI_hands : rec_AI_hands,

@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<STYLE>
+
+table, th, td {
+  border: 1px solid black;
+}
+
+</STYLE>
 <script type="text/javascript" src="rpsm.js"></script>
 <SCRIPT>
 function setval()
@@ -16,9 +22,9 @@ function setval()
   var los2           = parseInt(getSessionStorage("bl2lose", ""));
   var tie2           = parseInt(getSessionStorage("bl2tie", ""));
 
-  document.getElementById("qres").innerHTML = sim_diff;
-  document.getElementById("AImach1").innerHTML = info_machines[AImach1];
-  document.getElementById("AImach2").innerHTML = info_machines[AImach2];
+  <!-- document.getElementById("qres").innerHTML = sim_diff; -->
+  <!-- document.getElementById("AImach1").innerHTML = info_machines[AImach1]; -->
+  <!-- document.getElementById("AImach2").innerHTML = info_machines[AImach2]; -->
   ltgteq1 = "=";
   if (won1 > los1) { ltgteq1 = ">";}
   else if (won1 < los1) { ltgteq1 = "<";}
@@ -26,40 +32,62 @@ function setval()
   if (won2 > los2) { ltgteq2 = ">";}
   else if (won2 < los2) { ltgteq2 = "<";}
 
-  document.getElementById("round1").innerHTML = "won " + won1 + " " + ltgteq1 + " lost " + los1 + ", tied " + tie1;
-  document.getElementById("round2").innerHTML = "won " + won2 + " " + ltgteq2 + " lost " + los2 + ", tied " + tie2;
-  if ((which_difficult == "first") || (which_difficult == "second"))
+  if (which_difficult == "first")
   {
-    document.getElementById("difficulty").innerHTML = which_difficult + " round was more difficult";
+     document.getElementById("round1diff").innerHTML = "THIS ROUND";
   }
-  else
+  else if (which_difficult == "second")
   {
-    document.getElementById("difficulty").innerHTML = " both rounds were similarly difficult";
+      document.getElementById("round2diff").innerHTML = "THIS ROUND";
+  }
+  else if (which_difficult == "same")
+  {
+      document.getElementById("round2diff").innerHTML = "equally";
+      document.getElementById("round1diff").innerHTML = "difficult";
   }
 
+  document.getElementById("round1win").innerHTML = won1
+  document.getElementById("round1wl").innerHTML = ltgteq1
+  document.getElementById("round2win").innerHTML = won2
+  document.getElementById("round1los").innerHTML = los1
+  document.getElementById("round2wl").innerHTML = ltgteq2
+  document.getElementById("round2los").innerHTML = los2
+  document.getElementById("round1tie").innerHTML = tie1
+  document.getElementById("round2tie").innerHTML = tie2
+  document.getElementById("AImach1").innerHTML = info_machines[AImach1]
+  document.getElementById("AImach2").innerHTML = info_machines[AImach2]
+  document.getElementById("AIcmp").innerHTML = sim_diff.toUpperCase()
+
+		  
   var our_response = "Better luck next time!";
   if ((sim_diff == "similar") && (AImach1 == AImach2))
 {
-      our_response = "In fact, same AI machines were used.  You're very perceptive!";
+      our_response = "You played against the same machine.  You're very perceptive!";
 }
 
  else if ((sim_diff == "different") && (AImach1 != AImach2))
   {
-      our_response = "In fact, different AI machines were used.  You're very perceptive!";
+      our_response = "You played against different machines.  You're very perceptive!";
   }
  else if ((sim_diff == "different") && (AImach1 == AImach2))
   {
-      our_response = "In fact, same AI machines were used.  Better luck next time?!";
+      our_response = "Sorry, you actually played against same machine.  Better luck next time?!";
   }
  else if ((sim_diff == "similar") && (AImach1 != AImach2))
   {
-      our_response = "In fact, different AI machines were used.  Better luck next time?!";
+      our_response = "Sorry, you actually played against different machines.  Better luck next time?!";
   }
  else if (sim_diff == "not sure")
   {
-      our_response = "Perhaps try again?";
+      if (AImach1 == AImach2)
+		  {
+		  our_response = "You actually played against same machine.  Your ability to discern might increase with some more experience";
+}
+      else if (AImach1 != AImach2)
+		  {
+		  our_response = "You actually played against different machines.  Your ability to discern might increase with some more experience";
+}
   }
-console.log(our_response);
 
   document.getElementById("our_response").innerHTML = our_response;
 }
@@ -69,13 +97,13 @@ console.log(our_response);
         <title>Questions</title>
     </head>
 
+<!--       display: inline-block; -->
     <style>
 
       table td {
-      width: 170px;
       overflow: visible;
-      display: inline-block;
       white-space: nowrap;
+      padding: 20px
       }
         input[type=text] {
             width: 60%;
@@ -111,19 +139,46 @@ console.log(our_response);
 
     </style>
     <body onload="javascript:setval();">
-      In the first round, you <SPAN id="round1" style="font-weight: bold; font-size:22px"></SPAN>.<BR>
-      In the second round, you <SPAN id="round2" style="font-weight: bold; font-size:22px"></SPAN>.<BR>
-      You felt <SPAN id="difficulty" style="font-weight: bold; font-size:22px"></SPAN>.
-      <BR><BR>
+      <CENTER>
+	<H1>Results</H1>
+<BR>
+      <TABLE><!-- style="border-collapse:collapse">-->
+	<TR>
+	  <TH style="width:40px">Round</TH>
+	  <TH>Wins</TH>
+	  <TH></TH>
+	  <TH>Losses</TH>
+	  <TH>Ties</TH>
+	  <TH  style="background-color:#BBBBFF;">Round that felt<BR>more challenging</TH>
+	  <TH>AI machine</TH>
+	  <TH style="background-color:#BBBBFF;">Do you think AIs<BR>similar/different</TH>
+	  </TR>
 
-      Your answer to <B>"do you think AIs in round 1 and 2 are different?"</B>: <SPAN id="qres" style="font-weight: bold; font-size:22px"></SPAN>.
-      <BR>
-      The <B>AI machine</B> used in <B>round 1</B>: <SPAN id="AImach1" style="font-weight: bold; font-size:22px"></SPAN>.
-      <BR>
-      The <B>AI machine</B> used in <B>round 2</B>: <SPAN id="AImach2" style="font-weight: bold; font-size:22px"></SPAN>.
+	<TR>
+	  <TD><SPAN style="font-size:20px;font-weight:bold;">1</SPAN></TD>
+	  <TD><SPAN id="round1win" style="font-size:18px"></SPAN></TD>
+	  <TD><SPAN id="round1wl" style="font-weight: bold;font-size:18px"></SPAN></TD>
+	  <TD><SPAN id="round1los" style="font-size:18px"></SPAN></TD>
+	  <TD><SPAN id="round1tie" style="font-size:18px"></SPAN></TD>
+	  <TD style="background-color:#BBBBFF;"><SPAN id="round1diff" style="font-size:18px;font-weight:bold;"></SPAN></TD>
+	  <TD><SPAN id="AImach1" style="font-size:18px"></SPAN></TD>
+	  <TD style="background-color:#BBBBFF;" rowspan=2><SPAN id="AIcmp" style="font-size:18px;font-weight:bold;"></SPAN></TD>
+	  </TR>
+	<TR>
+	  <TD><SPAN style="font-size:20px;font-weight:bold;">2</SPAN></TD>
+	  <TD><SPAN id="round2win" style="font-size:18px"></SPAN></TD>
+	  <TD><SPAN id="round2wl" style="font-weight: bold;font-size:18px"></SPAN></TD>
+	  <TD><SPAN id="round2los" style="font-size:18px"></SPAN></TD>
+	  <TD><SPAN id="round2tie" style="font-size:18px"></SPAN></TD>
+	  <TD style="background-color:#BBBBFF;"><SPAN id="round2diff" style="font-size:18px;font-weight:bold;"></SPAN></TD>
+	  <TD><SPAN id="AImach2" style="font-size:18px"></SPAN></TD>
+	  </TR>
+	</TABLE>
+
       <BR><BR>
-      <SPAN id="our_response" style="font-weight: bold; font-size:30px;color:#FF0000"></SPAN>.
-      <BR><BR><BR><BR><BR><BR>
-      <H2>We appreciate your participation in the repeated RPS experiment!  If you enjoyed it and want to <A href="exp1.html">try again</A>, we would be appreciate further participation.  If you do, please indicate that it is not your first time participating in the questionnaire.  Thank you!</H2>
+      <SPAN id="our_response" style="font-size:30px;color:#FF0000"></SPAN>.
+      <BR><BR><BR>
+      <H2>We appreciate your participation in the repeated RPS experiment!  If you enjoyed it and want to <A href="rulesExp1.html">try again</A>, we would be appreciate further participation.  If you do, please indicate that it is not your first time participating in the questionnaire.  Thank you!</H2>
+      </CENTER>
     </body>
 </html>

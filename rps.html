@@ -46,6 +46,8 @@ Q.html
   var callingPage = "rps.html";
   var practiceMode    = JSON.parse((getSessionStorage("PracticeMode", false)));
   var realtimeResults = parseInt(getSessionStorage("RealtimeResults", __CWTL__));
+  exptname            = getSessionStorage("exptname", "");
+
   var MatchTo         = parseInt(getSessionStorage("MatchTo", 30));
   var to_block        = parseInt(getSessionStorage("to_block", 1));
   var block           = parseInt(getSessionStorage("block", 0));

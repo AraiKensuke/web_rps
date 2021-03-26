@@ -42,7 +42,7 @@
 <HTML>
 <SCRIPT>
 sessionStorage.setItem("q6", "<?=$different_AI?>");
-sessionStorage.setItem("q5", "<?=which_difficult?>");
+sessionStorage.setItem("q5", "<?=$which_difficult?>");
 
 document.location.href="exp1_results.html";
 </SCRIPT>
