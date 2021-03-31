@@ -36,7 +36,7 @@ Q.html
 
   var nextpageURL = "rps.html";     //  
   var php_backend = getSessionStorage("php_backend", "");
-  var url_after_blocks = "default_bye.html";
+  var url_after_blocks = getSessionStorage("url_after_blocks", "default_bye_html");
 
   //  things to change in practiceMode:
   //  MatchTo is set to 10
@@ -59,7 +59,7 @@ Q.html
   var AImach           = parseInt(getSessionStorage("mach" + block, __PRC__));
   if ((block == to_block) && (!practiceMode))
   {
-    var nextpageURL        = getSessionStorage("url_after_blocks", "default_bye_html");
+    var nextpageURL        = 
   }
   if (block > to_block)
   {  // reloaded during transition?  just go to last page
