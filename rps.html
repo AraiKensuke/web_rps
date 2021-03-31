@@ -51,8 +51,9 @@ Q.html
   var MatchTo         = parseInt(getSessionStorage("MatchTo", 30));
   var to_block        = parseInt(getSessionStorage("to_block", 1));
   var block           = parseInt(getSessionStorage("block", 0));
-  console.log("block   " + block);
+
   block += 1;
+  
   sessionStorage.setItem("block", block);
 
   var AImach           = parseInt(getSessionStorage("mach" + block, __PRC__));
@@ -60,6 +61,11 @@ Q.html
   {
     var nextpageURL        = getSessionStorage("url_after_blocks", "default_bye_html");
   }
+  if (block > to_block)
+  {  // reloaded during transition?  just go to last page
+       document.location.href=url_after_blocks;   //  beyond where we need to be
+  }
+
 
   if (practiceMode)
   {
@@ -72,11 +78,6 @@ Q.html
   //bottomDIV.style.opacity=0.4;
   //bottomDIV.innerHTML="<BR><BR><BR><H1>PRACTICE</H1>";
   }
-
-
-  console.log("to_block   " + to_block);
-  //console.log("nextpageURL   " + nextpageURL);
-  //console.log("AImach   " + AImach);
 
   var paced_or_free = __free__;
 
