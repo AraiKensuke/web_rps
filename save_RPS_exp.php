@@ -33,10 +33,10 @@
     file_put_contents($file, $rec_hands . "\n", FILE_APPEND);
     file_put_contents($file, $rec_AI_hands . "\n", FILE_APPEND);
     file_put_contents($file, $rec_times . "\n", FILE_APPEND);
-    file_put_contents($file, $rec_input_methd . "\n", FILE_APPEND);
+    file_put_contents($file, $rec_input_method . "\n", FILE_APPEND);
     file_put_contents($file, $AImach . "\n", FILE_APPEND);		
 
-    // $AImach    0 (MC)   1 (MC2)    2 (PRC)   3 (RND)
+    // $AImach    0 (MC)   1 (MC2)    2 (PRC)   3 (SMWCA) 4 (RND)
     if ($AImach == "2")
     {      
         $ini_weight       = getVal("ini_weight", "");
@@ -56,6 +56,13 @@
 	file_put_contents($file, $ini_cprob . "\n", FILE_APPEND);
         file_put_contents($file, $fin_cprob . "\n", FILE_APPEND);
         file_put_contents($file, $decay, FILE_APPEND);
+    }
+    if ($AImach == "3")
+    {      
+        $move_bgrd       = getVal("move_bgrd", "");
+
+        file_put_contents($file, $move_bgrd . "\n", FILE_APPEND);
+        file_put_contents($file, $N, FILE_APPEND);
     }
 
 ?>

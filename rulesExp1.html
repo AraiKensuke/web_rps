@@ -1,5 +1,7 @@
 <HTML>
 <link rel="stylesheet" href="exp1.css" type="text/css" />
+<script type="text/javascript" src="SMWCA.js"></script>
+<script type="text/javascript" src="PRCPTRN.js"></script>
 <script type="text/javascript" src="MC.js"></script>
 <SCRIPT src="rpsm.js"></SCRIPT>
 
@@ -7,8 +9,8 @@
       var MatchTo=80;
 
       useThese = [__MC__, __PRC__];
-      mach1 = useThese[Math.floor(Math.random()*useThese.length)];
-      mach2 = useThese[Math.floor(Math.random()*useThese.length)];
+      mach1 = __SMWCA__;//useThese[Math.floor(Math.random()*useThese.length)];
+      mach2 = __SMWCA__;//useThese[Math.floor(Math.random()*useThese.length)];
       //mach1   = __PRC__;
       //mach2   = __PRC__;
       realtimeResults = __NGAMES__;
@@ -28,8 +30,8 @@
   function setGameNums()
   {
       document.getElementById("ngames1").innerHTML = MatchTo;
-      document.getElementById("ngames2").innerHTML = MatchTo;
-      document.getElementById("ngames3").innerHTML = MatchTo;
+      //document.getElementById("ngames2").innerHTML = MatchTo;
+      //document.getElementById("ngames3").innerHTML = MatchTo;
   }
 
   function nextpage(dopractice)

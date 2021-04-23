@@ -21,6 +21,7 @@ var rec_hands="";	// 記録用
 var rec_inp_methd="";	// 記録用
 var rec_AI_hands="";	// 記録用
 var rec_times="";	// 記録用
+
 var results=[];	// [0]勝ち、[1]負け、[2]あいこ
 
 //  input method   x 2
@@ -32,22 +33,17 @@ var update_evry  = 1
 var n_rps_plyd   = 0
 var __JAPANESE__ = 0
 var __ENGLISH__  = 1
-var pred=[];
-var prc_weight=[];
 
-var ini_prc_weight="";
-var fin_prc_weight="";
 var ini_MC_cndprob="";
 var fin_MC_cndprob="";
 
-var prc_record=[];
+
 var time_now, last_time_now;
 var theDate = new Date();
 var startDate = new Date();
 last_time_now = theDate.getTime()
 var exptname;
 
-var rps_probs = [];
 var method = "blk1";
 var prc_N = 2;    // perceptron order
 
@@ -55,28 +51,31 @@ var blk = "1";
 var count = "0";
 var flag = "0";
 
-var __MC__  = 0;
-var __MC2__ = 1;
-var __PRC__ = 2;
-var __RND__ = 3;
+var __MC__     = 0;
+var __MC2__    = 1;
+var __PRC__    = 2;
+var __SMWCA__  = 3;
+var __RND__    = 4;
 
 var __NGAMES__  = 0;   // running number of games played
 var __CWTL__ = 1;      // cumulative win, tie, lose
 
-var machines = [__MC__, __MC2__, __PRC__, __RND__];
+var machines = [__MC__, __MC2__, __PRC__, __SMWCA__, __RND__];
 //var machines = [__MC__, __PRC__];
 var s_machines = ["frequentist", 
 		  "overgeneralized frequentist", 
-		  "perceptron", "random"];
+		  "perceptron", "wca", "random"];
 var info_machines = ["1-step frequentist", "1-step greedy frequentist",
-		     "multistep perceptron", "random"];
+		     "multistep perceptron", "wca", "random"];
 //"The AI looks at previous game.  If human played R and AI played S there, it looks back into its record of all previous games where human played R and AI played S, and then looks to see how often human next played R, P or S.  The AI then predicts human move in proportion to how frequently that move followed human-R and AI-S.",
 //		     "The AI looks at previous game.  If human played R and AI played S there, it looks back into its record of all previous games where human played R and AI played S, and then looks to see how often human next played R, P or S.  The AI then predicts human move that's dependent on how frequently that move followed human-R and AI-S, but in a more 'greedy' fashion, ie it strongly favors moves that are more likely, even if the frequency is very close to the 2nd most likely.",
 //		     "Perceptron looks at several previous games, and ", "random"];
 
 var realtimeResultsInfo = [__NGAMES__, __CWTL__];
 
-let model = new MarkovChain(0.9);
+let mrkvchn = new MarkovChain(0.9);
+let prc     = new Perceptron(prc_N);
+let smwca     = new SMWCA(4);
 var predict = 0;
 var pair1 = "";
 var pair2 = "";
@@ -93,7 +92,6 @@ function getSessionStorage(key, default_value)
 
 function set_lang(jore)
 {
-    console.log("set_lang")
     JorE = jore;
 
     var elemTITLE = document.getElementById("titleFONT")
@@ -159,93 +157,18 @@ function set_lang(jore)
 	redraw_graph(Ymax);
     }
 }
-function prettyArray2D(arr){
-    var sOut = "[";
-
-    for( var i = 0; i < arr.length; i++ )
-    {
-	if( i > 0 ) { sOut += " [";}
-	else	 { sOut += "[";}
-	for( var j = 0; j < arr[i].length; j++ )
-	{
-	    sOut += String(arr[i][j]);
-	    if( j < arr[i].length - 1 )
-	    {
-		sOut += " ";
-	    }
-	}
-	sOut += "]";	    
-    }
-    return sOut+"]";
-}
-
-function prettyArray3D(arr){
-    var sOut = "[";
-
-    for( var i = 0; i < arr.length; i++ )
-    {
-	if( i > 0 ) { sOut += " [";}
-	else	 { sOut += "[";}
-	
-	for( var j = 0; j < arr[i].length; j++ )
-	{
-	    if( j > 0 ) { sOut += "  [";}
-	    else	 { sOut += "[";}
-	    for( var k = 0; k < arr[i][j].length; k++ )
-	    {
-		sOut += String(arr[i][j][k]);
-		if( k < arr[i][j].length - 1 )
-		{
-		    sOut += " ";
-		}
-	    }
-	    sOut += "]";	    	    
-	}
-	if( i < arr[i].length - 1 )
-	{
-	    sOut += "]\n";
-	}
-	else
-	{
-	    sOut += "]";	    
-	}
-    }
-    return sOut+"]";
-}
 
 
 //初期化
 function Reset(){    
     stopped = false;
     //console.log("In Reset()")    
-    ini_prc_weight="";
-    fin_prc_weight="";
-    ini_MC_cndprob="";
-    fin_MC_cndprob="";
 
-    rps_probs=[];
     //method_num = Math.floor(Math.random() * 3);
     //console.log("Method chosen: " + String(method_num));
 
     for(var i=0;i<3;i++){
 	results[i]=new Array();
-	results[i][0]=0;
-	prc_weight[i] = new Array();
-	
-	for(var j=0;j<3;j++){
-	    prc_record[j] = new Array();
-	    prc_weight[i][j] = new Array();
-	    	    ini_MC_cndprob
-	    ini_MC_cndprob += "0.333333" + "0.333333" + "0.333333 ";
-
-	    //   initially, don't set the prc_weights farther back in time
-	    for(var k=0;k<prc_N;k++){
-		prc_record[j][k] = 0;    
-		prc_weight[i][j][k] = (k < 2) ? Math.random() * 4 - 2.0 : 0;
-		ini_prc_weight += String(prc_weight[i][j][k]) + " ";
-	    }
-	}
-	pred[i] = 0;
 	results[i][0]=0;
     }
 
@@ -276,7 +199,6 @@ function Reset(){
     //var iq = document.getElementById("final_result3")
 	//iq.style.display = "none";
 
-	model = new MarkovChain(0.9);
 	predict = 0;
 	pair1 = "";
 	pair2 = "";
@@ -312,7 +234,7 @@ function RPS(plhand, key_or_mouse) {
 
     /* 次の手のパーセプトロン予測を前もって行う */
 	var pre;
-    pre = AI(plhand_prev);
+    pre = AI(plhand_prev);  // plhand_prev = 1, 2, 3
     plhand_prev = plhand
     //console.log("************\n" + prettyArray2D(record) + "\n\n" + prettyArray3D(weight))
 	       
@@ -327,7 +249,7 @@ function RPS(plhand, key_or_mouse) {
     rec_AI_hands += String(predhand) + " ";
     rec_times += String(time_now - last_time_now) + " ";
     last_time_now = time_now;
-	ShowResults(plhand,predhand);    
+    ShowResults(plhand,predhand);    
 }
 
 
@@ -507,24 +429,11 @@ function ShowResults(plhand,predhand,resultTimeline){
 
 	if (AImach == __PRC__)
 	{		    
-	    for(var i=0;i<3;i++){
-		for(var j=0;j<3;j++){
-		    for(var k=0;k<prc_N;k++)
-		    {
-			fin_prc_weight += String(prc_weight[i][j][k]) + " ";
-		    }
-		}
-	    }
+	    prc.done();
 	}
 	else if ((AImach == __MC__) || (AImach == __MC2__))
 	{
-	    int_state = model.internal_state[model.internal_state.length-1]
-
-	    for(var i=0;i<3;i++){
-		for(var j=0;j<3;j++){
-		    fin_MC_cndprob += int_state[3*i+j][0].toFixed(4) + " " + int_state[3*i+j][2].toFixed(4) + int_state[3*i+j][4].toFixed(4) + " ";
-		}
-	    }
+	    mc.done();
 	}
 
 	You_win_or_lose(results[0][game],results[1][game]);
@@ -580,49 +489,17 @@ function redraw_graph(Ymax)
     }
 }
 
-function AI(player){
+function AI(player){  // player is 1, 2, 3
     //  'player' hand
     //perceptron
     n_rps_plyd += 1
 
-    if (AImach==__PRC__) {
-	var prec=[];
-	for(var i=0;i<3;i++) prec[i]=-1;
-	prec[player-1] = 1;
-	
-	if (n_rps_plyd % update_evry == 0){
-	    for(var i=0;i<3;i++){
-		if(prec[i]*pred[i] <= 0){
-		    for(var j=0;j<3;j++){
-			for(var k=0;k<prc_N;k++){
-			    prc_weight[i][j][k] += prec[i]*prc_record[j][k];
-			}
-		    }
-		}
-	    }
-	}
+    if (AImach==__SMWCA__) {
+	return(smwca.predict(player-1));
+    }
 
-	for(var i=0;i<3;i++){
-	    prc_record[i].unshift(prec[i]);
-	    prc_record[i].pop();
-	}
-	for(var i=0;i<3;i++) pred[i]=0;
-	for(var i=0;i<3;i++){
-	    for(var j=0;j<3;j++){
-		for(var k=0;k<prc_N;k++){
-		    pred[i] += prc_weight[i][j][k]*prc_record[j][k];
-		}
-	    }
-	}
-	var maxval=pred[0];
-	var maxnum = 0;
-	for(var i=1;i<3;i++){
-	    if(pred[i]>=maxval){
-		maxval = pred[i];
-		maxnum = i;
-	    }
-	}
-	return(maxnum+1);
+    else if (AImach==__PRC__) {
+	return(prc.predict(player));
     }
 
     //Markov Chain
@@ -631,8 +508,8 @@ function AI(player){
 	pair2 = pair1;
 	if (n_rps_plyd % update_evry == 0) {
 	    if (pair2 != '') {
-		predict = model.predict(pair2);
-		model.update_matrix(pair2, player); 
+		predict = mrkvchn.predict(pair2);
+		mrkvchn.update_matrix(pair2, player); 
 	    }	
 	}
 	
@@ -644,7 +521,6 @@ function AI(player){
     }
     else
     {
-
 	var rnd = Math.random(); 
 	if (rnd < 0.333333) predict=1;
 	else if (rnd < 0.6666666) predict=2;
@@ -844,11 +720,48 @@ function send_php(){
 
     savedirname = getSessionStorage("savedirname", d);
     if (savedirname == d)
-	{   //  savedirname is the default name
-	    sessionStorage.setItem("savedirname", d);
+    {   //  savedirname is the default name
+	sessionStorage.setItem("savedirname", d);
+    }
+
+    if (AImach == __SMWCA__)
+    {
+	str_out = "";
+
+	for (var i = 0; i < smwca.move_bgrd.length; i++ )
+	{
+	    if (i < smwca.move_bgrd.length - 1)
+	    {
+		str_out += smwca.move_bgrd[i].toString() + ":";
+	    }
+	    else
+	    {
+		str_out += smwca.move_bgrd[i].toString();
+	    }
 	}
 
-    if (AImach == __PRC__)
+	$.ajax({
+	    type: 'POST',
+	    url: php_backend,
+	    dataType:'text',
+	    data: {
+		exptname : exptname,
+		savedirname : savedirname,
+		rec_hands : rec_hands,
+    		rec_AI_hands : rec_AI_hands,
+    		rec_times : rec_times,
+		rec_input_method : rec_inp_methd,	          
+		move_bgrd : str_out,
+		AImach :  AImach,
+		block  : block,
+	    },
+	    success: function(data) {
+		//location.href = "./test.php";
+	    }
+	});
+    }
+
+    else if (AImach == __PRC__)
     {
 	$.ajax({
 	    type: 'POST',
@@ -861,11 +774,11 @@ function send_php(){
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
 		rec_input_method : rec_inp_methd,	          
-      		ini_weight : ini_prc_weight,
-		fin_weight : fin_prc_weight,
+      		ini_weight : prc.ini_prc_weight,
+		fin_weight : prc.fin_prc_weight,
 		AImach :  AImach,
 		block  : block,
-		N : prc_N
+		N : prc.prc_N
 	    },
 	    success: function(data) {
 		//location.href = "./test.php";
@@ -885,11 +798,11 @@ function send_php(){
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
 		rec_input_method : rec_inp_methd,	          
-      		ini_cprob : ini_MC_cndprob,
-		fin_cprob : fin_MC_cndprob,
+      		ini_cprob : mrkvchn.ini_MC_cndprob,
+		fin_cprob : mrkvchn.fin_MC_cndprob,
 		AImach :  AImach,
 		block : block,
-                decay : model.decay
+                decay : mrkvchn.decay
 	    },
 	    success: function(data) {
 		//location.href = "./test.php";

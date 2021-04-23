@@ -1,4 +1,9 @@
 class MarkovChain {
+    internal_state = [];
+
+    ini_MC_cndprob="";
+    fin_MC_cndprob="";
+
     constructor(decay) {
 	this.decay = decay;
 	this.matrix = {
@@ -12,9 +17,15 @@ class MarkovChain {
 	    "32":{"1":{"prob":1/3, "n_obs":0}, "2":{"prob":1/3, "n_obs":0}, "3":{"prob":1/3, "n_obs":0}},
 	    "33":{"1":{"prob":1/3, "n_obs":0}, "2":{"prob":1/3, "n_obs":0}, "3":{"prob":1/3, "n_obs":0}}
 	}
-	this.internal_state = [];
 	var prno_9x6 = this.to_9x6s(this.internal_state);
 	this.internal_state[0] = prno_9x6;
+
+	for(var i=0; i < 3; i++)
+	{
+	    for(var j=0;j<3;j++){
+		this.ini_MC_cndprob += "0.333333 " + "0.333333 " + "0.333333";
+	    }
+	}
     }
 
     to_9x6s()
@@ -82,7 +93,7 @@ class MarkovChain {
 	    var p_prob = Math.pow((probs['2']['prob']), 2)/con;
 	    var s_prob = Math.pow((probs['3']['prob']), 2)/con;
 	    
-	    rps_probs = [r_prob, p_prob, s_prob]
+	    var rps_probs = [r_prob, p_prob, s_prob];
 	    //console.log(rps_probs);
 	    
 	    if (sample < r_prob) return "1";
@@ -97,7 +108,7 @@ class MarkovChain {
 	    var p_prob = probs['2']['prob'];
 	    var s_prob = probs['3']['prob'];
 	    
-	    rps_probs = [r_prob, p_prob, s_prob]
+	    var rps_probs = [r_prob, p_prob, s_prob];
 	    //console.log(rps_probs);
 	    
 	    if (sample < r_prob) return "1";
@@ -109,6 +120,15 @@ class MarkovChain {
 	    
 	}
     }
-}
 
-//export { MarkovChain };
+    done()
+    {
+	int_state = this.internal_state[this.internal_state.length-1]
+	
+	for(var i=0;i<3;i++){
+	    for(var j=0;j<3;j++){
+		this.fin_MC_cndprob += int_state[3*i+j][0].toFixed(4) + " " + int_state[3*i+j][2].toFixed(4) + int_state[3*i+j][4].toFixed(4) + " ";
+	    }
+	}
+    }
+}
