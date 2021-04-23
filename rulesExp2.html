@@ -1,6 +1,7 @@
 <HTML>
 <link rel="stylesheet" href="exp1.css" type="text/css" />
 <SCRIPT src="aiconfig1.js"></SCRIPT>
+<SCRIPT src="util.js"></SCRIPT>
 <SCRIPT src="rpsm.js"></SCRIPT>
 
 <SCRIPT>
@@ -31,7 +32,7 @@
   {
 	aimach = parseInt(getradioval("mac", 0));
 			console.log(aimach);
-			sessionStorage.setItem("AIconfigNum1", aimach);
+	sessionStorage.setItem("AIconfigNum1", machine_and_configs[aimach]);
 	MatchTo = document.getElementsByName("matchto")[0].value
 			sessionStorage.setItem("MatchTo", MatchTo);
 

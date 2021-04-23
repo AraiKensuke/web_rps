@@ -13,8 +13,8 @@ function setval()
 {
   var sim_diff        = getSessionStorage("q6", "");
   var which_difficult        = getSessionStorage("q5", "");
-  var AImach1        = parseInt(getSessionStorage("mach1", ""));
-  var AImach2        = parseInt(getSessionStorage("mach2", ""));
+  var AIconfig1        = getSessionStorage("AIconfigNum1", "");
+  var AIconfig2        = getSessionStorage("AIconfigNum2", "");
   var won1           = parseInt(getSessionStorage("bl1win", ""));
   var los1           = parseInt(getSessionStorage("bl1lose", ""));
   var tie1           = parseInt(getSessionStorage("bl1tie", ""));
@@ -54,38 +54,38 @@ function setval()
   document.getElementById("round2los").innerHTML = los2
   document.getElementById("round1tie").innerHTML = tie1
   document.getElementById("round2tie").innerHTML = tie2
-  document.getElementById("AImach1").innerHTML = info_machines[AImach1]
-  document.getElementById("AImach2").innerHTML = info_machines[AImach2]
+  document.getElementById("AImach1").innerHTML = AIconfig1
+  document.getElementById("AImach2").innerHTML = AIconfig2
   document.getElementById("AIcmp").innerHTML = sim_diff.toUpperCase()
 
 		  
   var our_response = "Better luck next time!";
-  if ((sim_diff == "similar") && (AImach1 == AImach2))
+  if ((sim_diff == "similar") && (AIconfig1 == AIconfig2))
 {
-      our_response = "You played against the same machine.  You're very perceptive!";
+      our_response = "1  You played against the same machine.  You're very perceptive!";
 }
 
- else if ((sim_diff == "different") && (AImach1 != AImach2))
+ else if ((sim_diff == "different") && (AIconfig1 != AIconfig2))
   {
-      our_response = "You played against different machines.  You're very perceptive!";
+      our_response = "2  You played against different machines.  You're very perceptive!";
   }
- else if ((sim_diff == "different") && (AImach1 == AImach2))
+ else if ((sim_diff == "different") && (AIconfig1 == AIconfig2))
   {
-      our_response = "Sorry, you actually played against same machine.  Better luck next time?!";
+      our_response = "3  Sorry, you actually played against same machine.  Better luck next time?!";
   }
- else if ((sim_diff == "similar") && (AImach1 != AImach2))
+ else if ((sim_diff == "similar") && (AIconfig1 != AIconfig2))
   {
-      our_response = "Sorry, you actually played against different machines.  Better luck next time?!";
+      our_response = "4   Sorry, you actually played against different machines.  Better luck next time?!";
   }
  else if (sim_diff == "not sure")
   {
-      if (AImach1 == AImach2)
+      if (AIconfig1 == AIconfig2)
 		  {
-		  our_response = "You actually played against same machine.  Your ability to discern might increase with some more experience";
+		  our_response = "5   You actually played against same machine.  Your ability to discern might increase with some more experience";
 }
-      else if (AImach1 != AImach2)
+      else if (AIconfig1 != AIconfig2)
 		  {
-		  our_response = "You actually played against different machines.  Your ability to discern might increase with some more experience";
+		  our_response = "6   You actually played against different machines.  Your ability to discern might increase with some more experience";
 }
   }
 

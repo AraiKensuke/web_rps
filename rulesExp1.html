@@ -1,12 +1,14 @@
 <HTML>
 <link rel="stylesheet" href="exp1.css" type="text/css" />
+<SCRIPT src="aiconfig1.js"></SCRIPT>
+<SCRIPT src="util.js"></SCRIPT>
 <script type="text/javascript" src="SMWCA.js"></script>
 <script type="text/javascript" src="PRCPTRN.js"></script>
 <script type="text/javascript" src="MC.js"></script>
 <SCRIPT src="rpsm.js"></SCRIPT>
 
 <SCRIPT>
-      var MatchTo=80;
+      var MatchTo=90;
 
       realtimeResults = __NGAMES__;
 
@@ -15,16 +17,16 @@
       sessionStorage.setItem("to_block", 2);
       sessionStorage.setItem("MatchTo", MatchTo);
       sessionStorage.setItem("url_after_blocks", "QDifferentAIs.html");
-      sessionStorage.setItem("AIconfigNum1", 3);
-      sessionStorage.setItem("AIconfigNum2", 3);
+      mach1 = machine_and_configs[getRandomInt(0, machine_and_configs.length-1)];
+      mach2 = machine_and_configs[getRandomInt(0, machine_and_configs.length-1)];
+      sessionStorage.setItem("AIconfigNum1", mach1);
+      sessionStorage.setItem("AIconfigNum2", mach2);
       sessionStorage.setItem("RealtimeResults", realtimeResults);
       sessionStorage.setItem("php_backend", "save_RPS_exp.php");
 
   function setGameNums()
   {
       document.getElementById("ngames1").innerHTML = MatchTo;
-      //document.getElementById("ngames2").innerHTML = MatchTo;
-      //document.getElementById("ngames3").innerHTML = MatchTo;
   }
 
   function nextpage(dopractice)

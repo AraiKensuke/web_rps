@@ -143,13 +143,6 @@ var strategyListAll = [
     strategy_alternate_based_on_my_last,
     strategy_alternate_based_on_opp_last];
 
-
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 function randomPlay()
 {
     return getRandomInt(0, 2);//random.randint(0, 2)
@@ -302,16 +295,22 @@ class SMWCA
     opponentMoves = [];
     myMoves = [];
     tokenList = [];
+    counter_depth = 1;
 
     move_bgrd = [];
     fin_move_bgrd="";
 
     strategyList = null;
 
-    constructor(ngs, stratL)
+    constructor(ngs, counter_depth, stratL)
     {
+	this.counter_depth = counter_depth;
+	if (this.counter_depth > 2)
+	{
+	    this.counter_depth = 2
+	}
 	this.AImach = __SMWCA__;
-	this.AIconfigname = this.AImach + "-" + ngs.toString() + "-" + stratL.toString();
+	this.AIconfigname = this.AImach + "-" + ngs.toString() + "-" + this.counter_depth.toString() + "-" + stratL.toString();
 	this.ngramSizes = ngs;
 
         this.strategyList = [];
@@ -334,7 +333,7 @@ class SMWCA
 	{
 	    suggestion = WINNING_PLAY[suggestion];
 	}
-	if (counter >= 2)
+	if (counter >= 2)  // NOT elif, if counter==2, counter=1 case also done.
 	{
             suggestion = WINNING_PLAY[suggestion];
 	}
@@ -392,7 +391,7 @@ class SMWCA
             this.last_guesses = [];
 	    
             //for counter_num in [0,1,2]
-	    for (var counter_num = 0; counter_num < 3; counter_num++)// in [0,1,2]
+	    for (var counter_num = 0; counter_num < this.counter_depth+1; counter_num++)// in [0,1,2]
 	    {
 		//records[records.length] = [];
 		append(this.records, []);
@@ -463,7 +462,7 @@ class SMWCA
             //for i in range(len(strategyList))
 	    for (var i =0; i < this.strategyList.length; i++ )
 	    {
-		for (var counter=0; counter < 3; counter++)
+		for (var counter=0; counter < this.counter_depth+1; counter++)
 		{
                     
 		    var x = this.evaluate_strategy(this.strategyList, i, this.records, this.wins, this.last_guesses,tree, this.tokenList, ngramLength, counter)
