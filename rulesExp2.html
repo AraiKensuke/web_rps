@@ -1,5 +1,6 @@
 <HTML>
 <link rel="stylesheet" href="exp1.css" type="text/css" />
+<SCRIPT src="aiconfig1.js"></SCRIPT>
 <SCRIPT src="rpsm.js"></SCRIPT>
 
 <SCRIPT>
@@ -17,44 +18,46 @@
         return default_val;
     }
 
-      var MatchTo=120;
+    //mach1 = machines[Math.floor(Math.random()*machines.length)];
 
-      mach1 = machines[Math.floor(Math.random()*machines.length)];
-      realtimeResults = __NGAMES__;
-
-      sessionStorage.setItem("exptname", "exp2");
-      sessionStorage.setItem("block", 0);
-      sessionStorage.setItem("to_block", 1);
-      sessionStorage.setItem("MatchTo", MatchTo);
-      sessionStorage.setItem("url_after_blocks", "default_bye.html");
-      sessionStorage.setItem("RealtimeResults", __CWTL__);
-      sessionStorage.setItem("php_backend", "save_RPS_exp.php");
-
-  function setGameNums()
-  {
-      document.getElementById("ngames1").innerHTML = MatchTo;
-  }
+    sessionStorage.setItem("exptname", "exp2");
+    sessionStorage.setItem("block", 0);
+    sessionStorage.setItem("to_block", 1);
+    sessionStorage.setItem("url_after_blocks", "default_bye.html");
+    sessionStorage.setItem("RealtimeResults", __CWTL__);
+    sessionStorage.setItem("php_backend", "save_RPS_exp.php");
 
   function nextpage(dopractice)
   {
-	aimach = parseInt(getradioval("mach", 0));
+	aimach = parseInt(getradioval("mac", 0));
 			console.log(aimach);
-			sessionStorage.setItem("mach1", aimach);
+			sessionStorage.setItem("AIconfigNum1", aimach);
+	MatchTo = document.getElementsByName("matchto")[0].value
+			sessionStorage.setItem("MatchTo", MatchTo);
+
       sessionStorage.setItem("PracticeMode", dopractice);
       document.location="rps.html";
   }
 
+  function setup_radios()
+  {
+	frm = document.getElementsByName("chooseAI")[0]
+	innerHTML = "<TABLE>"
+        for (mac = 0; mac < machine_and_configs.length; mac++)
+	{
+	    innerHTML += "<TR><TD><INPUT name=\"mac\" type=\"radio\" value=\"" + mac + "\"/></TD><TD>" + machine_and_configs[mac] + "</TD></TR>";
+        }
+	innerHTML += "<TR><TD><INPUT name=\"matchto\" size=\"4\" type=\"text\" value=\"20\"/></TD><TD>number of games</TD></TR>";
+	innerHTML += "</TALE>";
+	frm.innerHTML = innerHTML;
+			
+  }
 </SCRIPT>
-<BODY>
+<BODY onload="setup_radios();">
+<CENTER>
 <FORM name="chooseAI">
-MC  <INPUT name="mach" type="radio" value="0"/>
-MC2 <INPUT name="mach" type="radio" value="1"/>
-PRC <INPUT name="mach" type="radio" value="2"/>
-SMWCA <INPUT name="mach" type="radio" value="3"/>
-RND <INPUT name="mach" type="radio" value="4"/>
 </FORM>
 <BR><BR>
-<CENTER>
 <TABLE><TR><TD>
 	    <A href="javascript:nextpage(false);"><IMG src="skip_practice.jpg" height=40/></A></TD></TR>
   <TR><TD>

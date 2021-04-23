@@ -20,6 +20,7 @@
     $rec_times        = getVal("rec_times", "");
     $rec_input_method = getVal("rec_input_method", "");
     $AImach           = getVal("AImach", "");
+    $AIconfigname           = getVal("AIconfigname", "");
     $block            = getVal("block", "");
 
     $out_dirname = "../DATA/" . $exptname . "/" . $savedirname;
@@ -28,7 +29,7 @@
         mkdir($out_dirname);
     }
 
-    $file = $out_dirname . "/block" . $block . "_AI" . $AImach . ".dat";
+    $file = $out_dirname . "/block" . $block . "_AI" . $AIconfigname . ".dat";
     file_put_contents($file, "#  player hands, AI hands, mv times, inp method, ini_weight, fin_weights, paced_or_free, AI_or_RNG, rps_probs, method\n" );
     file_put_contents($file, $rec_hands . "\n", FILE_APPEND);
     file_put_contents($file, $rec_AI_hands . "\n", FILE_APPEND);
@@ -36,8 +37,8 @@
     file_put_contents($file, $rec_input_method . "\n", FILE_APPEND);
     file_put_contents($file, $AImach . "\n", FILE_APPEND);		
 
-    // $AImach    0 (MC)   1 (MC2)    2 (PRC)   3 (SMWCA) 4 (RND)
-    if ($AImach == "2")
+    // $AImach    0 (MC)   1 (PRC)   2 (SMWCA) 3 (RND)
+    if ($AImach == "1")
     {      
         $ini_weight       = getVal("ini_weight", "");
     	$fin_weight       = getVal("fin_weight", "");
@@ -47,7 +48,7 @@
         file_put_contents($file, $fin_weight . "\n", FILE_APPEND);
         file_put_contents($file, $N, FILE_APPEND);
     }
-    if (($AImach == "0") || ($AImach == "1"))
+    if ($AImach == "0")
     {      
         $ini_cprob       = getVal("ini_cprob", "");
     	$fin_cprob       = getVal("fin_cprob", "");
@@ -57,7 +58,7 @@
         file_put_contents($file, $fin_cprob . "\n", FILE_APPEND);
         file_put_contents($file, $decay, FILE_APPEND);
     }
-    if ($AImach == "3")
+    if ($AImach == "2")
     {      
         $move_bgrd       = getVal("move_bgrd", "");
 

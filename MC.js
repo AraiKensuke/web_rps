@@ -1,10 +1,16 @@
 class MarkovChain {
+    AImach = null;
+    SoftmaxPwr = null;
     internal_state = [];
-
+    
     ini_MC_cndprob="";
     fin_MC_cndprob="";
 
-    constructor(decay) {
+    constructor(decay, smxpwr) {
+	this.AImach = __MC__;
+	this.AIconfigname = this.AImach + "-" + smxpwr.toString() + "-" + decay.toString();
+
+	this.SoftmaxPwr = smxpwr;
 	this.decay = decay;
 	this.matrix = {
 	    "11":{"1":{"prob":1/3, "n_obs":0}, "2":{"prob":1/3, "n_obs":0}, "3":{"prob":1/3, "n_obs":0}},
@@ -59,6 +65,7 @@ class MarkovChain {
     }
 
     update_matrix(pair, input) {
+	console.log("update_matrix");
 	for (var i = 1; i < 4; i++) {
 	    this.matrix[pair][String(i)]['n_obs'] = this.decay * this.matrix[pair][String(i)]['n_obs'];
 	}
@@ -82,8 +89,8 @@ class MarkovChain {
 	//blk = parseInt(blk, 10);
 	//console.log(blk);
 	
-	switch (AImach) { //change to SQ, PC, RD
-	case __MC2__:
+	switch (this.SoftmaxPwr) { //change to SQ, PC, RD
+	case 2:
 	    //console.log("MC2");
 	    //Method: SQUARED
 	    var sample = Math.random();
@@ -100,7 +107,7 @@ class MarkovChain {
 	    else if ((sample >= r_prob) && (sample < r_prob + p_prob)) return "2";
 	    else return "3";
 	    
-	case __MC__:
+	case 1:
 	    //console.log("MC");
 	    //Method: SOFTMAX
 	    var sample = Math.random();
@@ -123,7 +130,7 @@ class MarkovChain {
 
     done()
     {
-	int_state = this.internal_state[this.internal_state.length-1]
+	var int_state = this.internal_state[this.internal_state.length-1]
 	
 	for(var i=0;i<3;i++){
 	    for(var j=0;j<3;j++){

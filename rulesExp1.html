@@ -8,22 +8,15 @@
 <SCRIPT>
       var MatchTo=80;
 
-      useThese = [__MC__, __PRC__];
-      mach1 = __SMWCA__;//useThese[Math.floor(Math.random()*useThese.length)];
-      mach2 = __SMWCA__;//useThese[Math.floor(Math.random()*useThese.length)];
-      //mach1   = __PRC__;
-      //mach2   = __PRC__;
       realtimeResults = __NGAMES__;
 
-      console.log("mach1  " + mach1);
-      console.log("mach2  " + mach2);
       sessionStorage.setItem("exptname", "exp1");
       sessionStorage.setItem("block", 0);
       sessionStorage.setItem("to_block", 2);
       sessionStorage.setItem("MatchTo", MatchTo);
       sessionStorage.setItem("url_after_blocks", "QDifferentAIs.html");
-      sessionStorage.setItem("mach1", mach1);
-      sessionStorage.setItem("mach2", mach2);
+      sessionStorage.setItem("AIconfigNum1", 3);
+      sessionStorage.setItem("AIconfigNum2", 3);
       sessionStorage.setItem("RealtimeResults", realtimeResults);
       sessionStorage.setItem("php_backend", "save_RPS_exp.php");
 

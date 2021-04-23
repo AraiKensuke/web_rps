@@ -81,7 +81,6 @@ function strategy_predict_by_frequency(tree, ngramLength, tokenList)
     }
     dist = make_distribution(treeNode.oppNextPlays)
     //for i in [0,1,2]
-    console.log(dist)
 
     for (i = 0; i < 3; i++)
     {
@@ -135,6 +134,15 @@ function strategy_predict_by_frequency_last_n(tree, ngramLength, tokenList)
     }
     return [randomPlay(), 0];
 }
+
+var strategyListAll = [
+    strategy_predict_by_frequency,
+    strategy_predict_by_frequency_last_n,
+    strategy_my_lowest_freq,
+    strategy_changeup,
+    strategy_alternate_based_on_my_last,
+    strategy_alternate_based_on_opp_last];
+
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
@@ -285,6 +293,8 @@ function get_ngram(ngramLength, tokenList)
 
 class SMWCA
 {    
+    AImach  = null;
+    AIconfigname = null;
     records = [];
     wins = [];
     last_guesses = [];
@@ -294,28 +304,21 @@ class SMWCA
     tokenList = [];
 
     move_bgrd = [];
+    fin_move_bgrd="";
 
+    strategyList = null;
 
-    strategyList = [
-        strategy_predict_by_frequency_last_n,
-        strategy_predict_by_frequency,
-	strategy_my_lowest_freq,
-	strategy_alternate_based_on_my_last,
-	strategy_alternate_based_on_opp_last,
-	strategy_changeup];
-//
-//
-//        strategy_my_lowest_freq];
-    //strategy_changeup];
-    //     strategy_my_lowest_freq,
-    //     strategy_predict_by_frequency_last_n,
-    //     strategy_alternate_based_on_my_last,
-    //     strategy_alternate_based_on_opp_last
-    // ];
-
-    constructor(ngs)
+    constructor(ngs, stratL)
     {
+	this.AImach = __SMWCA__;
+	this.AIconfigname = this.AImach + "-" + ngs.toString() + "-" + stratL.toString();
 	this.ngramSizes = ngs;
+
+        this.strategyList = [];
+	for (var s = 0; s < stratL.length; s++)
+	{
+	    append(this.strategyList, strategyListAll[s]);
+	}
     }
     
 
@@ -479,7 +482,6 @@ class SMWCA
 		}
 	    }
 	}
-	console.log(highestScore + "  " + highestScoreStratIndex)
 	if (highestScore > 0)
 	{
 	    last_react_action = highestScorePlay
@@ -499,8 +501,9 @@ class SMWCA
 
     tally = 0;
 
-    predict(ob_last_opp_action)  //  ob_last_opp_action is 0, 1, 2
+    predict(ob_last_opp_action)  //  ob_last_opp_action is 1, 2, 3
     {
+	ob_last_opp_action -= 1   // I want it in 0, 1, 2
 	//global frame, tally, WINNING_PLAY
 	//global last_react_action
 
@@ -529,6 +532,23 @@ class SMWCA
 	}
 	//n_rps_plyd += 1
 	return last_react_action
+    }
+
+    done()
+    {
+	this.fin_move_bgrd = "";
+
+	for (var i = 0; i < this.move_bgrd.length; i++ )
+	{
+	    if (i < this.move_bgrd.length - 1)
+	    {
+		this.fin_move_bgrd += this.move_bgrd[i].toString() + ":";
+	    }
+	    else
+	    {
+		this.fin_move_bgrd += this.move_bgrd[i].toString();
+	    }
+	}
     }
 }
 

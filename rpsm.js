@@ -45,22 +45,19 @@ last_time_now = theDate.getTime()
 var exptname;
 
 var method = "blk1";
-var prc_N = 2;    // perceptron order
 
 var blk = "1";
 var count = "0";
 var flag = "0";
 
 var __MC__     = 0;
-var __MC2__    = 1;
-var __PRC__    = 2;
-var __SMWCA__  = 3;
-var __RND__    = 4;
+var __PRC__    = 1;
+var __SMWCA__  = 2;
+var __RND__    = 3;
 
 var __NGAMES__  = 0;   // running number of games played
 var __CWTL__ = 1;      // cumulative win, tie, lose
 
-var machines = [__MC__, __MC2__, __PRC__, __SMWCA__, __RND__];
 //var machines = [__MC__, __PRC__];
 var s_machines = ["frequentist", 
 		  "overgeneralized frequentist", 
@@ -73,9 +70,9 @@ var info_machines = ["1-step frequentist", "1-step greedy frequentist",
 
 var realtimeResultsInfo = [__NGAMES__, __CWTL__];
 
-let mrkvchn = new MarkovChain(0.9);
-let prc     = new Perceptron(prc_N);
-let smwca     = new SMWCA(4);
+//let mrkvchn = new MarkovChain(0.9);
+//let prc     = new Perceptron(prc_N);
+//let smwca     = new SMWCA(4);
 var predict = 0;
 var pair1 = "";
 var pair2 = "";
@@ -427,14 +424,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	/* 各予測ユニットの入力と相手の新しい手のコードの符号が
 	   一致していない場合に誤り訂正学習を行う */
 
-	if (AImach == __PRC__)
-	{		    
-	    prc.done();
-	}
-	else if ((AImach == __MC__) || (AImach == __MC2__))
-	{
-	    mc.done();
-	}
+	rpsAI.done()
 
 	You_win_or_lose(results[0][game],results[1][game]);
     }
@@ -494,22 +484,17 @@ function AI(player){  // player is 1, 2, 3
     //perceptron
     n_rps_plyd += 1
 
-    if (AImach==__SMWCA__) {
-	return(smwca.predict(player-1));
+    if ((rpsAI.AImach==__SMWCA__) || (rpsAI.AImach == __PRC__)) {
+	return(rpsAI.predict(player));
     }
-
-    else if (AImach==__PRC__) {
-	return(prc.predict(player));
-    }
-
     //Markov Chain
-    else if ((AImach==__MC__) || (AImach == __MC2__))
+    else if (rpsAI.AImach==__MC__)
     {
 	pair2 = pair1;
 	if (n_rps_plyd % update_evry == 0) {
 	    if (pair2 != '') {
-		predict = mrkvchn.predict(pair2);
-		mrkvchn.update_matrix(pair2, player); 
+		predict = rpsAI.predict(pair2);
+		rpsAI.update_matrix(pair2, player); 
 	    }	
 	}
 	
@@ -724,22 +709,8 @@ function send_php(){
 	sessionStorage.setItem("savedirname", d);
     }
 
-    if (AImach == __SMWCA__)
+    if (rpsAI.AImach == __SMWCA__)
     {
-	str_out = "";
-
-	for (var i = 0; i < smwca.move_bgrd.length; i++ )
-	{
-	    if (i < smwca.move_bgrd.length - 1)
-	    {
-		str_out += smwca.move_bgrd[i].toString() + ":";
-	    }
-	    else
-	    {
-		str_out += smwca.move_bgrd[i].toString();
-	    }
-	}
-
 	$.ajax({
 	    type: 'POST',
 	    url: php_backend,
@@ -751,8 +722,9 @@ function send_php(){
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
 		rec_input_method : rec_inp_methd,	          
-		move_bgrd : str_out,
-		AImach :  AImach,
+		move_bgrd : rpsAI.fin_move_bgrd,
+		AImach :  rpsAI.AImach,
+		AIconfigname :  rpsAI.AIconfigname,
 		block  : block,
 	    },
 	    success: function(data) {
@@ -761,7 +733,7 @@ function send_php(){
 	});
     }
 
-    else if (AImach == __PRC__)
+    else if (rpsAI.AImach == __PRC__)
     {
 	$.ajax({
 	    type: 'POST',
@@ -774,18 +746,19 @@ function send_php(){
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
 		rec_input_method : rec_inp_methd,	          
-      		ini_weight : prc.ini_prc_weight,
-		fin_weight : prc.fin_prc_weight,
-		AImach :  AImach,
+      		ini_weight : rpsAI.ini_prc_weight,
+		fin_weight : rpsAI.fin_prc_weight,
+		AImach :  rpsAI.AImach,
+		AIconfigname :  rpsAI.AIconfigname,
 		block  : block,
-		N : prc.prc_N
+		N : rpsAI.prc_N
 	    },
 	    success: function(data) {
 		//location.href = "./test.php";
 	    }
 	});
     }
-    else if ((AImach == __MC__) || (AImach == __MC2__))
+    else if (rpsAI.AImach == __MC__)
     {
 	$.ajax({
 	    type: 'POST',
@@ -798,11 +771,12 @@ function send_php(){
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
 		rec_input_method : rec_inp_methd,	          
-      		ini_cprob : mrkvchn.ini_MC_cndprob,
-		fin_cprob : mrkvchn.fin_MC_cndprob,
-		AImach :  AImach,
+      		ini_cprob : rpsAI.ini_MC_cndprob,
+		fin_cprob : rpsAI.fin_MC_cndprob,
+		AImach :  rpsAI.AImach,
+		AIconfigname :  rpsAI.AIconfigname,
 		block : block,
-                decay : mrkvchn.decay
+                decay : rpsAI.decay
 	    },
 	    success: function(data) {
 		//location.href = "./test.php";
@@ -810,7 +784,7 @@ function send_php(){
 	});
     }
     else
-    {
+    {  // random
 	$.ajax({
 	    type: 'POST',
 	    url: php_backend,
@@ -822,7 +796,8 @@ function send_php(){
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
 		rec_input_method : rec_inp_methd,	          
-		AImach :  AImach,
+		AImach :  __RND__,
+		AIconfigname :  __RND__,
 		block : block,
 	    },
 	    success: function(data) {
