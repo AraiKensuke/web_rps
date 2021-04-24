@@ -711,6 +711,8 @@ function send_php(){
 
     if (rpsAI.AImach == __SMWCA__)
     {
+	sessionStorage.setItem("move_bgrd" + block, rpsAI.fin_move_bgrd);
+
 	$.ajax({
 	    type: 'POST',
 	    url: php_backend,

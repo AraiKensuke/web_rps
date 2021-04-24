@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html>
 <STYLE>
-
-table, th, td {
+<!--https://www.freecodecamp.org/news/how-to-make-your-first-javascript-chart/-->
+#figures table, th, td {
   border: 1px solid black;
 }
 
 </STYLE>
+<script type="text/javascript" src="util.js"></script>
 <script type="text/javascript" src="rpsm.js"></script>
+<!--<script src="https://code.jscharting.com/2.9.0/jscharting.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<canvas id="myChart" width="85%" height="10%"></canvas>
 <SCRIPT>
 function setval()
 {
@@ -142,6 +146,34 @@ function setval()
       <CENTER>
 	<H1>Results</H1>
 <BR>
+Round1
+<BR>
+<!--
+strategies<div id="chartDiv1stid" style="width:90%; height:150px; margin:0 auto;"></div>
+counter depth<div id="chartDiv1cntr" style="width:90%; height:150px; margin:0 auto;"></div>
+Round2
+<BR>
+strategies<div id="chartDiv2stid" style="width:90%; height:150px; margin:0 auto;"></div>
+counter depth<div id="chartDiv2cntr" style="width:90%; height:150px; margin:0 auto;"></div>
+-->
+<!--<TABLE style="width:99%;border:1px" >-->
+<TABLE id="figures" style="width:99%;">
+<TR>
+<TH id="figurecol0" style="width:10%;padding-left:0px;padding-right:0px">
+<TH id="figurecol1" style="width:45%;padding-left:0px;padding-right:0px">Round 1</TH>
+<TH id="figurecol1" style="width:45%;padding-left:0px;padding-right:0px">Round 2</TH>
+</TR>
+<TD>S#</TD>
+<TD><canvas id="chart1stid" width="45%" height="15%"></canvas></TD>
+<TD><canvas id="chart2stid" width="45%" height="15%"></canvas></TD>
+</TR>
+<TR>
+<TD>C L.</TD>
+<TD><canvas id="chart1cntr" width="45%" height="15%"></canvas></TD>
+<TD><canvas id="chart2cntr" width="45%" height="15%"></canvas></TD>
+</TR>
+</TABLE>
+
       <TABLE><!-- style="border-collapse:collapse">-->
 	<TR>
 	  <TH style="width:40px">Round</TH>
@@ -181,4 +213,61 @@ function setval()
       <H2>We appreciate your participation in the repeated RPS experiment!  If you enjoyed it and want to <A href="rulesExp1.html">try again</A>, we would be appreciate further participation.  If you do, please indicate that it is not your first time participating in the questionnaire.  Thank you!</H2>
       </CENTER>
     </body>
+<SCRIPT>
+var move_bgrd1        = getSessionStorage("move_bgrd1", "");
+var move_bgrd2        = getSessionStorage("move_bgrd2", "");
+dat1 = to_2darray_from_str(move_bgrd1);
+dat2 = to_2darray_from_str(move_bgrd2);
+
+col10 = getcolumn(dat1, 0, false);
+col11 = getcolumn(dat1, 1, false);
+col20 = getcolumn(dat2, 0, false);
+col21 = getcolumn(dat2, 1, false);
+
+var ct1stid = document.getElementById('chart1stid').getContext('2d');
+var ct1cntr = document.getElementById('chart1cntr').getContext('2d');
+var ct2stid = document.getElementById('chart2stid').getContext('2d');
+var ct2cntr = document.getElementById('chart2cntr').getContext('2d');
+
+Chart.defaults.color="#000000;"
+
+var xs = [];
+for (i = 0; i < col10.length; i++ )
+{
+    xs[i] = i;
+}
+data = {labels: xs, datasets: [{data: col10}]};
+config = {type: 'line', data, options: {}};
+var myChart = new Chart(ct1stid, config);
+
+data = {labels: xs, datasets: [{data: col11}]};
+config = {type: 'line', data, options: {}};
+var myChart = new Chart(ct1cntr, config);
+
+data = {labels: xs, datasets: [{data: col20}]};
+config = {type: 'line', data, options: {}};
+var myChart = new Chart(ct2stid, config);
+
+data = {labels: xs, datasets: [{data: col21}]};
+config = {type: 'line', data, options: {}};
+var myChart = new Chart(ct2cntr, config);
+
+
+//var chart = JSC.Chart('chartDiv1stid', {
+//type: 'line',
+//series: [{points: col10}]});
+
+//var chart = JSC.Chart('chartDiv1cntr', {
+//type: 'line',
+//series: [{points: col11}]});
+
+//var chart = JSC.Chart('chartDiv2stid', {
+//type: 'line',
+//series: [{points: col20}]});
+
+//var chart = JSC.Chart('chartDiv2cntr', {
+//type: 'line',
+//series: [{points: col21}]});
+
+</SCRIPT>
 </html>

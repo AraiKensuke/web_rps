@@ -535,19 +535,7 @@ class SMWCA
 
     done()
     {
-	this.fin_move_bgrd = "";
-
-	for (var i = 0; i < this.move_bgrd.length; i++ )
-	{
-	    if (i < this.move_bgrd.length - 1)
-	    {
-		this.fin_move_bgrd += this.move_bgrd[i].toString() + ":";
-	    }
-	    else
-	    {
-		this.fin_move_bgrd += this.move_bgrd[i].toString();
-	    }
-	}
+	this.fin_move_bgrd = to_str_from_2darray(this.move_bgrd);
     }
 }
 
