@@ -1,5 +1,99 @@
-<HTML>
-<BODY>
-Bye, thanks for stopping by!
-</BODY>
-</HTML>
+<!DOCTYPE html>
+<html>
+<STYLE>
+<!--https://www.freecodecamp.org/news/how-to-make-your-first-javascript-chart/-->
+#figures table, th, td {
+  border: 1px solid black;
+}
+
+</STYLE>
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript" src="rpsm.js"></script>
+<!--<script src="https://code.jscharting.com/2.9.0/jscharting.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<canvas id="myChart" width="85%" height="10%"></canvas>
+    <head>
+        <meta charset = "utf-8">
+        <title>Questions</title>
+    </head>
+
+<!--       display: inline-block; -->
+    <style>
+
+      table td {
+      overflow: visible;
+      white-space: nowrap;
+      padding: 20px
+      }
+        input[type=text] {
+            width: 60%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        input[type=button] {
+            width: 10%;
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        h1 {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        p {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        label {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        body {	font-family: 'Console', Monaco, monospace;
+	margin-top: 40px; 
+	margin-left: 100px;  
+	margin-right: 100px;  
+	margin-bottom: 100px;  
+	background-color: rgb(255, 255, 255);
+	}
+
+    </style>
+    <body onload="javascript:setval();">
+      <CENTER>
+	<H1>Results</H1>
+<BR>
+Round1
+<BR>
+<!--<TABLE style="width:99%;border:1px" >-->
+<TD><canvas id="chart1stid" width="45%" height="15%"></canvas></TD>
+<TD><canvas id="chart1cntr" width="45%" height="15%"></canvas></TD>
+    </body>
+<SCRIPT>
+var move_bgrd1        = getSessionStorage("move_bgrd1", "");
+dat1 = to_2darray_from_str(move_bgrd1);
+
+col10 = getcolumn(dat1, 0, false);
+col11 = getcolumn(dat1, 1, false);
+
+var ct1stid = document.getElementById('chart1stid').getContext('2d');
+var ct1cntr = document.getElementById('chart1cntr').getContext('2d');
+
+Chart.defaults.color="#000000;"
+
+var xs = [];
+for (i = 0; i < col10.length; i++ )
+{
+    xs[i] = i;
+}
+data = {labels: xs, datasets: [{data: col10, borderColor: "#000000"}]};
+options = {scales: { y: {max: 6, min: -1, ticks: { stepSize: 1}}}}
+config = {type: 'line', data, options: options};
+var myChart = new Chart(ct1stid, config);
+
+optionsCntr = {scales: { y: {max: 3, min: -1, ticks: { stepSize: 1}}}}
+data = {labels: xs, datasets: [{data: col11, borderColor: "#000000"}]};
+config = {type: 'line', data, options: optionsCntr};
+var myChart = new Chart(ct1cntr, config);
+
+</SCRIPT>
+</html>

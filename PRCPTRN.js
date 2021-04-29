@@ -30,7 +30,7 @@ class Perceptron {
     }
 
     predict(player)
-    {
+    {   //   current player move is predicted by current contents of this.pred
 	var prec=[];
 	for(var i=0;i<3;i++) prec[i]=-1;
 	prec[player-1] = 1;
@@ -50,6 +50,7 @@ class Perceptron {
 	    this.prc_record[i].pop();
 	}
 
+	//    Build new prediction of what HUMAN will play.
 	for(var i=0;i<3;i++) this.pred[i]=0;
 
 	for(var i=0;i<3;i++){
@@ -60,7 +61,7 @@ class Perceptron {
 	    }
 	}
 
-	var maxval=this.pred[0];
+	var maxval=this.pred[0];  
 	var maxnum = 0;
 
 	for(var i=1;i<3;i++){

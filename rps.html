@@ -8,14 +8,21 @@
 <script src="d3.v3.min.js" charset="utf-8"></script>
 <script src="anime.min.js"></script>
 <SCRIPT src="util.js"></SCRIPT>
+<!--  SMWCA    code from kaggle -->
+<script type="text/javascript" src="move_order.js"></script>
+<!--  SMWCA    code from kaggle -->
+<script type="text/javascript" src="OutcomeBasedRule.js"></script>
+<!--  SMWCA    code from kaggle -->
 <script type="text/javascript" src="SMWCA.js"></script>
+<!--  PRCPTRN    code from kaggle -->
 <script type="text/javascript" src="PRCPTRN.js"></script>
+<!--  MC       code from kaggle -->
 <script type="text/javascript" src="MC.js"></script>
 <script type="text/javascript" src="rpsm.js"></script>
 <!--
 exp1.html    (some starting script)
 rps.html
-Q.html       
+Q.html
 -->
 <SCRIPT>
   // hey dude
@@ -24,7 +31,7 @@ Q.html
   var __free__      = 1;
   var __AI__        = 0;
   var __RNG__       = 1;
-  
+
   var paced_or_free = __free__;   // not used right now
   var AI_or_RNG     = __AI__;
 
@@ -37,7 +44,7 @@ Q.html
   var N = 2;
   var Match;
 
-  var nextpageURL = "rps.html";     //  
+  var nextpageURL = "rps.html";     //
   var php_backend = getSessionStorage("php_backend", "");
   var url_after_blocks = getSessionStorage("url_after_blocks", "default_bye_html");
 
@@ -56,7 +63,7 @@ Q.html
   var block           = parseInt(getSessionStorage("block", 0));
 
   block += 1;
-  
+
   sessionStorage.setItem("block", block);
 
   var AIconfig           = getSessionStorage("AIconfigNum" + block, __PRC__);
@@ -113,7 +120,7 @@ Q.html
 		    }(document, 'script', 'facebook-jssdk'));
 
 var charfield = document.getElementById("game");
-charfield.onkeypress = function(e) {  
+charfield.onkeypress = function(e) {
     var e=window.event || e;
     var nowtm = new Date();
     //alert(e.keyCode);
@@ -123,21 +130,21 @@ charfield.onkeypress = function(e) {
     if (!stopped)
     {
 	if( e.keyCode == 49)
-	{
-	    if (!refractory_period)	    
+	{   //  key is '1'       ROCK
+	    if (!refractory_period)
 	    {
 		RPS(1, 1);
 	    }
 	}
 	else if( e.keyCode == 50)
-	{
+	{   //  key is '2'        SCISSOR  (PAPER)
 	    if (!refractory_period)
 	    {
 		RPS(2, 1);
 	    }
 	}
 	else if( e.keyCode == 51)
-	{
+	{   //  key is '3'        PAPER
 	    if (!refractory_period)
 	    {
 		RPS(3, 1);
@@ -148,12 +155,12 @@ charfield.onkeypress = function(e) {
 	//     console.log("here")
 	//     if (nowtm.getTime() - refractory_period_start > refr_period_dur)
 	//     {
-	// 	console.log("refractory end")		
-	// 	refractory_period = false;    //  
+	// 	console.log("refractory end")
+	// 	refractory_period = false;    //
 	//     }
 	// }
     }
-    
+
 }
 </script>
 <div class="title">
@@ -176,7 +183,7 @@ charfield.onkeypress = function(e) {
     </tbody>
     </table>
 -->
-  
+
 </div>
 <table>
   <tbody>
@@ -191,7 +198,7 @@ charfield.onkeypress = function(e) {
 <div class="machine_buttons">
 	<img src="mr.jpg" class="m_rock" value="グー" />
   <img src="ms.jpg" class="m_scissors" value="チョキ" />
-	<img src="mp.jpg" class="m_paper" value="パー" />  
+	<img src="mp.jpg" class="m_paper" value="パー" />
 
 </div>
 <div class="m_copy">

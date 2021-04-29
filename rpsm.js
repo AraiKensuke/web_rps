@@ -1,4 +1,4 @@
-/* 
+/*
 じゃんけんマシン
  篠本 滋「情報処理概論-予測とシミュレーション」（岩波書店）
  6．5節「じゃんけんマシンを作ってみよう」 pp101-107．
@@ -54,13 +54,14 @@ var __MC__     = 0;
 var __PRC__    = 1;
 var __SMWCA__  = 2;
 var __RND__    = 3;
+var __OBR__    = 4;
 
 var __NGAMES__  = 0;   // running number of games played
 var __CWTL__ = 1;      // cumulative win, tie, lose
 
 //var machines = [__MC__, __PRC__];
-var s_machines = ["frequentist", 
-		  "overgeneralized frequentist", 
+var s_machines = ["frequentist",
+		  "overgeneralized frequentist",
 		  "perceptron", "wca", "random"];
 var info_machines = ["1-step frequentist", "1-step greedy frequentist",
 		     "multistep perceptron", "wca", "random"];
@@ -97,8 +98,8 @@ function set_lang(jore)
     var elemDescF = document.getElementById("descFONT")
     var elemResuF = document.getElementById("results")
     var elemAnnoF = document.getElementById("announce")
-    var resultTimeline = anime.timeline();    
-    
+    var resultTimeline = anime.timeline();
+
     if( JorE == __JAPANESE__ )
     {
     }
@@ -133,7 +134,7 @@ function set_lang(jore)
 	    elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";
 	}
 
-	
+
 
 	//elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"</font>"; //to change, uncomment text in ShowResults
 
@@ -141,7 +142,7 @@ function set_lang(jore)
 	//elemAnnoF.innerHTML = "<B>[!HELP US!]</B> collect data to study how players decide their next move in a game of rock-scissors-paper!  Only your moves are collected - nothing else about your online identity.<b><br/><br/><B>[References]</B> <a href=\"https://www.iwanami.co.jp/book/b264786.html\">Building AI <a href=\"http://www.ton.scphys.kyoto-u.ac.jp/~shino/janken_iphone/\">iPhone version</a>。<a href=\"c.html\">C source code</a>.  Please send any questions or comments about the game to <a href=\"mailto:shinomoto@scphys.kyoto-u.ac.jp?Subject=janken\">Shigeru Shinomoto</a>."
     }
 
-    
+
     var Ymax = 0;
     for(var i=0;i<3;i++){
 	if(Ymax<results[i][game]){
@@ -157,9 +158,9 @@ function set_lang(jore)
 
 
 //初期化
-function Reset(){    
+function Reset(){
     stopped = false;
-    //console.log("In Reset()")    
+    //console.log("In Reset()")
 
     //method_num = Math.floor(Math.random() * 3);
     //console.log("Method chosen: " + String(method_num));
@@ -171,7 +172,7 @@ function Reset(){
 
     //Match = Number(document.form.match.value);
     game=0;
-    rec_hands="";   
+    rec_hands="";
     rec_AI_hands="";
     document.getElementById("final_result").innerHTML = '';
     //document.getElementById("final_result3").innerHTML = '';
@@ -182,15 +183,15 @@ function Reset(){
     /* 勝敗表示を消す */
     var win_elem = document.getElementById("win");
     win_elem.style.opacity = 0;
-    
+
 
     do1st = anime.timeline()
-    do1st.add({	
+    do1st.add({
     	targets: ['.m_rock_copy', '.m_scissors_copy', '.m_paper_copy', '.rock_copy', '.scissors_copy', '.paper_copy'],
-    	translateY: 0, translateX:0, 
+    	translateY: 0, translateX:0,
     	scale: 1, duration: 1, easing: 'linear'
     });
-    
+
     var retry = document.getElementById("final_result2")
     retry.style.display = "none";
     //var iq = document.getElementById("final_result3")
@@ -211,42 +212,66 @@ function Reset(){
 }
 
 
-
+//  1 is ROCK, 2 is SCISSOR, 3 is PAPER
 function RPS(plhand, key_or_mouse) {
     var win_elem = document.getElementById("win");
     win_elem.style.opacity = 0;
 
     do1st = anime.timeline()
-    do1st.add({	
+    do1st.add({
     	targets: ['.m_rock_copy', '.m_scissors_copy', '.m_paper_copy', '.rock_copy', '.scissors_copy', '.paper_copy'],
-    	translateY: 0, translateX:0, 
+    	translateY: 0, translateX:0,
     	scale: 1, duration: 1, easing: 'linear'
     });
-    
+
     //console.log("RPS  " + String(stopped))
     var theDate = new Date()
-        time_now = theDate.getTime();        
-    
+        time_now = theDate.getTime();
+
 	//rec_hands += " " + String(plhand);
 
     /* 次の手のパーセプトロン予測を前もって行う */
 	var pre;
-    pre = AI(plhand_prev);  // plhand_prev = 1, 2, 3
+    predWhatHumanWillPlay = AI(plhand_prev);  // plhand_prev = 1, 2, 3   //  prediction of HUMAN
     plhand_prev = plhand
     //console.log("************\n" + prettyArray2D(record) + "\n\n" + prettyArray3D(weight))
-	       
+
 	/* (pre+1)%3+1はパーセプトロンの予測手predに対して勝つ「手」
 	pre=1(グー)   :(pre+1)%3+1=3(パー)
 	pre=2(チョキ) :(pre+1)%3+1=1(グー)
 	pre=3(パー)   :(pre+1)%3+1=2(チョキ)*/
-    predhand=(pre+1)%3+1; //gives stronger hand if RSP? -s
+    //////////////////////  FORMULA correct if 1>2  __moRSP__  /////////////
+    //     R=1, S=2, P=3
+    //  (AI to play P if AI predicts HUM will play R)
+    //  AIhand = 3 if predWhatHumanWillPlay = 1
+    //  (AI to play R if AI predicts HUM will play S)
+    //  AIhand = 1 if predWhatHumanWillPlay = 2
+    //  (AI to play S if AI predicts HUM will play P)
+    //  AIhand = 2 if predWhatHumanWillPlay = 3
+    if (move_order == __moRSP__)
+    {
+	AIhand=(predWhatHumanWillPlay+1)%3+1; //gives stronger hand if RSP?
+    }
+
+    //////////////////////  FORMULA correct if 2>1  __moRPS__  /////////////
+    //     R=1, P=2, S=3
+    //  (AI to play P if predict HUM will play R)
+    //  AIhand = 2 if predWhatHumanWillPlay = 1
+    //  (AI to play S if predict HUM will play P)
+    //  AIhand = 3 if predWhatHumanWillPlay = 2
+    //  (AI to play R if predict HUM will play S)
+    //  AIhand = 1 if predWhatHumanWillPlay = 3
+    if (move_order == __moRPS__ )
+    {
+	AIhand=(predWhatHumanWillPlay+3)%3+1; //gives stronger hand if RSP? -s
+    }
 
     rec_inp_methd += String(key_or_mouse) + " ";
     rec_hands += String(plhand) + " ";
-    rec_AI_hands += String(predhand) + " ";
+    rec_AI_hands += String(AIhand) + " ";
     rec_times += String(time_now - last_time_now) + " ";
     last_time_now = time_now;
-    ShowResults(plhand,predhand);    
+    ShowResults(plhand,AIhand);
 }
 
 
@@ -326,7 +351,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	});
 	break;
     }
-    
+
     /* 勝敗の表示 */
     /* (3+predhand-plhand)%3
      * 0 : あいこ
@@ -381,7 +406,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	results[2][game+1]=results[2][game];
 	break;
     }
-    
+
     if (realtimeResults == __CWTL__)
     {
 	var text="";
@@ -399,14 +424,14 @@ function ShowResults(plhand,predhand,resultTimeline){
     {
 	document.getElementById("results").innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";
     }
-    
+
     var Ymax = 0;
     for(var i=0;i<3;i++){
 	if(Ymax<results[i][game+1]){
 	    Ymax=results[i][game+1];
 	}
     }
-    
+
 
     if (realtimeResults == __CWTL__)
     {
@@ -420,7 +445,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	var prec=[];
 	for(var i=0;i<3;i++) prec[i]=-1;
 	prec[plhand-1] = 1;
-	
+
 	/* 各予測ユニットの入力と相手の新しい手のコードの符号が
 	   一致していない場合に誤り訂正学習を行う */
 
@@ -468,7 +493,7 @@ function redraw_graph(Ymax)
 	txtLOSE = "Perceptron win"
 	txtTIE  = "     Tie      "
     }
-    
+
     svg.append("text").text(txtWIN).attr("x",graph_base+graph_width*0.3+10).attr("y",graph_height*0.2).attr({'dy': ".35em", 'fill': "black" });
     svg.append("line").attr("x1", graph_base+graph_width*0.1).attr("x2", graph_base+graph_width*0.3).attr("y1", graph_height*0.2+20).attr("y2",graph_height*0.2+20).attr("stroke","#E60012").attr("stroke-width",8);
     svg.append("text").text(txtLOSE).attr("x",graph_base+graph_width*0.3+10).attr("y",graph_height*0.2+20).attr({'dy': ".35em", 'fill': "black" });
@@ -484,7 +509,7 @@ function AI(player){  // player is 1, 2, 3
     //perceptron
     n_rps_plyd += 1
 
-    if ((rpsAI.AImach==__SMWCA__) || (rpsAI.AImach == __PRC__)) {
+    if ((rpsAI.AImach==__SMWCA__) || (rpsAI.AImach == __PRC__) || (rpsAI.AImach == __OBR__)) {
 	return(rpsAI.predict(player));
     }
     //Markov Chain
@@ -494,23 +519,23 @@ function AI(player){  // player is 1, 2, 3
 	if (n_rps_plyd % update_evry == 0) {
 	    if (pair2 != '') {
 		predict = rpsAI.predict(pair2);
-		rpsAI.update_matrix(pair2, player); 
-	    }	
+		rpsAI.update_matrix(pair2, player);
+	    }
 	}
-	
+
 	var predictNum = parseInt(predict, 10);
 	var mChoice = (predictNum+1) % 3 + 1;
 	pair1 = String(mChoice) + String(player);
-	
+
 	return(predictNum);
     }
     else
     {
-	var rnd = Math.random(); 
+	var rnd = Math.random();
 	if (rnd < 0.333333) predict=1;
 	else if (rnd < 0.6666666) predict=2;
 	else predict=3;
-	
+
 	return predict;
     }
 }
@@ -539,7 +564,7 @@ function You_win_or_lose(win,lose){
     if (practiceMode)
     {
 	var pgo = document.getElementById("top");
-	
+
 	pgo.innerHTML = '<BR><BR><BR><BR><BR><BR><BR><BR><CENTER><A href="javascript:goon();"><img src="done_practicing.jpg" height=30/></A><BR><BR><BR><A href="javascript:practiceagain();"><img src="more_practice.jpg" height=30/></A></CENTER><BR>';
 	pgo.style.backgroundColor="grey";
 	pgo.style.height=600;
@@ -572,12 +597,12 @@ function You_win_or_lose(win,lose){
 	}
     }
     youwin.style.display="inline";
-    
+
     var res = "Wins: "+results[0][game]+", Losses: "+results[1][game]+", Ties: "+results[2][game];
     var temp = sessionStorage.getItem('result1');
     if (temp == null) {sessionStorage.setItem('result1', res);}
     else {sessionStorage.setItem('result2', res);}
-	
+
     //document.getElementById("final_result3").innerHTML = 'あなたのIQは'+ (110 + (win-lose)*2) +'くらいかな？';
     var retry = document.getElementById("final_result2")
     retry.style.display = "inline";
@@ -593,7 +618,7 @@ function You_win_or_lose(win,lose){
 	duration: 0,
 	translateX:0
     });
-    /*    
+    /*
 	  resultTimeline.add({
 		translateY: -80,
 		targets: '#final_result3',
@@ -666,10 +691,10 @@ function You_win_or_lose(win,lose){
 	}
 
     if (!practiceMode)
-    {   // don't send 
+    {   // don't send
 	send_php();
 	//win = results[0][results]
-	//sessionStorage.setItem("bl" + block + "wins", 
+	//sessionStorage.setItem("bl" + block + "wins",
 	win = results[0][game]
 	lose = results[1][game]
 	tie = results[2][game]
@@ -699,8 +724,8 @@ function send_php(){
     var day   = startDate.getDate().toString().padStart(2, "0");
     var hr    = startDate.getHours().toString().padStart(2, "0");
     var min   = startDate.getMinutes().toString().padStart(2, "0");
-    var sec   = startDate.getSeconds().toString().padStart(2, "0");  
-	
+    var sec   = startDate.getSeconds().toString().padStart(2, "0");
+
     d = yr + mon + day + "-" + hr + min + "-" + sec;
 
     savedirname = getSessionStorage("savedirname", d);
@@ -723,10 +748,32 @@ function send_php(){
 		rec_hands : rec_hands,
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
-		rec_input_method : rec_inp_methd,	          
+		rec_input_method : rec_inp_methd,
 		move_bgrd : rpsAI.fin_move_bgrd,
 		AImach :  rpsAI.AImach,
 		AIconfigname :  rpsAI.AIconfigname,
+		block  : block,
+	    },
+	    success: function(data) {
+		//location.href = "./test.php";
+	    }
+	});
+    }
+
+    if (rpsAI.AImach == __OBR__)
+    {
+	$.ajax({
+	    type: 'POST',
+	    url: php_backend,
+	    dataType:'text',
+	    data: {
+		exptname : exptname,
+		savedirname : savedirname,
+		rec_hands : rec_hands,
+    		rec_AI_hands : rec_AI_hands,
+    		rec_times : rec_times,
+		rec_input_method : rec_inp_methd,
+		AImach :  rpsAI.AImach,
 		block  : block,
 	    },
 	    success: function(data) {
@@ -747,7 +794,7 @@ function send_php(){
 		rec_hands : rec_hands,
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
-		rec_input_method : rec_inp_methd,	          
+		rec_input_method : rec_inp_methd,
       		ini_weight : rpsAI.ini_prc_weight,
 		fin_weight : rpsAI.fin_prc_weight,
 		AImach :  rpsAI.AImach,
@@ -772,7 +819,7 @@ function send_php(){
 		rec_hands : rec_hands,
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
-		rec_input_method : rec_inp_methd,	          
+		rec_input_method : rec_inp_methd,
       		ini_cprob : rpsAI.ini_MC_cndprob,
 		fin_cprob : rpsAI.fin_MC_cndprob,
 		AImach :  rpsAI.AImach,
@@ -797,7 +844,7 @@ function send_php(){
 		rec_hands : rec_hands,
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
-		rec_input_method : rec_inp_methd,	          
+		rec_input_method : rec_inp_methd,
 		AImach :  __RND__,
 		AIconfigname :  __RND__,
 		block : block,
@@ -808,3 +855,4 @@ function send_php(){
 	});
     }
 }
+

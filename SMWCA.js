@@ -10,7 +10,7 @@ last_react_action = null;
 WINNING_PLAY = [1, 2, 0]   //  IF (RSP)
 //[1, 2, 0]   [2, 0, 1]
 //[1, 0, 2]   [2, 1, 0]
-CHANGEUP_WT = 0.5;
+CHANGEUP_WT = 0.4;
 
 function append(to_this_list, item)
 {
@@ -18,14 +18,23 @@ function append(to_this_list, item)
 }
 
 function strategy_changeup(tree, ngramLength, tokenList)
-{
+{   // changeup  ->  upgrade from my last move, choose to beat my last move
     ngram = get_ngram(ngramLength, tokenList);
+    console.log("changeup   " + ngramLength.toString());
     treeNode = tree.findPatternEndPoint(ngram);
+    if (treeNode == null)
+    {
+	console.log("treeNode IS NULL!!!!!!!!!!");
+    }
+    console.log("treeNode.myNextPlays.length    " + treeNode.myNextPlays.length.toString())
     if ((treeNode == null) || (treeNode.myNextPlays.length == 0))
     {
-        return [randomPlay(), 0];
+        //return [randomPlay(), 0];
+	return [0, 0];
     }
+
     myLastPlay = treeNode.myNextPlays[treeNode.myNextPlays.length-1];
+    console.log("myLastPlay   " + myLastPlay.toString());
     return [WINNING_PLAY[parseInt(myLastPlay)], CHANGEUP_WT];
 }
 
@@ -33,14 +42,19 @@ frame = 0;
 
 function strategy_alternate_based_on_my_last(tree, ngramLength, tokenList)
 {
-    //global frame
     ngram = get_ngram(ngramLength, tokenList)
     treeNode = tree.findPatternEndPoint(ngram)
     if ((treeNode == null) || (treeNode.myNextPlays.length == 0))
-    {
+    {   //  we're here mid-round sometimes.  NOT exclusively at start of round.
+	console.log("!!!!!!!!!   based on my last, returning randomPlay(), 0")
         return [randomPlay(), 0];
     }
     myLastPlay = treeNode.myNextPlays[treeNode.myNextPlays.length-1];
+    if (n_rps_plyd > 4)
+    {
+	console.log(n_rps_plyd.toString() + "  " + myLastPlay.toString());
+    }
+
     if (n_rps_plyd % 2 == 0)
     {
         return [WINNING_PLAY[parseInt(myLastPlay)], CHANGEUP_WT];
@@ -55,6 +69,7 @@ function strategy_alternate_based_on_opp_last(tree, ngramLength, tokenList)
 {
     //global frame
     ngram = get_ngram(ngramLength, tokenList)
+    //console.log("opp last");
     treeNode = tree.findPatternEndPoint(ngram)
     if ((treeNode == null) || (treeNode.myNextPlays.length == 0))
     {
@@ -74,6 +89,7 @@ function strategy_alternate_based_on_opp_last(tree, ngramLength, tokenList)
 function strategy_predict_by_frequency(tree, ngramLength, tokenList)
 {
     ngram = get_ngram(ngramLength, tokenList)
+    //console.log("by freq");
     treeNode = tree.findPatternEndPoint(ngram)
     if (treeNode == null)
     {
@@ -94,11 +110,34 @@ function strategy_predict_by_frequency(tree, ngramLength, tokenList)
     return [randomPlay(), 0]
 }
 
-MY_LOWEST_WT = 0.5;
+function strategy_predict_by_frequency_last_n(tree, ngramLength, tokenList)
+{
+    n = 4;
+    ngram = get_ngram(ngramLength, tokenList);
+    //console.log("freq_last_n");
+    treeNode = tree.findPatternEndPoint(ngram);
+    if (treeNode == null)
+    {
+	return [randomPlay(), 0];
+    }
+    dist = make_distribution(treeNode.oppNextPlays.slice(treeNode.oppNextPlays.length-n, treeNode.oppNextPlays.length));      // slice
+    for (i = 0; i < 3; i++)
+    {
+        if ((dist[i] > dist[(i+1)%3]) && (dist[i] > dist[(i+2)%3]))
+	{
+	    return [WINNING_PLAY[i], dist[i] / (dist[2] + dist[1] + dist[0])];
+	}
+    }
+    return [randomPlay(), 0];
+}
+
+
+MY_LOWEST_WT = 0.4;
 
 function strategy_my_lowest_freq(tree, ngramLength, tokenList)
 {
     ngram = get_ngram(ngramLength, tokenList);
+    //console.log("lowest");
     treeNode = tree.findPatternEndPoint(ngram)
     if (treeNode == null)
     {
@@ -115,25 +154,6 @@ function strategy_my_lowest_freq(tree, ngramLength, tokenList)
     return [randomPlay(), 0];
 }
 
-function strategy_predict_by_frequency_last_n(tree, ngramLength, tokenList)
-{
-    n = 4;
-    ngram = get_ngram(ngramLength, tokenList);
-    treeNode = tree.findPatternEndPoint(ngram);
-    if (treeNode == null)
-    {
-	return [randomPlay(), 0];
-    }
-    dist = make_distribution(treeNode.oppNextPlays.slice(treeNode.oppNextPlays.length-n, treeNode.oppNextPlays.length));      // slice
-    for (i = 0; i < 3; i++)
-    {
-        if ((dist[i] > dist[(i+1)%3]) && (dist[i] > dist[(i+2)%3]))
-	{
-	    return [WINNING_PLAY[i], dist[i] / (dist[2] + dist[1] + dist[0])];
-	}
-    }
-    return [randomPlay(), 0];
-}
 
 var strategyListAll = [
     strategy_predict_by_frequency,
@@ -157,10 +177,10 @@ function make_distribution(list)
     }
     //for li in list:
     //    dist[int(li)] += 1
-    
+
     return dist
 }
-    
+
 class Tree
 {
     constructor()
@@ -172,7 +192,7 @@ class Tree
         this.myNextPlays = [];
         this.oppNextPlays = [];
         this.children = {};
-    }    
+    }
 
     addNextPlays(myNext, oppNext)
     {
@@ -195,7 +215,7 @@ class Tree
         //this.indexList[this.indexList.length] = index;
 	append(this.indexList, index);
     }
-        
+
     addIndex(ind)
     {
         this.count += 1;
@@ -207,7 +227,7 @@ class Tree
     {
         return this.countPattern(pattern, 0);
     }
-            
+
     countPattern(pattern, index)
     {
         if (pattern.length > 0)
@@ -219,7 +239,7 @@ class Tree
                 nextToken = pattern[1];
 	    }
             var oppNext = nextToken[0];
-            var myNext = nextToken[1]; 
+            var myNext = nextToken[1];
             //rest = pattern[1:len(pattern)];       // slice
 	    var rest = pattern.slice(1, pattern.length);       // slice
 	    var child = this.children[first];
@@ -238,7 +258,7 @@ class Tree
             this.children[first].countPattern(rest, index+1);
 	}
     }
-    
+
     findPatternEndPoint(pattern)
     {
         if (pattern.length > 0)
@@ -268,7 +288,7 @@ class Tree
 function build_ngram_tree(tokenList)
 {
     var tree = new Tree();
-    
+
     //for (i in range(len(tokenList)))
     for (var i = 0; i < tokenList.length; i++ )
     {
@@ -277,15 +297,16 @@ function build_ngram_tree(tokenList)
     }
     return tree;
 }
-    
+
 function get_ngram(ngramLength, tokenList)
 {
     //return tokenList[len(tokenList)-ngramLength:len(tokenList)];  // slice
-    return tokenList.slice(tokenList.length-ngramLength, tokenList.length);  // slice
+    ng = tokenList.slice(tokenList.length-ngramLength, tokenList.length);  // slice
+    return ng;
 }
 
 class SMWCA
-{    
+{
     AImach  = null;
     AIconfigname = null;
     records = [];
@@ -316,10 +337,10 @@ class SMWCA
         this.strategyList = [];
 	for (var s = 0; s < stratL.length; s++)
 	{
-	    append(this.strategyList, strategyListAll[s]);
+	    append(this.strategyList, strategyListAll[stratL[s]]);
 	}
     }
-    
+
 
     // returns suggestion, score, weight
     evaluate_strategy(strategyList, strategyIndex, records, wins, last_guesses, tree, tokenList, ngramLength, counter)
@@ -378,18 +399,18 @@ class SMWCA
     weighted_ngram_tree(ob_last_opp_action)
     {
 	//global move_bgrd;
-    
+
 	//global records;
 	//global wins;
 	//global last_guesses;
 	//global tokenList;
-    
+
 	if ((this.records.length == 0) || (this.records == null))
 	{
             this.records = [];
 	    this.wins = [];
             this.last_guesses = [];
-	    
+
             //for counter_num in [0,1,2]
 	    for (var counter_num = 0; counter_num < this.counter_depth+1; counter_num++)// in [0,1,2]
 	    {
@@ -430,11 +451,11 @@ class SMWCA
 	//myMoves.append(last_react_action);
 	//myMoves[myMoves.length] = last_react_action;
 	append(this.myMoves, last_react_action);
-	
+
 	//tokenList[tokenList.length] = ob_last_opp_action.toString() + last_react_action.toString();
 
 	append(this.tokenList, ob_last_opp_action.toString() + last_react_action.toString());
-	
+
 	var maxTokenListLength = 50;
 	if (this.tokenList.length > maxTokenListLength)
 	{
@@ -442,7 +463,7 @@ class SMWCA
 	}
 	var tree = build_ngram_tree(this.tokenList)
 	//scores = [0,0,0]
-    
+
 	var highestScore = 0;
 	var highestScorePlay = 0;
 	var highestScoreWeight = 0;
@@ -453,6 +474,9 @@ class SMWCA
 	var suggestion;
 	var score;
 	var weight;
+	var weights = [];
+	var suggestions = [];
+
 	//for ngramLength in range(ngramSizes)
 	for (var ngramLength=0; ngramLength <  this.ngramSizes; ngramLength++)
 	{
@@ -464,11 +488,13 @@ class SMWCA
 	    {
 		for (var counter=0; counter < this.counter_depth+1; counter++)
 		{
-                    
+
 		    var x = this.evaluate_strategy(this.strategyList, i, this.records, this.wins, this.last_guesses,tree, this.tokenList, ngramLength, counter)
 		    suggestion = x[0];
-		    score      = x[1]; 
+		    score      = x[1];
 		    weight     = x[2];
+		    weights[weights.length] = weight;
+		    suggestions[suggestions.length] = suggestion;
                     if (score > highestScore)
 		    {
 			highestScore = score
@@ -481,6 +507,9 @@ class SMWCA
 		}
 	    }
 	}
+	console.log("weights");
+	console.log(weights);
+	console.log(suggestions);
 	if (highestScore > 0)
 	{
 	    last_react_action = highestScorePlay
@@ -501,7 +530,7 @@ class SMWCA
     tally = 0;
 
     predict(ob_last_opp_action)  //  ob_last_opp_action is 1, 2, 3
-    {
+    {   //   predict should return AI prediction of HUMAN hand
 	ob_last_opp_action -= 1   // I want it in 0, 1, 2
 	//global frame, tally, WINNING_PLAY
 	//global last_react_action
@@ -519,9 +548,10 @@ class SMWCA
 	}
 	//print('AI Score: ', tally);
 	//if (observation.step < 2)
-	if (n_rps_plyd < 2)
+	if (n_rps_plyd < 4)
 	{
-	    last_react_action = getRandomInt(0, 2);
+	    console.log("here " + n_rps_plyd.toString())
+	    last_react_action = 2//getRandomInt(0, 2);
 
             //last_react_action = random.randint(0,2);
 	}
@@ -529,7 +559,8 @@ class SMWCA
 	{
             last_react_action = this.weighted_ngram_tree(ob_last_opp_action)
 	}
-	//n_rps_plyd += 1
+	//n_rps_plyd += 1   //  THIS is what AI should play, so
+	//  prediction of HUMan is downgrade of last_react_action
 	return last_react_action
     }
 
@@ -538,4 +569,5 @@ class SMWCA
 	this.fin_move_bgrd = to_str_from_2darray(this.move_bgrd);
     }
 }
+
 
