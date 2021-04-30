@@ -26,6 +26,7 @@ function new_rule(old_rule)
 }
 
 class OutcomeBasedRule {
+    stays;
     pred=[];
     my_last_play;
     last_result;
@@ -33,12 +34,17 @@ class OutcomeBasedRule {
     W_rule = null;
     T_rule = null;
     L_rule = null;
+    epsilon = null;
+    max_stays = null;
 
     //i_switch_timescale;
 
-    constructor(move_order) //, switch_timescale) {
+    constructor(move_order, mxstys) //, switch_timescale) {
     {
 	this.AImach = __OBR__;
+	this.epsilon = epsilon;
+	this.stays  = 0;     // we won't keep stays longer than max_stays
+	this.max_stays = mxstys;
 
 	this.W_rule = __ST__;
 	this.T_rule = __DN__;
@@ -110,10 +116,28 @@ class OutcomeBasedRule {
 	if (rule == __UP__)
 	{
 	    this.my_last_play = this.upgrade(this.my_last_play);
+	    this.stays = 0
 	}
 	else if (rule == __DN__)
 	{
 	    this.my_last_play = this.downgrade(this.my_last_play);
+	    this.stays = 0
+	}
+	else
+	{   //  we don't want to get stuck
+	    this.stays += 1;
+	    if (this.stays > this.max_stays)
+	    {
+		if (Math.random() < (0.333*this.i_switch_timescale))
+		{
+		    this.my_last_play = this.downgrade(this.my_last_play);
+		}
+		else
+		{
+		    this.my_last_play = this.upgrade(this.my_last_play);
+		}
+	    }
+	    this.stays = 0;
 	}
 
 	// if (Math.random() < (0.333*this.i_switch_timescale))
