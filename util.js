@@ -1,7 +1,18 @@
 function getRandomInt(min, max) {
+    //  inclusive min and max.
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/* Randomize array in-place using Durstenfeld shuffle algorithm */
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
 }
 
 function to_str_from_2darray(arr2d)
@@ -16,7 +27,7 @@ function to_str_from_2darray(arr2d)
 }
 
 function to_2darray_from_str(strrep)
-{   //   "0,1,2:3,4,5:6,7,8"  -->  [[0, 1, 2], [3, 4, 5], [6,7,8]]  
+{   //   "0,1,2:3,4,5:6,7,8"  -->  [[0, 1, 2], [3, 4, 5], [6,7,8]]
     arr1d_of_strings = strrep.split(":");
 
     arr = [];
@@ -48,4 +59,9 @@ function getcolumn(arr, col, add_series_x_axis)
 	}
     }
     return column_arr;
+}
+
+function append_to_array(to_this_list, item)
+{
+    to_this_list[to_this_list.length] = item;
 }

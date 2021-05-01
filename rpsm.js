@@ -28,7 +28,7 @@ var results=[];	// [0]勝ち、[1]負け、[2]あいこ
 //  paced or free  x 2
 //  AI or RNG      x 2
 
-var wait_next    = 5000
+var wait_next    = 2000
 var update_evry  = 1
 var n_rps_plyd   = 0
 var __JAPANESE__ = 0
@@ -36,7 +36,6 @@ var __ENGLISH__  = 1
 
 var ini_MC_cndprob="";
 var fin_MC_cndprob="";
-
 
 var time_now, last_time_now;
 var theDate = new Date();
@@ -589,11 +588,11 @@ function You_win_or_lose(win,lose){
 	{
 	    if (block == to_block)
 	    {
-		youwin.innerHTML = '<img style="opacity:0.75;" src="toquestionnaire.jpg"/>';
+		youwin.innerHTML = '<img style="opacity:0.5;" src="toquestionnaire.jpg"/>';
 	    }
 	    else
 	    {
-		youwin.innerHTML = '<img style="opacity:0.75;" src="nextround.jpg"/>';
+		youwin.innerHTML = '<img style="opacity:0.5;" src="nextround.jpg"/>';
 	    }
 	}
     }
@@ -735,6 +734,7 @@ function send_php(){
 	sessionStorage.setItem("savedirname", d);
     }
 
+    sessionStorage.setItem("results" + block, to_str_from_2darray(results));
     if (rpsAI.AImach == __SMWCA__)
     {
 	sessionStorage.setItem("move_bgrd" + block, rpsAI.fin_move_bgrd);
@@ -856,4 +856,3 @@ function send_php(){
 	});
     }
 }
-

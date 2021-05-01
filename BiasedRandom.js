@@ -14,6 +14,7 @@ class BiasedRandom {
 
     constructor(move_order, probs) //, switch_timescale) {
     {
+	this.moves = [0, 0, 0];
 	this.rps_prob = [];
 	this.rps_prob[0] = probs[0];
 	this.rps_prob[1] = probs[1];
@@ -71,6 +72,8 @@ class BiasedRandom {
 	}
 
 	var ret = this.downgrade(iFnd + 1);  // return pred of HUMAN hand
+	this.moves[ret-1] += 1;
+	console.log(this.moves)
 	return ret;
     }
 

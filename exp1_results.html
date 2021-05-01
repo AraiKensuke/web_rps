@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <STYLE>
-<!--https://www.freecodecamp.org/news/how-to-make-your-first-javascript-chart/-->
 #figures table, th, td {
   border: 1px solid black;
 }
@@ -62,7 +61,7 @@ function setval()
   document.getElementById("AImach2").innerHTML = AIconfig2
   document.getElementById("AIcmp").innerHTML = sim_diff.toUpperCase()
 
-		  
+
   var our_response = "Better luck next time!";
   if ((sim_diff == "similar") && (AIconfig1 == AIconfig2))
 {
@@ -134,10 +133,10 @@ function setval()
         }
 
         body {	font-family: 'Console', Monaco, monospace;
-	margin-top: 40px; 
-	margin-left: 100px;  
-	margin-right: 100px;  
-	margin-bottom: 100px;  
+	margin-top: 40px;
+	margin-left: 100px;
+	margin-right: 100px;
+	margin-bottom: 100px;
 	background-color: rgb(255, 255, 255);
 	}
 
@@ -145,8 +144,6 @@ function setval()
     <body onload="javascript:setval();">
       <CENTER>
 	<H1>Results</H1>
-<BR>
-Round1
 <BR>
 <!--
 strategies<div id="chartDiv1stid" style="width:90%; height:150px; margin:0 auto;"></div>
@@ -159,19 +156,19 @@ counter depth<div id="chartDiv2cntr" style="width:90%; height:150px; margin:0 au
 <!--<TABLE style="width:99%;border:1px" >-->
 <TABLE id="figures" style="width:99%;">
 <TR>
-<TH id="figurecol0" style="width:10%;padding-left:0px;padding-right:0px">
-<TH id="figurecol1" style="width:45%;padding-left:0px;padding-right:0px">Round 1</TH>
-<TH id="figurecol1" style="width:45%;padding-left:0px;padding-right:0px">Round 2</TH>
+<!--<TH id="figurecol0" style="width:10%;padding-left:0px;padding-right:0px">-->
+<TH id="figurecol1" style="width:50%;padding-left:0px;padding-right:0px">Round 1</TH>
+<TH id="figurecol1" style="width:50%;padding-left:0px;padding-right:0px">Round 2</TH>
 </TR>
-<TD>S#</TD>
-<TD><canvas id="chart1stid" width="45%" height="15%"></canvas></TD>
-<TD><canvas id="chart2stid" width="45%" height="15%"></canvas></TD>
+<!--<TD>S#</TD>-->
+<TD><canvas id="round1cum" width="45%" height="15%"></canvas></TD>
+<TD><canvas id="round2cum" width="45%" height="15%"></canvas></TD>
 </TR>
-<TR>
+<!--<TR>
 <TD>C L.</TD>
-<TD><canvas id="chart1cntr" width="45%" height="15%"></canvas></TD>
-<TD><canvas id="chart2cntr" width="45%" height="15%"></canvas></TD>
-</TR>
+<TD><canvas id="round1ties" width="45%" height="15%"></canvas></TD>
+<TD><canvas id="round2ties" width="45%" height="15%"></canvas></TD>
+</TR>-->
 </TABLE>
 
       <TABLE><!-- style="border-collapse:collapse">-->
@@ -214,60 +211,49 @@ counter depth<div id="chartDiv2cntr" style="width:90%; height:150px; margin:0 au
       </CENTER>
     </body>
 <SCRIPT>
-var move_bgrd1        = getSessionStorage("move_bgrd1", "");
-var move_bgrd2        = getSessionStorage("move_bgrd2", "");
-dat1 = to_2darray_from_str(move_bgrd1);
-dat2 = to_2darray_from_str(move_bgrd2);
 
-col10 = getcolumn(dat1, 0, false);
-col11 = getcolumn(dat1, 1, false);
-col20 = getcolumn(dat2, 0, false);
-col21 = getcolumn(dat2, 1, false);
+var results1        = getSessionStorage("results1", "");
+var results2        = getSessionStorage("results2", "");
+dat1 = to_2darray_from_str(results1);
+dat2 = to_2darray_from_str(results2);
 
-var ct1stid = document.getElementById('chart1stid').getContext('2d');
-var ct1cntr = document.getElementById('chart1cntr').getContext('2d');
-var ct2stid = document.getElementById('chart2stid').getContext('2d');
-var ct2cntr = document.getElementById('chart2cntr').getContext('2d');
+var cum1            = [];
+var cum2            = [];
+for (var i = 0; i < dat1[0].length; i++ )
+{
+    cum1[i] = dat1[0][i] - dat1[1][i];
+    cum2[i] = dat2[0][i] - dat2[1][i];
+}
+
+var canv_cum1 = document.getElementById('round1cum').getContext('2d');
+var canv_cum2 = document.getElementById('round2cum').getContext('2d');
 
 Chart.defaults.color="#000000;"
 
 var xs = [];
-for (i = 0; i < col10.length; i++ )
+
+for (i = 0; i < dat1[0].length; i++ )
 {
     xs[i] = i;
 }
-data = {labels: xs, datasets: [{data: col10}]};
-config = {type: 'line', data, options: {}};
-var myChart = new Chart(ct1stid, config);
 
-data = {labels: xs, datasets: [{data: col11}]};
-config = {type: 'line', data, options: {}};
-var myChart = new Chart(ct1cntr, config);
+cum1max = Math.max(...cum1)
+cum1min = Math.min(...cum1)
+cum2max = Math.max(...cum2)
+cum2min = Math.min(...cum2)
 
-data = {labels: xs, datasets: [{data: col20}]};
-config = {type: 'line', data, options: {}};
-var myChart = new Chart(ct2stid, config);
+ymax    = Math.max(cum1max, cum2max);
+ymin    = Math.min(cum1min, cum2min);
+amp    = Math.max(Math.abs(ymax), Math.abs(ymin))+1
 
-data = {labels: xs, datasets: [{data: col21}]};
-config = {type: 'line', data, options: {}};
-var myChart = new Chart(ct2cntr, config);
+const data1 = {labels: xs, datasets: [{data: cum1, label: "Cumulative wins round 1"}]};
+const config1 = {type: 'line', data: data1, options: {scales: { y: { min: (-1*amp), max: amp}}}}
+var myChart = new Chart(canv_cum1, config1);
 
+const data2 = {labels: xs, datasets: [{data: cum2, label: "Cumulative wins round 2"}]};
+const config2 = {type: 'line', data: data2, options: {scales: { y: { min: (-1*amp), max: amp}}}};
+var myChart = new Chart(canv_cum2, config2);
 
-//var chart = JSC.Chart('chartDiv1stid', {
-//type: 'line',
-//series: [{points: col10}]});
-
-//var chart = JSC.Chart('chartDiv1cntr', {
-//type: 'line',
-//series: [{points: col11}]});
-
-//var chart = JSC.Chart('chartDiv2stid', {
-//type: 'line',
-//series: [{points: col20}]});
-
-//var chart = JSC.Chart('chartDiv2cntr', {
-//type: 'line',
-//series: [{points: col21}]});
 
 </SCRIPT>
 </html>
