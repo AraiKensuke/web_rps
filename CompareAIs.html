@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="rps.css" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript" src="rpsm.js"></script>
+<SCRIPT>
+    savedirname = getSessionStorage("savedirname", "");
+    block       = getSessionStorage("block", "");
+    to_block       = getSessionStorage("to_block", "");
+
+    function getradioval(name, default_val)
+    {
+        radios = document.getElementsByName(name);
+
+        for (i = 0; i < radios.length; i++ )
+        {
+            if (radios[i].checked)
+            {
+                return radios[i].value;
+            }
+        }
+        return default_val;
+    }
+
+    function sethidden()
+    {
+        document.getElementsByName("savedirname")[0].value=savedirname;
+        document.getElementsByName("block")[0].value=block;
+        document.getElementsByName("to_block")[0].value=to_block;
+    }
+
+</SCRIPT>
+    <head>
+        <meta charset = "utf-8">
+        <title>Questions</title>
+    </head>
+
+    <style>
+
+      table td {
+      width: 170px;
+      overflow: visible;
+      display: inline-block;
+      white-space: nowrap;
+      }
+        input[type=text] {
+            width: 60%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        input[type=button] {
+            width: 10%;
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        h1 {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        p {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        label {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        body {	font-family: 'Console', Monaco, monospace;
+	margin-top: 40px;
+	margin-left: 100px;
+	margin-right: 100px;
+	margin-bottom: 100px;
+	background-color: rgb(255, 255, 255);
+	}
+
+    </style>
+        <body onload="javascript:sethidden();">
+	  <CENTER>
+        <h1>Questions</h1></CENTER>
+
+        <form name="questionform" action="exp3_save_compare.php" method="post">
+	  <INPUT type="hidden" name="savedirname" value="">
+	  <INPUT type="hidden" name="block" value="">
+	  <INPUT type="hidden" name="to_block" value="">
+	    <p><B>1.</B>  In competitive situations, we try to gain an upper hand by looking for regularities or patterns in our opponent's behavior, while we try to avoid being "figured out" by our opponents.  The different ways  people accomplish this can be sensed as a difference in playing styles.<br><br>  <U>The AIs you played against in the last 2 of the experiment may or may not have used different competitive algorithms, resulting in different playing styles. Do you think the two AIs you played against had similar or different playing styles?</U></p>
+	    <TABLE><TR><TD>
+            <input type="radio" name="q1" value="similar">
+            <label>Similar</label>
+	    </TD><TD>
+            <input type="radio" name="q1" value="different">
+            <label>Different</label>
+	    </TD><TD>
+            <input type="radio" name="q1" value="not sure">
+            <label>Don't know</label>
+	    </TD></TR>
+	      </TABLE>
+	    <BR><BR>
+	    <CENTER>
+	      <INPUT type="image" src="SubmitAndViewResults.jpg" alt="Submit And View Results"/></CENTER>
+        </form>
+
+    </body>
+</html>
