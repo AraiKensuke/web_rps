@@ -14,6 +14,10 @@
       var to_block=elem_block*4;   
                          //  
 
+      strt = getRandomInt(0, parseInt(machine_and_configs_all.length/2)-1)
+      machine_and_configs = machine_and_configs_all.slice(strt, strt+2)
+      machine_and_configs_nicknames = machine_and_configs_nicknames_all.slice(2*strt, 2*strt+2)
+      console.log(strt)
       realtimeResults = __NGAMES__;
 
       sessionStorage.setItem("exptname", "exp3");
@@ -30,7 +34,8 @@
       diff_blks = [];
       ident_blks= [];
 
-      for (eblk = 0; eblk < elem_block; eblk++ )
+      hlf_elem_block = parseInt(elem_block/2)
+      for (eblk = 0; eblk < hlf_elem_block; eblk++ )
 			    {
 			    ident_blks[2*eblk] = 0;
 			    ident_blks[2*eblk+1] = 1;
@@ -44,14 +49,19 @@
 				       shuffleArray(diff_blks);
 				       shuffleArray(ident_blks);
 
-
+			  //console.log("diff")
+			  //  console.log(diff_blks)
+			  //console.log("ident")
+			  //  console.log(ident_blks)
 iident = -1;
+iidiff = 1;
+inds_2 = [[0, 1], [1, 0]]
       for (blk = 0; blk < 2*elem_block; blk++ )
       {
 			   if (diff_blks[blk] == 1)
 			   {
-			       inds = [0, 1];
-			       shuffleArray(inds);
+			  iidiff++;
+			       inds = inds_2[iidiff%2]
 			   }
 			   else if (diff_blks[blk] == 0)
 			   {
