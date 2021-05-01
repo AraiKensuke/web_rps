@@ -1,0 +1,106 @@
+<HTML>
+<link rel="stylesheet" href="rps.css" type="text/css"/>
+<SCRIPT src="aiconfig3.js"></SCRIPT>
+<SCRIPT src="util.js"></SCRIPT>
+<script type="text/javascript" src="SMWCA.js"></script>
+<script type="text/javascript" src="PRCPTRN.js"></script>
+<script type="text/javascript" src="MC.js"></script>
+<SCRIPT src="rpsm.js"></SCRIPT>
+
+<SCRIPT>
+      var MatchTo=10;
+      var elem_block = 4;       //  2*elem_block ident, 2*elem_block diff
+                                //  elem_block of ident == 0, elem_block of ident == 1
+      var to_block=elem_block*4;   
+                         //  
+
+      realtimeResults = __NGAMES__;
+
+      sessionStorage.setItem("exptname", "exp3");
+      sessionStorage.setItem("block", 0);
+      sessionStorage.setItem("to_block", to_block);
+      sessionStorage.setItem("mid_block_every", 2);
+      sessionStorage.setItem("MatchTo", MatchTo);
+
+      sessionStorage.setItem("url_after_blocks", "default_bye.html");
+      sessionStorage.setItem("url_mid_blocks", "CompareAIs.html");
+      sessionStorage.setItem("php_backend", "save_RPS_exp.php");
+
+
+      diff_blks = [];
+      ident_blks= [];
+
+      for (eblk = 0; eblk < elem_block; eblk++ )
+			    {
+			    ident_blks[2*eblk] = 0;
+			    ident_blks[2*eblk+1] = 1;
+			    }
+
+      for (blk = 0; blk < elem_block; blk++ )
+			  {
+			  diff_blks[2*blk] = 0;
+			  diff_blks[2*blk+1] = 1;
+			  }
+				       shuffleArray(diff_blks);
+				       shuffleArray(ident_blks);
+
+
+iident = -1;
+      for (blk = 0; blk < 2*elem_block; blk++ )
+      {
+			   if (diff_blks[blk] == 1)
+			   {
+			       inds = [0, 1];
+			       shuffleArray(inds);
+			   }
+			   else if (diff_blks[blk] == 0)
+			   {
+			   iident++;
+			       inds = [ident_blks[iident], ident_blks[iident]];
+			   }
+
+
+          mach1 = machine_and_configs[inds[0]];
+          nickn1 = machine_and_configs_nicknames[inds[0]];
+
+          sessionStorage.setItem("AIconfigNum" + (2*blk+1).toString(), mach1);
+          sessionStorage.setItem("AIconfigNumNickname" + (2*blk+1).toString(), nickn1);
+          mach2 = machine_and_configs[inds[1]];
+
+          nickn2 = machine_and_configs_nicknames[inds[1]];
+			  console.log(blk + " ----    " + nickn1 + "   " + nickn2);
+          sessionStorage.setItem("AIconfigNum" + (2*blk+2).toString(), mach2);
+          sessionStorage.setItem("AIconfigNumNickname" + (2*blk+2).toString(), nickn2);
+
+      }
+
+      sessionStorage.setItem("RealtimeResults", realtimeResults);
+      sessionStorage.setItem("php_backend", "save_RPS_exp.php");
+
+  function setGameNums()
+  {
+      document.getElementById("ngames1").innerHTML = MatchTo;
+  }
+
+  function nextpage(dopractice)
+  {
+      sessionStorage.setItem("PracticeMode", dopractice);
+      document.location="rps.html";
+  }
+</SCRIPT>
+<BODY onload="javascript:setGameNums();">
+        <p id="p1">We ask that you play 2 rounds of repeated RPS lasting <SPAN id="ngames1">100</SPAN> games each, against a bot - a computerized, artificial intelligence RPS player - that tries to learn your tendencies.  Please try to hard to outsmart and outplay the bot to the best of your ability.  After 2 rounds, we will ask you some questions regarding how you felt about your opponents.<BR><BR>
+You can go straight to the 2 rounds, or you can first practice playing RPS against the computer in short, 10 game rounds, and then go on to the 2 rounds when you're ready.
+</p>
+
+<BR><BR>
+<CENTER>
+<TABLE><TR><TD>
+	    <A href="javascript:nextpage(false);"><IMG src="skip_practice.jpg" height=40/></A></TD></TR>
+  <TR><TD>
+	    <A href="javascript:nextpage(true);"><IMG src="practice_round.jpg" height=40/></A>
+</TR></TABLE>
+</CENTER>
+
+</BODY>
+</HTML>
