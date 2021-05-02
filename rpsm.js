@@ -55,6 +55,7 @@ var __SMWCA__  = 2;
 var __RND__    = 3;
 var __OBR__    = 4;
 var __BIRND__    = 5;
+var __MIMIC__    = 6;
 
 var __NGAMES__  = 0;   // running number of games played
 var __CWTL__ = 1;      // cumulative win, tie, lose
@@ -509,8 +510,8 @@ function AI(player){  // player is 1, 2, 3
     //perceptron
     n_rps_plyd += 1
 
-    if ((rpsAI.AImach==__SMWCA__) || (rpsAI.AImach == __PRC__) || (rpsAI.AImach == __OBR__) || (rpsAI.AImach == __BIRND__)) {
-	return(rpsAI.predict(player));
+    if ((rpsAI.AImach==__SMWCA__) || (rpsAI.AImach == __PRC__) || (rpsAI.AImach == __OBR__) || (rpsAI.AImach == __BIRND__) || (rpsAI.AImach == __MIMIC__)) {
+	return (rpsAI.predict(player));
     }
     //Markov Chain
     else if (rpsAI.AImach==__MC__)

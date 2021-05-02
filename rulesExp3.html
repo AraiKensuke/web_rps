@@ -17,8 +17,9 @@
       strt = getRandomInt(0, parseInt(machine_and_configs_all.length/2)-1)
       machine_and_configs = machine_and_configs_all.slice(strt, strt+2)
       machine_and_configs_nicknames = machine_and_configs_nicknames_all.slice(2*strt, 2*strt+2)
+      machine_and_configs_indices = ["1", "2"];//machine_and_configs_indices_all.slice(2*strt, 2*strt+2)
       console.log(strt)
-      realtimeResults = __NGAMES__;
+      realtimeResults = __CWTL__;
 
       sessionStorage.setItem("exptname", "exp3");
       sessionStorage.setItem("block", 0);
@@ -29,7 +30,6 @@
       sessionStorage.setItem("url_after_blocks", "default_bye.html");
       sessionStorage.setItem("url_mid_blocks", "CompareAIs.html");
       sessionStorage.setItem("php_backend", "save_RPS_exp.php");
-
 
       diff_blks = [];
       ident_blks= [];
@@ -71,15 +71,19 @@ inds_2 = [[0, 1], [1, 0]]
 
 
           mach1 = machine_and_configs[inds[0]];
+          inds1 = machine_and_configs_indices[inds[0]];
           nickn1 = machine_and_configs_nicknames[inds[0]];
 
           sessionStorage.setItem("AIconfigNum" + (2*blk+1).toString(), mach1);
+          sessionStorage.setItem("AIconfigNumIndex" + (2*blk+1).toString(), inds1);
           sessionStorage.setItem("AIconfigNumNickname" + (2*blk+1).toString(), nickn1);
           mach2 = machine_and_configs[inds[1]];
+          inds2 = machine_and_configs_indices[inds[1]];
 
           nickn2 = machine_and_configs_nicknames[inds[1]];
 			  console.log(blk + " ----    " + nickn1 + "   " + nickn2);
           sessionStorage.setItem("AIconfigNum" + (2*blk+2).toString(), mach2);
+          sessionStorage.setItem("AIconfigNumIndex" + (2*blk+2).toString(), inds2);
           sessionStorage.setItem("AIconfigNumNickname" + (2*blk+2).toString(), nickn2);
 
       }
