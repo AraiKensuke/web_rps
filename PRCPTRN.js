@@ -7,6 +7,13 @@ class Perceptron {
 
     prc_N = 0
 
+    constructStr;
+
+    setConstructStr(s)
+    {
+	this.constructStr = s;
+    }
+
     constructor(N) {
 	this.AImach = __PRC__;
 	this.prc_N = N

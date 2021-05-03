@@ -3,6 +3,13 @@
 class Mimic {
     epsilon;
 
+    constructStr;
+
+    setConstructStr(s)
+    {
+	this.constructStr = s;
+    }
+
     constructor(move_order, mode, epsilon) {
         // mode is 0 for copy, 1 for upgrade/downgrade
         this.mode_val = mode;

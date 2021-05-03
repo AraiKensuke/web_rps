@@ -91,6 +91,7 @@ Q.html
   var AIconfig           = getSessionStorage("AIconfigNum" + block, __PRC__);
 
   rpsAI               = eval("new " + AIconfig)
+  rpsAI.setConstructStr(AIconfig)
 
   if (block > to_block)
   {  // reloaded during transition?  just go to last page

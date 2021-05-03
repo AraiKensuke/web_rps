@@ -5,6 +5,8 @@ class MarkovChain {
     
     ini_MC_cndprob="";
     fin_MC_cndprob="";
+    
+    constructStr;
 
     constructor(decay, smxpwr) {
 	this.AImach = __MC__;
@@ -32,6 +34,11 @@ class MarkovChain {
 		this.ini_MC_cndprob += "0.333333 " + "0.333333 " + "0.333333";
 	    }
 	}
+    }
+
+    setConstructStr(s)
+    {
+	this.constructStr = s;
     }
 
     to_9x6s()

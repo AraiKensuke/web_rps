@@ -14,6 +14,7 @@
     }
 
     $exptname         = getVal("exptname", "");
+    $constructStr         = getVal("constructStr", "");
     $savedirname      = getVal("savedirname", "");
     $rec_hands        = getVal("rec_hands", "");
     $rec_AI_hands     = getVal("rec_AI_hands", "");
@@ -29,8 +30,9 @@
         mkdir($out_dirname);
     }
 
-    $file = $out_dirname . "/block" . $block . "_AI" . $AIconfigname . ".dat";
+    $file = $out_dirname . "/block" . $block . "_AI" . ".dat";
     file_put_contents($file, "#  player hands, AI hands, mv times, inp method, ini_weight, fin_weights, paced_or_free, AI_or_RNG, rps_probs, method\n" );
+    file_put_contents($file, $constructStr . "\n", FILE_APPEND);
     file_put_contents($file, $rec_hands . "\n", FILE_APPEND);
     file_put_contents($file, $rec_AI_hands . "\n", FILE_APPEND);
     file_put_contents($file, $rec_times . "\n", FILE_APPEND);

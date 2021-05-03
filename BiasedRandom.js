@@ -12,6 +12,14 @@ class BiasedRandom {
     rps_cumprob = null;
     AImach = __BIRND__;
 
+    constructStr;
+
+    setConstructStr(s)
+    {
+	this.constructStr = s;
+    }
+
+
     constructor(move_order, probs) //, switch_timescale) {
     {
 	this.moves = [0, 0, 0];

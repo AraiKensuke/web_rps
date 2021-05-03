@@ -49,6 +49,13 @@ class OutcomeBasedRule {
 
     //i_switch_timescale;
 
+    constructStr;
+
+    setConstructStr(s)
+    {
+	this.constructStr = s;
+    }
+
     constructor(move_order, mxstys, eps, rule_profile) //, switch_timescale) {
     {
 	this.AImach = __OBR__;

@@ -60,12 +60,6 @@ var __MIMIC__    = 6;
 var __NGAMES__  = 0;   // running number of games played
 var __CWTL__ = 1;      // cumulative win, tie, lose
 
-//var machines = [__MC__, __PRC__];
-var s_machines = ["frequentist",
-		  "overgeneralized frequentist",
-		  "perceptron", "wca", "random"];
-var info_machines = ["1-step frequentist", "1-step greedy frequentist",
-		     "multistep perceptron", "wca", "random"];
 //"The AI looks at previous game.  If human played R and AI played S there, it looks back into its record of all previous games where human played R and AI played S, and then looks to see how often human next played R, P or S.  The AI then predicts human move in proportion to how frequently that move followed human-R and AI-S.",
 //		     "The AI looks at previous game.  If human played R and AI played S there, it looks back into its record of all previous games where human played R and AI played S, and then looks to see how often human next played R, P or S.  The AI then predicts human move that's dependent on how frequently that move followed human-R and AI-S, but in a more 'greedy' fashion, ie it strongly favors moves that are more likely, even if the frequency is very close to the 2nd most likely.",
 //		     "Perceptron looks at several previous games, and ", "random"];
@@ -765,6 +759,7 @@ function send_php(){
 		rec_input_method : rec_inp_methd,
 		move_bgrd : rpsAI.fin_move_bgrd,
 		AImach :  rpsAI.AImach,
+		constructStr :  rpsAI.constructStr,
 		AIconfigname :  rpsAI.AIconfigname,
 		block  : block,
 	    },
@@ -788,6 +783,7 @@ function send_php(){
     		rec_times : rec_times,
 		rec_input_method : rec_inp_methd,
 		AImach :  rpsAI.AImach,
+		constructStr :  rpsAI.constructStr,
 		block  : block,
 	    },
 	    success: function(data) {
@@ -813,6 +809,7 @@ function send_php(){
 		fin_weight : rpsAI.fin_prc_weight,
 		AImach :  rpsAI.AImach,
 		AIconfigname :  rpsAI.AIconfigname,
+		constructStr :  rpsAI.constructStr,
 		block  : block,
 		N : rpsAI.prc_N
 	    },
@@ -838,6 +835,7 @@ function send_php(){
 		fin_cprob : rpsAI.fin_MC_cndprob,
 		AImach :  rpsAI.AImach,
 		AIconfigname :  rpsAI.AIconfigname,
+		constructStr :  rpsAI.constructStr,
 		block : block,
                 decay : rpsAI.decay
 	    },
@@ -860,6 +858,7 @@ function send_php(){
     		rec_times : rec_times,
 		rec_input_method : rec_inp_methd,
 		AImach :  __RND__,
+		constructStr :  rpsAI.constructStr,
 		AIconfigname :  __RND__,
 		block : block,
 	    },
