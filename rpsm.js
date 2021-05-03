@@ -28,7 +28,7 @@ var results=[];	// [0]勝ち、[1]負け、[2]あいこ
 //  paced or free  x 2
 //  AI or RNG      x 2
 
-var wait_next    = 2000
+var wait_next    = 2000;
 var update_evry  = 1
 var n_rps_plyd   = 0
 var __JAPANESE__ = 0
@@ -132,7 +132,14 @@ function set_lang(jore)
 	}
 	else if (realtimeResults == __NGAMES__)
 	{
-	    elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";
+	    if (mid_block == null)
+	    {
+		elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";
+	    }
+	    else
+	    {
+		elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";
+	    }
 	}
 
 
@@ -702,6 +709,7 @@ function You_win_or_lose(win,lose){
 	sessionStorage.setItem("bl" + block + "win", win);
 	sessionStorage.setItem("bl" + block + "lose", lose);
 	sessionStorage.setItem("bl" + block + "tie", tie);
+	//console.log("going to nextpageURL   " + nextpageURL);
 	setTimeout(() => {  location.href=nextpageURL; }, wait_next);
     }
 }

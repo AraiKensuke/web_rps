@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<STYLE>
+<!--https://www.freecodecamp.org/news/how-to-make-your-first-javascript-chart/-->
+#figures table, th, td {
+  border: 1px solid black;
+}
+
+</STYLE>
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript" src="rpsm.js"></script>
+<!--<script src="https://code.jscharting.com/2.9.0/jscharting.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
+<canvas id="myChart" width="85%" height="10%"></canvas>
+    <head>
+        <meta charset = "utf-8">
+        <title>Questions</title>
+    </head>
+
+<!--       display: inline-block; -->
+    <style>
+
+      table td {
+      overflow: visible;
+      white-space: nowrap;
+      padding: 20px
+      }
+        input[type=text] {
+            width: 60%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        input[type=button] {
+            width: 10%;
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        h1 {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        p {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        label {
+            font-family: 'Console', Monaco, monospace;
+        }
+
+        body {	font-family: 'Console', Monaco, monospace;
+	margin-top: 40px;
+	margin-left: 100px;
+	margin-right: 100px;
+	margin-bottom: 100px;
+	background-color: rgb(255, 255, 255);
+	}
+
+    </style>
+<SCRIPT>
+      function do_table()
+      {
+          to_block = parseInt(getSessionStorage("to_block"));
+      scores = {}
+          var html4table = "<TABLE><TR><TH>rule ID</TH><TH>outcomes</TH><TH>your perception</TH></TR>";
+    divobj = document.getElementsByName("resultTAB")[0];
+      for( var b = 0; b < to_block; b++)
+			  {
+			  html4table += "<TR><TD>";
+cmp = sessionStorage.getItem("compare" + (b+1).toString());
+aib = sessionStorage.getItem("AIconfigNumIndex" + (b+1).toString());
+aiNm = sessionStorage.getItem("AIconfigNumNickname" + (b+1).toString());
+
+    resbstr   = sessionStorage.getItem("results" + (b+1).toString());
+    resb =  to_2darray_from_str(resbstr);
+
+			 win1 = parseInt(resb[0][resb[0].length-1])
+			 los1 = parseInt(resb[1][resb[1].length-1])
+
+			  c1  = win1-los1;
+			  if (c1 > 0)
+      {
+sc1 = ("+" + c1.toString());
+}
+      else if (c1 < 0)
+{
+sc1 = c1.toString();
+}
+else
+{
+sc1 = "TIE";
+}
+console.log("aib-1:   " + (aib-1))
+
+if (scores[parseInt(aib)-1] == null)
+{
+		    scores[parseInt(aib)-1] = []
+}
+append_to_array(scores[parseInt(aib)-1], c1);
+
+			  html4table += aiNm;
+			  html4table += "</TD><TD>" + "(" +sc1+")</TD><TD>" + cmp + "</TD></TR>";
+}
+html4table += "</TABLE>";
+
+//html4table += "scores ID 1:  " + scores[0].toString() + "    mean: " + math.mean(scores[0]);
+      divobj.innerHTML = html4table;
+      }
+
+</SCRIPT>
+    <BODY onload="javascript:do_table();">
+      <CENTER>
+<DIV name="resultTAB" style="width:90%">
+</DIV>
+</CENTER>
+</BODY>
+<SCRIPT>
+</SCRIPT>
+</html>

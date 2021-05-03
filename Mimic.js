@@ -35,12 +35,19 @@ class Mimic {
 	}
 
         // else mode 1: downgrade/upgrade with prob 0.5
-        else {
+        else if (this.mode_val == 1) {
             //if (rnd < 0.5) {return this.downgrade(player)}
 	    val  = this.downgrade(player);
 	    val  = this.downgrade(val);
             //else {return this.upgrade(player)}
         }
+        else if (this.mode_val == 2) {
+            //if (rnd < 0.5) {return this.downgrade(player)}
+	    val  = this.downgrade(player);
+	    val  = this.upgrade(val);
+            //else {return this.upgrade(player)}
+        }
+
 
 	if (Math.random() < this.epsilon)
 	{   // add a bit of noise

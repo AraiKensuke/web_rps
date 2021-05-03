@@ -66,13 +66,18 @@ Q.html
   var MatchTo         = parseInt(getSessionStorage("MatchTo", 30));
   var to_block        = parseInt(getSessionStorage("to_block", 1));
   var block           = parseInt(getSessionStorage("block", 0));
-  var mid_block           = parseInt(getSessionStorage("mid_block_every", null));
+  var ss_mid_block           = getSessionStorage("mid_block_every", null);
+  var mid_block       = (ss_mid_block == null) ? null : parseInt(ss_mid_block);
 
+  block += 1;
+  console.log("block   is " + block + "        to_block is " + to_block);
   if (!practiceMode)
   {
       if (block == to_block)
       {
+  console.log("!!!!!!!!!!!!!!!!!   should be here block == to_block");
           var nextpageURL        = url_after_blocks;
+  console.log(nextpageURL);
       }
       if ( (mid_block != null) && (block % mid_block == 1) )
 
@@ -81,7 +86,6 @@ Q.html
       }
   }
 
-  block += 1;
   sessionStorage.setItem("block", block);
 
   var AIconfig           = getSessionStorage("AIconfigNum" + block, __PRC__);

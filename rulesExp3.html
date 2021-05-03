@@ -31,61 +31,34 @@
       sessionStorage.setItem("url_mid_blocks", "CompareAIs.html");
       sessionStorage.setItem("php_backend", "save_RPS_exp.php");
 
-      diff_blks = [];
-      ident_blks= [];
+      matchup_types = [[0, 1], [0, 0], [1, 0], [1, 1]];
 
-      hlf_elem_block = parseInt(elem_block/2)
-      for (eblk = 0; eblk < hlf_elem_block; eblk++ )
-			    {
-			    ident_blks[2*eblk] = 0;
-			    ident_blks[2*eblk+1] = 1;
-			    }
-
-      for (blk = 0; blk < elem_block; blk++ )
-			  {
-			  diff_blks[2*blk] = 0;
-			  diff_blks[2*blk+1] = 1;
-			  }
-				       shuffleArray(diff_blks);
-				       shuffleArray(ident_blks);
-
-			  //console.log("diff")
-			  //  console.log(diff_blks)
-			  //console.log("ident")
-			  //  console.log(ident_blks)
-iident = -1;
-iidiff = 1;
-inds_2 = [[0, 1], [1, 0]]
-      for (blk = 0; blk < 2*elem_block; blk++ )
+      inds  = [-1, -1];
+      for (bb = 0; bb < 2; bb++)
       {
-			   if (diff_blks[blk] == 1)
-			   {
-			  iidiff++;
-			       inds = inds_2[iidiff%2]
-			   }
-			   else if (diff_blks[blk] == 0)
-			   {
-			   iident++;
-			       inds = [ident_blks[iident], ident_blks[iident]];
-			   }
+	for (blk = 0; blk < 4; blk++)
+	{
+            inds[0] = matchup_types[blk][0];
+            inds[1] = matchup_types[blk][1];
 
 
-          mach1 = machine_and_configs[inds[0]];
-          inds1 = machine_and_configs_indices[inds[0]];
-          nickn1 = machine_and_configs_nicknames[inds[0]];
+            mach1 = machine_and_configs[inds[0]];
+            inds1 = machine_and_configs_indices[inds[0]];
+            nickn1 = machine_and_configs_nicknames[inds[0]];
 
-          sessionStorage.setItem("AIconfigNum" + (2*blk+1).toString(), mach1);
-          sessionStorage.setItem("AIconfigNumIndex" + (2*blk+1).toString(), inds1);
-          sessionStorage.setItem("AIconfigNumNickname" + (2*blk+1).toString(), nickn1);
-          mach2 = machine_and_configs[inds[1]];
-          inds2 = machine_and_configs_indices[inds[1]];
+            sessionStorage.setItem("AIconfigNum" + (bb*8 + 2*blk+1).toString(), mach1);
+            sessionStorage.setItem("AIconfigNumIndex" + (bb*8 + 2*blk+1).toString(), inds1);
+            sessionStorage.setItem("AIconfigNumNickname" + (bb*8 + 2*blk+1).toString(), nickn1);
+            mach2 = machine_and_configs[inds[1]];
+            inds2 = machine_and_configs_indices[inds[1]];
 
-          nickn2 = machine_and_configs_nicknames[inds[1]];
-			  console.log(blk + " ----    " + nickn1 + "   " + nickn2);
-          sessionStorage.setItem("AIconfigNum" + (2*blk+2).toString(), mach2);
-          sessionStorage.setItem("AIconfigNumIndex" + (2*blk+2).toString(), inds2);
-          sessionStorage.setItem("AIconfigNumNickname" + (2*blk+2).toString(), nickn2);
-
+            nickn2 = machine_and_configs_nicknames[inds[1]];
+	    console.log(blk + " ----    " + nickn1 + "   " + nickn2);
+            sessionStorage.setItem("AIconfigNum" + (bb*8 + 2*blk+2).toString(), mach2);
+            sessionStorage.setItem("AIconfigNumIndex" + (bb*8 + 2*blk+2).toString(), inds2);
+            sessionStorage.setItem("AIconfigNumNickname" + (bb*8 + 2*blk+2).toString(), nickn2);
+         }
+         shuffleArray(matchup_types);
       }
 
       sessionStorage.setItem("RealtimeResults", realtimeResults);
