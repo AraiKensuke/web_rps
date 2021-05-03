@@ -584,11 +584,21 @@ function You_win_or_lose(win,lose){
 	{
 	    if (block == to_block)
 	    {
-		if (win > lose) {imgsrc = "youwin_done.jpg";} else {imgsrc = "youlost_done.jpg";}
+		if (win > lose) {imgsrc = "youwin_done.png";} 
+		else if (win == lose)
+		    {
+		if (win > lose) {imgsrc = "youtied_done.png";} 
+			}
+		else {imgsrc = "youlost_done.png";}
 	    }
 	    else
 	    {
-		if (win > lose) {imgsrc = "youwin.jpg";} else {imgsrc = "youlost.jpg";}
+		if (win > lose) {imgsrc = "youwin.png";} 
+		else if (win == lose)
+		    {
+		if (win > lose) {imgsrc = "youtied.png";} 
+			}
+		else {imgsrc = "youlost.png";}
 	    }
 	    youwin.innerHTML = '<img style="opacity:0.75;" src="' + imgsrc + '">';
 	}

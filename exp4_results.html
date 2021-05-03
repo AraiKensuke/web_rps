@@ -12,7 +12,7 @@
 <!--<script src="https://code.jscharting.com/2.9.0/jscharting.js"></script>-->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
-<canvas id="myChart" width="85%" height="10%"></canvas>
+<canvas id="myChart" width="85%" height="15%"></canvas>
     <head>
         <meta charset = "utf-8">
         <title>Questions</title>
@@ -20,12 +20,18 @@
 
 <!--       display: inline-block; -->
     <style>
+      table {
+      position: absolute;
+}
 
       table td {
       overflow: visible;
       white-space: nowrap;
-      padding: 20px
+      padding: 4px;
+      width: 100px;
+      border: 1px solid black;
       }
+      
         input[type=text] {
             width: 60%;
             padding: 12px 20px;
@@ -60,14 +66,19 @@
 
     </style>
 <SCRIPT>
-      function do_table()
-      {
+  var scores_by_block = [];
+  var scores_0 = [];
+  var block_xs        = [];
+
+  //  BY block
           to_block = parseInt(getSessionStorage("to_block"));
+
       scores = {}
-          var html4table = "<TABLE><TR><TH>rule ID</TH><TH>outcomes</TH><TH>your perception</TH></TR>";
-    divobj = document.getElementsByName("resultTAB")[0];
+          var html4table = "<TABLE><TR><TH>rule ID</TH><TH>outcomes</TH></TR>";
       for( var b = 0; b < to_block; b++)
-			  {
+{
+scores_0[b] = 0;
+  block_xs[b] = b+1;
 			  html4table += "<TR><TD>";
 cmp = sessionStorage.getItem("compare" + (b+1).toString());
 aib = sessionStorage.getItem("AIconfigNumIndex" + (b+1).toString());
@@ -80,6 +91,7 @@ aiNm = sessionStorage.getItem("AIconfigNumNickname" + (b+1).toString());
 			 los1 = parseInt(resb[1][resb[1].length-1])
 
 			  c1  = win1-los1;
+			  scores_by_block[b] = c1;
 			  if (c1 > 0)
       {
 sc1 = ("+" + c1.toString());
@@ -101,21 +113,37 @@ if (scores[parseInt(aib)-1] == null)
 append_to_array(scores[parseInt(aib)-1], c1);
 
 			  html4table += aiNm;
-			  html4table += "</TD><TD>" + "(" +sc1+")</TD><TD>" + cmp + "</TD></TR>";
+			  html4table += "</TD><TD>" + "(" +sc1+")</TD></TR>";
 }
 html4table += "</TABLE>";
 
 //html4table += "scores ID 1:  " + scores[0].toString() + "    mean: " + math.mean(scores[0]);
-      divobj.innerHTML = html4table;
+
+      function do_tables()
+      {
+    //divobj = document.getElementsByName("resultTAB")[0];
+      //divobj.innerHTML = html4table;
       }
 
 </SCRIPT>
-    <BODY onload="javascript:do_table();">
+    <BODY onload="javascript:do_tables();">
       <CENTER>
-<DIV name="resultTAB" style="width:90%">
-</DIV>
+<!--<DIV name="resultTAB" style="width:90%">-->
+<SCRIPT>
+document.write(html4table);
+</SCRIPT>
+<!--</DIV>-->
+<canvas id="myChart" width="85%" height="10%"></canvas>
 </CENTER>
 </BODY>
 <SCRIPT>
+var canv_scores = document.getElementById('myChart').getContext('2d');
+
+const data1 = {labels: block_xs, datasets: [{data: scores_by_block, label: "scores", borderColor: "#000000;"}, {data: scores_0, label: "", borderColor: "#FF3333;"}]};
+const config1 = {type: 'line', data: data1, options: {}}
+var myChart = new Chart(canv_scores, config1);
+
+
+
 </SCRIPT>
 </html>

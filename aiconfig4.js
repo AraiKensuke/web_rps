@@ -6,8 +6,8 @@ var machines = [["1", "WTL1", "OutcomeBasedRule(__moRSP__, 3, 0.15, [__ST__, __U
 		["6", "WTL4", "OutcomeBasedRule(__moRSP__, 3, 0.15, [__UP__, __ST__, __UP__]);"],
 
 		["7", "Mimic2", "Mimic(__moRSP__, 1, 0.15);"],
-		["8", "WTL5", "OutcomeBasedRule(__moRSP__, 3, 0.15, [__DN__, __DN__, __ST__]);"],
-		["9", "WTL6", "OutcomeBasedRule(__moRSP__, 3, 0.15, [__UP__, __UP__, __ST__]);"]];
+		["8", "Rnd", "BiasedRandom(__moRSP__, [0.33, 0.33, 0.34])"],
+		["9", "BiasRnd", "BiasedRandom(__moRSP__, [0.25, 0.25, 0.5])"]]
 
 var machines_use_these = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
