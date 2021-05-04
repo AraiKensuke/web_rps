@@ -8,7 +8,7 @@
 <SCRIPT src="rpsm.js"></SCRIPT>
 
 <SCRIPT>
-      var MatchTo=25;
+      var MatchTo=12;
       realtimeResults = __CWTL__;
 
       machine_and_configs = [];
@@ -60,7 +60,6 @@ inds[blk] = blk
   {
       document.getElementById("ngames1").innerHTML = MatchTo;
       document.getElementById("ngames2").innerHTML = MatchTo;
-      document.getElementById("ngames3").innerHTML = MatchTo;
   }
 
   function nextpage(dopractice)
@@ -71,7 +70,7 @@ inds[blk] = blk
 
 </SCRIPT>
 <BODY onload="javascript:setGameNums();">
-        <p id="p1">We ask that you play 18 <SPAN id="ngames1">10</SPAN>-match rounds (like playing <SPAN id="ngames2">10</SPAN> back-to-back matches against 18 different people) of repeated RPS against 18 different bots, each deciding next move based on your and/or the bot's last moves.  The exact rule each bot uses will be different.  Bot A may always keep playing the same hand following a win, while bot B might always move to a different hand following a win.  You likely won't completely figure out how each bot plays in <SPAN id="ngames3">10</SPAN> matches, but you'll probably learn enough to gain a small advantage.  <BR><BR>
+        <p id="p1">The tournament pits you against 18 different bots.  You'll play against each bot in a <SPAN id="ngames1">10</SPAN>-match round, and the victor is the one that wins more matches.  Each bot has their own rule for deciding its next move based on your and/or the bot's last moves.  Bot A may always keep playing the same hand following a win, while bot B might always move to a different hand following a win.  You likely won't completely figure out how each bot plays in <SPAN id="ngames2">10</SPAN> matches, but you'll probably learn enough to gain a small advantage.  <BR><BR>
 You can go straight to the 18 rounds, or you can first practice playing RPS against the computer in short, 10 game rounds, and then go on to the 2 rounds when you're ready.
 </p>
 
