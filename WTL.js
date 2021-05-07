@@ -8,31 +8,7 @@ var __AI_LOS__ = 2;
 
 //   R, S, P
 
-function new_rule(old_rule)
-{
-    var new_RULE = null;
-    if (old_rule == __ST__)
-    {
-	new_RULE = (Math.random() < 0.5) ? __UP__ : __DN__;
-    }
-    else if (old_rule == __UP__)
-    {
-	new_RULE = (Math.random() < 0.5) ? __ST__ : __DN__;
-    }
-    else if (old_rule == __DN__)
-    {
-	new_RULE = (Math.random() < 0.5) ? __UP__ : __ST__;
-    }
-    return new_RULE;
-}
-
-class OutcomeBasedRule {
-    //rules = [[__ST__, __DN__, __UP__], [__ST__, __UP__, __UP__],
-    //	     [__DN__, __DN__, __ST__], [__DN__, __ST__, __DN__],
-    //	     [__UP__, __UP__, __DN__], [__UP__, __ST__, __DN__]];
-    //rules = [[__ST__, __DN__, __DN__], [__DN__, __ST__, __DN__],
-    //	     [__DN__, __DN__, __ST__]];
-
+class WTL {
     stays;
     pred=[];
     my_last_play;
@@ -40,6 +16,9 @@ class OutcomeBasedRule {
     consecutive_ups;
     consecutive_dns;
     consecutive_ties;
+
+    consecutive_losses;
+    counter_mode;
 
     W_rule = null;
     T_rule = null;
@@ -49,6 +28,7 @@ class OutcomeBasedRule {
 
     //i_switch_timescale;
 
+    doCounter = false;
     constructStr;
 
     setConstructStr(s)
@@ -56,16 +36,50 @@ class OutcomeBasedRule {
 	this.constructStr = s;
     }
 
-    constructor(move_order, mxstys, eps, rule_profile) //, switch_timescale) {
+    pickAction(cum_ps)    
     {
-	this.AImach = __OBR__;
-	this.stays  = 0;     // we won't keep stays longer than max_stays
-	this.max_stays = mxstys;
-	this.epsilon = eps;
+	var r = Math.random()
+	for( var i = 0; i < cum_ps.length-1; i++)
+	{
+	    if ((r >= cum_ps[i]) && (r < cum_ps[i+1]))
+	    {
+		return i
+	    }
+	}
+	
+    }
+
+    constructor(move_order, pW, pT, pL, doCounter) //, switch_timescale) {
+    {
+
+	this.AImach = __WTL__;
+	this.doCounter = doCounter;
 	//var rule_profile = getRandomInt(0, this.rules.length);
-	this.W_rule = rule_profile[0];
-	this.T_rule = rule_profile[1];
-	this.L_rule = rule_profile[2];
+	this.W_rule = pW;
+	this.T_rule = pT;
+	this.L_rule = pL;
+	this.consecutive_losses = 0;
+	this.counter_mode = 0;
+
+	var sum_W = this.W_rule[0] + this.W_rule[1] + this.W_rule[2]
+	var sum_T = this.T_rule[0] + this.T_rule[1] + this.T_rule[2]
+	var sum_L = this.L_rule[0] + this.L_rule[1] + this.L_rule[2]
+	for (var i = 0; i < 3; i++ )
+	{
+	    this.W_rule[i] /= sum_W
+	    this.T_rule[i] /= sum_T
+	    this.L_rule[i] /= sum_L
+	}
+	this.cum_W_rule = [0];
+	this.cum_T_rule = [0];
+	this.cum_L_rule = [0];
+
+	for (var i = 0; i < 3; i++ )
+	{
+	    this.cum_W_rule[i+1] = this.W_rule[i] + this.cum_W_rule[i]
+	    this.cum_T_rule[i+1] = this.T_rule[i] + this.cum_T_rule[i]
+	    this.cum_L_rule[i+1] = this.L_rule[i] + this.cum_L_rule[i]
+	}
 
 	this.my_last_play = 1;
 	this.consecutive_ups = 0;
@@ -116,6 +130,7 @@ class OutcomeBasedRule {
 	     ((this.my_last_play == 3) && (player == 1)) )
 	{  // (AI=R, HUM=S) or (AI=S, HUM=P) or or (AI=P, HUM=R)
 	    last_outcome=__AI_WIN__;
+	    this.consecutive_losses = 0;
 	}
 	else if ( ((this.my_last_play == 2) && (player == 1)) ||
 		  ((this.my_last_play == 3) && (player == 2)) ||
@@ -123,6 +138,7 @@ class OutcomeBasedRule {
 	{
 	    // (AI=S, HUM=R) or (AI=P, HUM=S) or or (AI=R, HUM=P)
 	    last_outcome = __AI_LOS__;
+	    this.consecutive_losses += 1;
 	}
 	else   // TIE
 	{
@@ -132,61 +148,52 @@ class OutcomeBasedRule {
 
 	if (last_outcome == __AI_WIN__)
 	{
-	    this.consecutive_wins += 1;
-	    this.consecutive_ties = 0;
-	    this.consecutive_loss = 0;
-	    rule = this.W_rule;
+	    rule = this.pickAction(this.cum_W_rule);
 	}
 	else if (last_outcome == __AI_TIE__)
 	{
-	    this.consecutive_wins = 0;
-	    this.consecutive_ties += 1;
-	    this.consecutive_loss = 0;
-
-	    rule = this.T_rule;
+	    rule = this.pickAction(this.cum_T_rule);
 	}
 	else if (last_outcome == __AI_LOS__)
 	{
-	    this.consecutive_wins = 0;
-	    this.consecutive_ties = 0;
-	    this.consecutive_loss += 1;
-	    rule = this.L_rule;
+	    rule = this.pickAction(this.cum_L_rule);
 	}
 
 	if (rule == __UP__)
 	{
-	    //this.consecutive_ups += 1;
-
-	    //if (this.consecutive_ups > 3)
-	    //{
+	    //this.my_last_play = this.downgrade(this.my_last_play);
 	    this.my_last_play = this.upgrade(this.my_last_play);
-	    // this.consecutive_ups = 0;
-	    // //}
-	    // else
-	    // {
-	    // 	this.my_last_play = this.upgrade(this.my_last_play);
-	    // }
 	}
 	else if (rule == __DN__)
 	{
-	    // this.consecutive_dns += 1;
-	    // if (this.consecutive_dns > 3)
-	    // {
+	    //this.my_last_play = this.upgrade(this.my_last_play);
 	    this.my_last_play = this.downgrade(this.my_last_play);
-	    // }
-	    // else
-	    // {
-	    // 	this.my_last_play = this.downgrade(this.my_last_play);
-	    // }
 	}
-	else if (rule == __CH__)
+
+
+	if (this.doCounter)
 	{
-	    this.my_last_play = this.change(this.my_last_play);
+	    if ( (this.consecutive_losses > 2) && (this.counter_mode == 0) )
+	    {
+		//  counter.  If I was going to 
+		this.counter_mode = 3;
+		this.consecutive_losses = 0;
+	    }
+	    if (this.counter_mode > 0)
+	    {
+		
+		// if (this.counter_mode == 1)
+		// {
+		// 	this.my_last_play = this.upgrade(this.my_last_play);
+		// }
+		// else
+		// {   // counter
+		this.my_last_play = this.downgrade(this.my_last_play);
+		//}
+		this.counter_mode -= 1;
+	    }
 	}
-	if (Math.random() < this.epsilon)
-	{
-	    this.my_last_play = this.change(this.my_last_play);
-	}
+
 
 	var ret = this.downgrade(this.my_last_play);  // return pred of HUMAN hand
 	return ret;

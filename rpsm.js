@@ -21,14 +21,14 @@ var rec_hands="";	// 記録用
 var rec_inp_methd="";	// 記録用
 var rec_AI_hands="";	// 記録用
 var rec_times="";	// 記録用
-
+var plhand_prev;
 var results=[];	// [0]勝ち、[1]負け、[2]あいこ
 
 //  input method   x 2
 //  paced or free  x 2
 //  AI or RNG      x 2
 
-var wait_next    = 2000;
+var wait_next    = 4000;
 var update_evry  = 1
 var n_rps_plyd   = 0
 var __JAPANESE__ = 0
@@ -42,20 +42,14 @@ var theDate = new Date();
 var startDate = new Date();
 last_time_now = theDate.getTime()
 var exptname;
+var stop_after_n_consec_wins = 10000;
+var consec_wins = 0;
 
 var method = "blk1";
 
 var blk = "1";
 var count = "0";
 var flag = "0";
-
-var __MC__     = 0;
-var __PRC__    = 1;
-var __SMWCA__  = 2;
-var __RND__    = 3;
-var __OBR__    = 4;
-var __BIRND__    = 5;
-var __MIMIC__    = 6;
 
 var __NGAMES__  = 0;   // running number of games played
 var __CWTL__ = 1;      // cumulative win, tie, lose
@@ -179,8 +173,7 @@ function Reset(){
     document.getElementById("final_result").innerHTML = '';
     //document.getElementById("final_result3").innerHTML = '';
     // 適当な値を相手の手の初期値として指定
-    //var plhand = Math.floor( Math.random() * 3 + 1 );
-    plhand_prev = 1;  //start with goo
+    plhand_prev = Math.floor( Math.random() * 3 + 1 );
 
     /* 勝敗表示を消す */
     var win_elem = document.getElementById("win");
@@ -276,6 +269,39 @@ function RPS(plhand, key_or_mouse) {
     ShowResults(plhand,AIhand);
 }
 
+function RPS_nodisp(plhand, game) {
+    var pre;
+    predWhatHumanWillPlay = AI(plhand_prev);  // plhand_prev = 1, 2, 3   //  prediction of HUMAN
+    plhand_prev = plhand
+
+    if (move_order == __moRSP__)
+    {
+	AIhand=(predWhatHumanWillPlay+1)%3+1; //gives stronger hand if RSP?
+    }
+    if (move_order == __moRPS__ )
+    {
+	AIhand=(predWhatHumanWillPlay+3)%3+1; //gives stronger hand if RSP? -s
+    }    
+    s = (3+AIhand-plhand)%3;
+    switch((3+AIhand-plhand)%3){
+    case 0:
+	results[0][game+1]=results[0][game];
+	results[1][game+1]=results[1][game];
+	results[2][game+1]=results[2][game]+1;
+	break;
+    case 1:
+	results[0][game+1]=results[0][game]+1;
+	results[1][game+1]=results[1][game];
+	results[2][game+1]=results[2][game];
+	break;
+    case 2:
+	results[0][game+1]=results[0][game];
+	results[1][game+1]=results[1][game]+1;
+	results[2][game+1]=results[2][game];
+	break;
+    }
+}
+
 
 /*1(グー),2(チョキ),3(パー)を入力すると，前もって決めていた
 マシンの手を示します．そして「勝ち，負け，引き分け」を表示．
@@ -361,6 +387,7 @@ function ShowResults(plhand,predhand,resultTimeline){
      * 2 : マシンの勝ち */
     switch((3+predhand-plhand)%3){
     case 0:
+	consec_wins = 0;
 	resultTimeline.add({
 	    targets: '#win',
 	    duration: 100,
@@ -372,6 +399,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	results[2][game+1]=results[2][game]+1;
 	break;
     case 1:
+	consec_wins += 1;
 	resultTimeline.add({
 	    targets: '#win',
 	    offset: '-=100',
@@ -390,6 +418,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	results[2][game+1]=results[2][game];
 	break;
     case 2:
+	consec_wins = 0;
 	resultTimeline.add({
 	    targets: '#win',
 	    offset: '-=100',
@@ -434,14 +463,14 @@ function ShowResults(plhand,predhand,resultTimeline){
 	}
     }
 
-
     if (realtimeResults == __CWTL__)
     {
 	redraw_graph(Ymax);
     }
 
     game++;
-    if (n_rps_plyd >= MatchTo){
+    if ( (n_rps_plyd >= MatchTo) || (consec_wins > stop_after_n_consec_wins) )
+    {
 	stopped = true;
 	// fin_prc_weightを更新
 	var prec=[];
@@ -511,7 +540,7 @@ function AI(player){  // player is 1, 2, 3
     //perceptron
     n_rps_plyd += 1
 
-    if ((rpsAI.AImach==__SMWCA__) || (rpsAI.AImach == __PRC__) || (rpsAI.AImach == __OBR__) || (rpsAI.AImach == __BIRND__) || (rpsAI.AImach == __MIMIC__)) {
+    if ((rpsAI.AImach==__SMWCA__) || (rpsAI.AImach == __PRC__) || (rpsAI.AImach == __OBR__) || (rpsAI.AImach == __BIRND__) || (rpsAI.AImach == __MIMIC__) || (rpsAI.AImach == __WTL__)) {
 	return (rpsAI.predict(player));
     }
     //Markov Chain

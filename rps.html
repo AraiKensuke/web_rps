@@ -11,8 +11,11 @@
 <!--  SMWCA    code from kaggle -->
 <script type="text/javascript" src="move_order.js"></script>
 <!--  SMWCA    code from kaggle -->
+<script type="text/javascript" src="AItypes.js"></script>
+
 <script type="text/javascript" src="Mimic.js"></script>
 <!--  SMWCA    code from kaggle -->
+<script type="text/javascript" src="WTL.js"></script>
 <script type="text/javascript" src="OutcomeBasedRule.js"></script>
 <!--  SMWCA    code from kaggle -->
 <script type="text/javascript" src="BiasedRandom.js"></script>
@@ -63,7 +66,8 @@ Q.html
   var realtimeResults = parseInt(getSessionStorage("RealtimeResults", __CWTL__));
   exptname            = getSessionStorage("exptname", "");
 
-  var MatchTo         = parseInt(getSessionStorage("MatchTo", 30));
+  var MatchTo         = parseInt(getSessionStorage("MatchTo", 100));
+  stop_after_n_consec_wins         = parseInt(getSessionStorage("stop_after_n_consec_wins", 100000));
   var to_block        = parseInt(getSessionStorage("to_block", 1));
   var block           = parseInt(getSessionStorage("block", 0));
   var ss_mid_block           = getSessionStorage("mid_block_every", null);
@@ -262,4 +266,4 @@ charfield.onkeypress = function(e) {
 <!--<input type="button" style="font:10.5pt Arial;" value="Reset" onclick="Reset()" /> -->
 </body>
 </html>
-v
+

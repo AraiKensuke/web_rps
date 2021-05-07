@@ -1,0 +1,82 @@
+<HTML>
+<link rel="stylesheet" href="rps.css" type="text/css" />
+<SCRIPT src="util.js"></SCRIPT>
+<SCRIPT src="aiconfig6.js"></SCRIPT>
+
+<script type="text/javascript" src="SMWCA.js"></script>
+<script type="text/javascript" src="PRCPTRN.js"></script>
+<script type="text/javascript" src="MC.js"></script>
+<SCRIPT src="rpsm.js"></SCRIPT>
+
+<SCRIPT>
+      var MatchTo=40;
+      realtimeResults = __CWTL__;
+
+      machine_and_configs = [];
+      machine_and_configs_indices = [];
+      machine_and_configs_nicknames = [];
+
+      nmachines = _machine_and_configs.length;
+      for (i = 0; i < nmachines; i++ )
+		      {
+		      machine_and_configs[i] = _machine_and_configs[i]
+		      machine_and_configs_indices[i] = _machine_and_configs_indices[i]
+		      machine_and_configs_nicknames[i] = _machine_and_configs_nicknames[i]
+}
+to_block = nmachines;
+      sessionStorage.setItem("exptname", "exp6");
+      sessionStorage.setItem("block", 0);
+      sessionStorage.setItem("to_block", to_block);
+      sessionStorage.setItem("MatchTo", MatchTo);
+      sessionStorage.setItem("url_after_blocks", "exp4_results.html");
+      sessionStorage.setItem("stop_after_n_consec_wins", 6);
+
+      inds = [];
+      for (blk = 0; blk < to_block; blk++ )
+      {
+inds[blk] = blk
+			  }
+			  shuffleArray(inds);
+      for (blk = 0; blk < to_block; blk++ )
+      {
+            mach1 = machine_and_configs[inds[blk]];
+            inds1 = machine_and_configs_indices[inds[blk]];
+            nickn1 = machine_and_configs_nicknames[inds[blk]];
+
+            sessionStorage.setItem("AIconfigNum" + (blk+1).toString(), mach1);
+            sessionStorage.setItem("AIconfigNumIndex" + (blk+1).toString(), inds1);
+            sessionStorage.setItem("AIconfigNumNickname" + (blk+1).toString(), nickn1);
+	}
+
+      sessionStorage.setItem("RealtimeResults", realtimeResults);
+      sessionStorage.setItem("php_backend", "save_RPS_exp.php");
+
+  function setGameNums()
+  {
+      document.getElementById("ngames1").innerHTML = MatchTo;
+      document.getElementById("ngames2").innerHTML = MatchTo;
+  }
+
+  function nextpage(dopractice)
+  {
+      sessionStorage.setItem("PracticeMode", dopractice);
+      document.location="rps.html";
+  }
+
+</SCRIPT>
+<BODY onload="javascript:setGameNums();">
+        <p id="p1">The tournament pits you against 4 different bots.  You'll play against each bot in a <SPAN id="ngames1">10</SPAN>-match round, and the victor is the one that wins more matches.  Each bot has their own rule for deciding its next move based on your and/or the bot's last moves.  Bot A may always keep playing the same hand following a win, while bot B might always move to a different hand following a win.  You likely won't completely figure out how each bot plays in <SPAN id="ngames2">10</SPAN> matches, but you'll probably learn enough to gain a small advantage.  <BR><BR>
+You can go straight to the 2 rounds, or you can first practice playing RPS against the computer in short, 10 game rounds, and then go on to the 2 rounds when you're ready.
+</p>
+
+<BR><BR>
+<CENTER>
+<TABLE><TR><TD>
+	    <A href="javascript:nextpage(false);"><IMG src="skip_practice.jpg" height=40/></A></TD></TR>
+  <TR><TD>
+	    <A href="javascript:nextpage(true);"><IMG src="practice_round.jpg" height=40/></A>
+</TR></TABLE>
+</CENTER>
+
+</BODY>
+</HTML>
