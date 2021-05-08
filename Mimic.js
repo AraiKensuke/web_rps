@@ -68,8 +68,6 @@ class Mimic {
 	    }
 	}
 	return val;
-
-
     }
 
     done(){};

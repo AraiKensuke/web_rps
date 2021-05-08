@@ -55,6 +55,8 @@ inds[blk] = blk
   {
       document.getElementById("ngames1").innerHTML = MatchTo;
       document.getElementById("ngames2").innerHTML = MatchTo;
+      document.getElementById("nbots1").innerHTML = nmachines;
+      document.getElementById("nbots2").innerHTML = nmachines;
   }
 
   function nextpage(dopractice)
@@ -65,8 +67,8 @@ inds[blk] = blk
 
 </SCRIPT>
 <BODY onload="javascript:setGameNums();">
-        <p id="p1">The tournament pits you against 4 different bots.  You'll play against each bot in a <SPAN id="ngames1">10</SPAN>-match round, and the victor is the one that wins more matches.  Each bot has their own rule for deciding its next move based on your and/or the bot's last moves.  Bot A may always keep playing the same hand following a win, while bot B might always move to a different hand following a win.  You likely won't completely figure out how each bot plays in <SPAN id="ngames2">10</SPAN> matches, but you'll probably learn enough to gain a small advantage.  <BR><BR>
-You can go straight to the 2 rounds, or you can first practice playing RPS against the computer in short, 10 game rounds, and then go on to the 2 rounds when you're ready.
+        <p id="p1">The tournament pits you against <SPAN id="nbots1">10</SPAN> different bots.  You'll play against each bot in a <SPAN id="ngames1">10</SPAN>-match round, and the victor is the one that wins more matches.  Each bot decides the next move in its own way, and might look at what happened in the last match, or it might be like a 2 year-old that really likes to play rock regardless of how that has worked for them so far.  You likely won't completely figure out how each bot plays in <SPAN id="ngames2">10</SPAN> matches, but you'll probably learn enough to gain a small advantage.  <BR><BR>
+You can go straight to the <SPAN id="nbots2">10</SPAN> rounds, or you can first practice playing RPS against the computer in a short 10 game round.
 </p>
 
 <BR><BR>
