@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<STYLE>
+<!--https://www.freecodecamp.org/news/how-to-make-your-first-javascript-chart/-->
+#figures table, th, td {
+  border: 1px solid black;
+}
+
+</STYLE>
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript" src="rpsm.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
+    <head>
+        <meta charset = "utf-8">
+        <title>Questions</title>
+    </head>
+
+<!--       display: inline-block; -->
+    <style>
+      table {
+      position: absolute;
+}
+
+      table td {
+      overflow: visible;
+      white-space: nowrap;
+      padding: 4px;
+      width: 100px;
+      border: 1px solid black;
+      }
+        body {	font-family: Verdana;
+	margin-top: 40px;
+	margin-left: 100px;
+	margin-right: 100px;
+	margin-bottom: 100px;
+	background-color: rgb(255, 255, 255);
+	}
+
+    </style>
+<SCRIPT>
+  var scores_by_block = [];
+  var scores_0 = [];
+  var block_xs        = [];
+
+  //  BY block
+          to_block = parseInt(getSessionStorage("to_block"));
+
+      scores = {}
+var visitnum = sessionStorage.getItem("visitnum", "");
+var partID = sessionStorage.getItem("ParticipantID", "");
+
+          var html4table = "<TABLE><TR><TH>rule ID</TH><TH>outcomes</TH></TR>";
+      for( var b = 0; b < to_block; b++)
+{
+  block_xs[b] = b+1;
+			  html4table += "<TR><TD>";
+cmp = sessionStorage.getItem("compare" + (b+1).toString());
+aib = sessionStorage.getItem("AIconfigNumIndex" + (b+1).toString());
+aiNm = sessionStorage.getItem("AIconfigNumNickname" + (b+1).toString());
+
+    resbstr   = sessionStorage.getItem("results" + (b+1).toString());
+    resb =  to_2darray_from_str(resbstr);
+
+			 win1 = parseInt(resb[0][resb[0].length-1])
+			 los1 = parseInt(resb[1][resb[1].length-1])
+
+			  c1  = win1-los1;
+			  scores_by_block[b] = c1;
+			  if (c1 > 0)
+      {
+sc1 = ("+" + c1.toString());
+}
+      else if (c1 < 0)
+{
+sc1 = c1.toString();
+}
+else
+{
+sc1 = "TIE";
+}
+
+if (scores[parseInt(aib)-1] == null)
+{
+		    scores[parseInt(aib)-1] = []
+}
+append_to_array(scores[parseInt(aib)-1], c1);
+
+			  html4table += aiNm;
+			  html4table += "</TD><TD>" + "(" +sc1+")</TD></TR>\n";
+}
+html4table += "</TABLE>";
+
+var html4links = "";
+html4links += "<BR><BR><BR><A href=\"TournamentRules.php?partID=" + partID + "\">Play tournament again now</A>, or if you want to play again later, use your participantID:<PRE>" + partID + "</PRE>You will not be asked to fill out the questionnaires again if you use the ID. To reiterate, <B>this ID does not contain any identifying information about you</B>.  It is only used to mark data in our database as being collected from the same anonymous individual, and <B>your use of it in future participation in this experiment is optional and voluntary</B>.";
+
+
+      function do_tables()
+      {
+    //divobjTAB = document.getElementsByName("resultTAB")[0];
+    divobjLINKS = document.getElementsByName("linksTAB")[0];
+      //divobjTAB.innerHTML = html4table;
+      divobjLINKS.innerHTML = html4links;
+		    spanobjMach1 = document.getElementsByName("mach1")[0];
+		    spanobjMach2 = document.getElementsByName("mach2")[0];
+		    spanobjMach3 = document.getElementsByName("mach3")[0];
+		    spanobjMach1.innerHTML = sessionStorage.getItem("AIconfigNumNickname1");
+		    spanobjMach2.innerHTML = sessionStorage.getItem("AIconfigNumNickname2");
+		    spanobjMach3.innerHTML = sessionStorage.getItem("AIconfigNumNickname3");
+		    visitnumSPAN = document.getElementsByName("visitSPAN")[0];
+		    if ((visitnum == "1") || (visitnum == "21") || (visitnum == "31") || (visitnum == "41") || (visitnum == "51"))
+		    {
+		    visitnumSPAN.innerHTML = visitnum + "st";
+		    }
+		    else if ((visitnum == "2") || (visitnum == "22") || (visitnum == "32") || (visitnum == "42") || (visitnum == "52"))
+		    {
+		    visitnumSPAN.innerHTML = visitnum + "nd";
+		    }
+		    else if ((visitnum == "3") || (visitnum == "23") || (visitnum == "33") || (visitnum == "43") || (visitnum == "53"))
+		    {
+		    visitnumSPAN.innerHTML = visitnum + "rd";
+		    }
+		    else
+		    {
+		    visitnumSPAN.innerHTML = visitnum + "th";
+		    }
+      }
+
+
+</SCRIPT>
+    <BODY onload="javascript:do_tables();">
+<H1>Thank you for your participation!</H1>
+Your <SPAN name="visitSPAN"></SPAN> time participating.<BR>
+
+<!--<DIV name="resultTAB" style="height:150px"></DIV>-->
+<DIV name="plotDIV1" style="height:150px">
+Round 1 net wins (machine: <span name="mach1"></span>):
+<canvas id="myChart1" style="height:100px;"></canvas>
+</DIV><BR>
+<DIV name="plotDIV2" style="height:150px">
+Round 2 net wins (machine: <span name="mach2"></span>):
+<canvas id="myChart2" style="height:100px;"></canvas>
+</DIV><BR>
+<DIV name="plotDIV3" style="height:150px">
+Round 3 net wins (machine: <span name="mach3"></span>):
+<canvas id="myChart3" style="height:100px;"></canvas>
+</DIV>
+
+<DIV name="linksTAB" style="height:100px"></DIV>
+</BODY>
+<SCRIPT>
+var s_net_wins1 = sessionStorage.getItem("net_wins1");
+var s_net_wins2 = sessionStorage.getItem("net_wins2");
+var s_net_wins3 = sessionStorage.getItem("net_wins3");
+var net_wins1 = to_1darray_from_str(s_net_wins1);
+var net_wins2 = to_1darray_from_str(s_net_wins2);
+var net_wins3 = to_1darray_from_str(s_net_wins3);
+
+var games_xs = [];
+for (ii =0; ii < net_wins1.length; ii++ )
+{
+    scores_0[ii] = 0;
+
+    games_xs[ii] = ii+1;
+}
+max1 = Math.max(Math.max.apply(Math, net_wins1))
+min1 = Math.min(Math.min.apply(Math, net_wins1))
+max2 = Math.max(Math.max.apply(Math, net_wins2))
+min2 = Math.min(Math.min.apply(Math, net_wins2))
+max3 = Math.max(Math.max.apply(Math, net_wins3))
+min3 = Math.min(Math.min.apply(Math, net_wins3))
+
+var canv_scores = document.getElementById("myChart1").getContext('2d');
+var data1 = {labels: games_xs, datasets: [{data: net_wins1, label: "net wins", borderColor: "#000000;"}, {data: scores_0, label: "tie", borderColor: "#FF3333;", borderDash: [2, 2]}]};
+
+var x_scales = 	{ display: true, 
+		 title: { 
+		      display:true,
+		      text: 'match #'
+                        }
+                };
+
+var y_scales = 	{ display: true, 
+		 title: { 
+		      display:true,
+		      text: 'net wins'
+                        }
+                };
+
+var x_and_y_scales = {x: x_scales, y: y_scales};
+ops = {maintainAspectRatio: false,responsive: true, scales: x_and_y_scales};
+
+
+var config1 = {type: 'line', data: data1, options: ops}
+var myChart = new Chart(canv_scores, config1);
+
+var canv_scores = document.getElementById('myChart2').getContext('2d');
+var data2 = {labels: games_xs, datasets: [{data: net_wins2, label: "net wins", borderColor: "#000000;"}, {data: scores_0, label: "tie", borderColor: "#FF3333;", borderDash: [2, 2]}]};
+var config2 = {type: 'line', data: data2, options: ops}
+var myChart = new Chart(canv_scores, config2);
+
+var canv_scores = document.getElementById('myChart3').getContext('2d');
+var data3 = {labels: games_xs, datasets: [{data: net_wins3, label: "net wins", borderColor: "#000000;"}, {label: "tie", data: scores_0, borderColor: "#FF3333;", borderDash: [2, 2]}]};
+var config3 = {type: 'line', data: data3, options: ops}
+var myChart = new Chart(canv_scores, config3);
+
+</SCRIPT>
+</html>
