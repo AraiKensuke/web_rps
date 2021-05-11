@@ -28,7 +28,14 @@ Website   Kensuke Arai
 -->
 <link rel="stylesheet" href="rps.css" type="text/css" />
 <SCRIPT src="util.js"></SCRIPT>
-<SCRIPT src="aiconfig6.js"></SCRIPT>
+<?php
+if (($visit % 3) + 1)
+{
+    $ai_js_file = "machTMB" . (($visit-1) % 3 + 1) . ".js";
+}
+?>
+<SCRIPT src="<?=$ai_js_file?>"></SCRIPT>
+
 <SCRIPT src="rpsm.js"></SCRIPT>
 <STYLE>
           input {border:3px solid #000000;font-size:16px;}

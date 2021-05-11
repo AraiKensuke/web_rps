@@ -6,3 +6,4 @@ var __OBR__    = 4;
 var __BIRND__    = 5;
 var __MIMIC__    = 6;
 var __WTL__    = 7;
+var __FXDSQ__    = 8;

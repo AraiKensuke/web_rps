@@ -559,11 +559,7 @@ function AI(player){  // player is 1, 2, 3
     //perceptron
     n_rps_plyd += 1
 
-    if ((rpsAI.AImach==__SMWCA__) || (rpsAI.AImach == __PRC__) || (rpsAI.AImach == __OBR__) || (rpsAI.AImach == __BIRND__) || (rpsAI.AImach == __MIMIC__) || (rpsAI.AImach == __WTL__)) {
-	return (rpsAI.predict(player));
-    }
-    //Markov Chain
-    else if (rpsAI.AImach==__MC__)
+    if (rpsAI.AImach==__MC__)
     {
 	pair2 = pair1;
 	if (n_rps_plyd % update_evry == 0) {
@@ -579,7 +575,12 @@ function AI(player){  // player is 1, 2, 3
 
 	return(predictNum);
     }
-    // else
+
+    else {
+	return (rpsAI.predict(player));
+    }
+    //Markov Chain
+    //else     // else
     // {
     // 	var rnd = Math.random();
     // 	if (rnd < 0.333333) predict=1;

@@ -19,7 +19,6 @@ class BiasedRandom {
 	this.constructStr = s;
     }
 
-
     constructor(move_order, probs) //, switch_timescale) {
     {
 	this.moves = [0, 0, 0];
