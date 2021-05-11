@@ -30,9 +30,8 @@ $flder = mkoutdir("TMB1", $partID_valid, $visit);
 <HTML>
 <SCRIPT>
     visitnum = <?=$visit?>;
-alert("<?=$flder?>");
     sessionStorage.setItem("partID", "<?=$partID_valid?>");
-//document.location.href="rps.html";
+document.location.href="rps.html";
 </SCRIPT>
 </HTML>
 
