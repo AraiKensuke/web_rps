@@ -39,13 +39,10 @@ Website   Kensuke Arai
     if ($valid_id)
     {
 ?>
-alert("valid_id is true");
-alert("<?=$last_visit?>");
-alert("<?=$visit?>");
 <?php
 }
 ?>
-var MatchTo=5;
+var MatchTo=40;
 realtimeResults = __CWTL__;
 
 machine_and_configs = [];

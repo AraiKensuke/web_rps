@@ -122,23 +122,23 @@ function set_lang(jore)
     var elemAnnoF = document.getElementById("announce")
     var resultTimeline = anime.timeline();
 
-    document.title = "AI rock-scissors-paper";
+    document.title = "RPS Tournament";
     if (!practiceMode)
     {
-	tit = "AI rock-scissor-paper";
+	tit = "RPS Tournament: ";
 	if (to_block > 1)
 	{
-	    tit += " round " + block + "/" + to_block;
+	    tit += " Round " + block + "/" + to_block;
 	}
     }
     else
     {
-	tit = "AI rock-scissors-paper [PRACTICE MODE]"
+	tit = "RPS [PRACTICE MODE]"
     }
     elemTITLE.innerHTML = tit;
     
     elemINSTR.innerHTML = "Your move<BR>click buttons or use keys 123"
-    elemPERHF.innerHTML = "AI move"
+    elemPERHF.innerHTML = "Machine move"
     elemDescF.innerHTML = "Play <B><U>" + MatchTo + "</U></B> games!"
     
     if (realtimeResults == __CWTL__)
@@ -539,8 +539,8 @@ function redraw_graph(Ymax)
     }
     else
     {
-	txtWIN  = "   You win    "
-	txtLOSE = "Perceptron win"
+	txtWIN  = "   Your win    "
+	txtLOSE = "Machine win"
 	txtTIE  = "     Tie      "
     }
 
