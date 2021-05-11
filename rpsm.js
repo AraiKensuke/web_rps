@@ -790,6 +790,19 @@ function send_php(){
 	sessionStorage.setItem("savedirname", d);
     }
 
+    net_wins = "";
+
+    for (var ii = 0; ii < results[0].length-1; ii++ )
+    {
+	net_wins += (results[0][ii+1] - results[1][ii+1]).toString();
+	if (ii < results[0].length - 2)
+	{
+	    net_wins += " ";
+	}
+    }
+
+    sessionStorage.setItem("net_wins" + block, net_wins);
+    
     var visitnum = sessionStorage.getItem("visitnum", "");
     var partID   = sessionStorage.getItem("ParticipantID", "");
 

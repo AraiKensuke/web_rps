@@ -44,6 +44,18 @@ function to_2darray_from_str(strrep)
     return arr;
 }
 
+function to_1darray_from_str(strrep)
+{   //   "0,1,2:3,4,5:6,7,8"  -->  [[0, 1, 2], [3, 4, 5], [6,7,8]]
+    arr1d_of_strings = strrep.split(" ");
+
+    arr = [];
+    for (i = 0; i < arr1d_of_strings.length; i++ )
+    {
+	arr[i] = parseInt(arr1d_of_strings[i]);
+    }
+    return arr;
+}
+
 function getcolumn(arr, col, add_series_x_axis)
 {
     column_arr = []
