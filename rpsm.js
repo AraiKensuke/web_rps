@@ -11,7 +11,6 @@ javascript code:  中村和輝 2018/03/01.
  * prc_weight[3][3][N] : 重み関数3*N行列
  * pred[3] : 予測ユニットの入力
  */
-
 var graph_height = 440;
 var graph_width = 240;
 var graph_base = 24;
@@ -77,6 +76,40 @@ function getSessionStorage(key, default_value)
     return default_value;
 }
 
+function toRPSstr(hand)
+{
+    if (move_order == __moRSP__)
+    {
+	if (hand == 1)
+	{
+	    return "R";
+	}
+	else if (hand == 2)
+	{
+	    return "S";
+	}
+	else
+	{
+	    return "P";
+	}
+    }
+    else
+    {
+	if (hand == 1)
+	{
+	    return "R";
+	}
+	else if (hand == 2)
+	{
+	    return "P";
+	}
+	else
+	{
+	    return "S";
+	}
+    }
+}
+
 function set_lang(jore)
 {
     JorE = jore;
@@ -89,55 +122,41 @@ function set_lang(jore)
     var elemAnnoF = document.getElementById("announce")
     var resultTimeline = anime.timeline();
 
-    if( JorE == __JAPANESE__ )
+    document.title = "AI rock-scissors-paper";
+    if (!practiceMode)
     {
+	tit = "AI rock-scissor-paper";
+	if (to_block > 1)
+	{
+	    tit += " round " + block + "/" + to_block;
+	}
     }
     else
     {
-	document.title = "AI rock-scissors-paper";
-	if (!practiceMode)
+	tit = "AI rock-scissors-paper [PRACTICE MODE]"
+    }
+    elemTITLE.innerHTML = tit;
+    
+    elemINSTR.innerHTML = "Your move<BR>click buttons or use keys 123"
+    elemPERHF.innerHTML = "AI move"
+    elemDescF.innerHTML = "Play <B><U>" + MatchTo + "</U></B> games!"
+    
+    if (realtimeResults == __CWTL__)
+    {
+	//console.log("CWTL");
+	elemResuF.innerHTML = "<font color='#6970e9'>Win:"+results[0][game]+"</font>, <font color='#e9473f'>Losses:"+results[1][game]+"</font>, <font color='#319e34'>Tie:"+results[2][game]+"</font>";
+    }
+    else if (realtimeResults == __NGAMES__)
+    {
+	if (mid_block == null)
 	{
-	    tit = "AI rock-scissor-paper";
-	    if (to_block > 1)
-	    {
-		tit += " round " + block + "/" + to_block;
-	    }
+	    elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";
 	}
 	else
 	{
-	    tit = "AI rock-scissors-paper [PRACTICE MODE]"
+	    elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";
 	}
-	    elemTITLE.innerHTML = tit;
-
-	elemINSTR.innerHTML = "Your move<BR>click buttons or use keys 123"
-	elemPERHF.innerHTML = "AI move"
-	elemDescF.innerHTML = "Play <B><U>" + MatchTo + "</U></B> games!"
-
-	if (realtimeResults == __CWTL__)
-	{
-	    //console.log("CWTL");
-	    elemResuF.innerHTML = "<font color='#6970e9'>Win:"+results[0][game]+"</font>, <font color='#e9473f'>Losses:"+results[1][game]+"</font>, <font color='#319e34'>Tie:"+results[2][game]+"</font>";
-	}
-	else if (realtimeResults == __NGAMES__)
-	{
-	    if (mid_block == null)
-	    {
-		elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";
-	    }
-	    else
-	    {
-		elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";
-	    }
-	}
-
-
-
-	//elemResuF.innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"</font>"; //to change, uncomment text in ShowResults
-
-
-	//elemAnnoF.innerHTML = "<B>[!HELP US!]</B> collect data to study how players decide their next move in a game of rock-scissors-paper!  Only your moves are collected - nothing else about your online identity.<b><br/><br/><B>[References]</B> <a href=\"https://www.iwanami.co.jp/book/b264786.html\">Building AI <a href=\"http://www.ton.scphys.kyoto-u.ac.jp/~shino/janken_iphone/\">iPhone version</a>。<a href=\"c.html\">C source code</a>.  Please send any questions or comments about the game to <a href=\"mailto:shinomoto@scphys.kyoto-u.ac.jp?Subject=janken\">Shigeru Shinomoto</a>."
     }
-
 
     var Ymax = 0;
     for(var i=0;i<3;i++){
@@ -262,8 +281,8 @@ function RPS(plhand, key_or_mouse) {
     }
 
     rec_inp_methd += String(key_or_mouse) + " ";
-    rec_hands += String(plhand) + " ";
-    rec_AI_hands += String(AIhand) + " ";
+    rec_hands += toRPSstr(plhand) + " ";
+    rec_AI_hands += toRPSstr(AIhand) + " ";
     rec_times += String(time_now - last_time_now) + " ";
     last_time_now = time_now;
     ShowResults(plhand,AIhand);
@@ -754,6 +773,7 @@ function send_php(){
     // console.log(rec_inp_methd)
 // phpへの値の受け渡し
 
+
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     var yr    = startDate.getFullYear().toString().substring(2, 4)
     var mon   = months[startDate.getMonth()]//.toString().padStart(2, "0");
@@ -764,11 +784,14 @@ function send_php(){
 
     d = yr + mon + day + "-" + hr + min + "-" + sec;
 
-    savedirname = getSessionStorage("savedirname", d);
+    savedirname = getSessionStorage("savedirname", d);  // multiple times rounds, first time we set it by next line
     if (savedirname == d)
     {   //  savedirname is the default name
 	sessionStorage.setItem("savedirname", d);
     }
+
+    var visitnum = sessionStorage.getItem("visitnum", "");
+    var partID   = sessionStorage.getItem("ParticipantID", "");
 
     sessionStorage.setItem("results" + block, to_str_from_2darray(results));
     if (rpsAI.AImach == __SMWCA__)
@@ -781,8 +804,8 @@ function send_php(){
 	    dataType:'text',
 	    data: {
 		exptname : exptname,
-		savedirname : savedirname,
-		rec_hands : rec_hands,
+		visit : visitnum,
+		ParticipantID : partID,
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
 		rec_input_method : rec_inp_methd,
@@ -806,7 +829,8 @@ function send_php(){
 	    dataType:'text',
 	    data: {
 		exptname : exptname,
-		savedirname : savedirname,
+		visit : visitnum,
+		ParticipantID : partID,
 		rec_hands : rec_hands,
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
@@ -829,7 +853,8 @@ function send_php(){
 	    dataType:'text',
 	    data: {
 		exptname : exptname,
-		savedirname : savedirname,
+		visit : visitnum,
+		ParticipantID : partID,
 		rec_hands : rec_hands,
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
@@ -855,7 +880,8 @@ function send_php(){
 	    dataType:'text',
 	    data: {
 		exptname : exptname,
-		savedirname : savedirname,
+		visit : visitnum,
+		ParticipantID : partID,
 		rec_hands : rec_hands,
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,
@@ -881,7 +907,8 @@ function send_php(){
 	    dataType:'text',
 	    data: {
 		exptname : exptname,
-		savedirname : savedirname,
+		visit : visitnum,
+		ParticipantID : partID,
 		rec_hands : rec_hands,
     		rec_AI_hands : rec_AI_hands,
     		rec_times : rec_times,

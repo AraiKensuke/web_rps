@@ -1,22 +1,18 @@
 h1 {
-    font-family: 'Console', Monaco, monospace;
+    font-family: 'Verdana';
 }
 
 p {
-    font-family: 'Console', Monaco, monospace; font-size: 22px;
-}
-
-button {
-    font-family: 'Console', Monaco, monospace;
+    font-family: 'Verdana';
 }
 
 body {
-    font-family: 'Console', Monaco, monospace;
+    font-family: 'Verdana';
     margin-top: 100px; 
     margin-left: 100px;  
     margin-right: 100px;  
     margin-bottom: 100px;  
-    background-color: rgb(230, 230, 230);
+    background-color: rgb(255, 255, 255);
 }
 
 input[type=radio] {
