@@ -4,17 +4,6 @@
 	//
 include "utils.php";
 
-function getVal($key, $default)
-{
-    if (isset($_POST[$key])) {
-	    return $_POST[$key];
-    } 
-    else {
-        echo "no value for:  " . $key;
-        return $default;
-    }
-}
-
 //  if from $TMB, make directory if not there
 //  test
 //  DATA/RPSrules/050521/

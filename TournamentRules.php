@@ -49,7 +49,7 @@ if (($visit % 3) + 1)
 <?php
 }
 ?>
-var MatchTo=40;
+var MatchTo=5;
 realtimeResults = __CWTL__;
 
 machine_and_configs = [];
@@ -68,7 +68,7 @@ sessionStorage.setItem("exptname", "TMB1");
 sessionStorage.setItem("block", 0);
 sessionStorage.setItem("to_block", to_block);
 sessionStorage.setItem("MatchTo", MatchTo);
-sessionStorage.setItem("url_after_blocks", "TournamentResults.html");
+sessionStorage.setItem("url_after_blocks", "4ChoiceQuestionnaire.php");
 //sessionStorage.setItem("stop_after_n_consec_wins", 6);
 
 inds = [];
@@ -121,7 +121,7 @@ function nextpage(dopractice)
         }
         else
         {
-            document.location.href="rps.html";
+            document.location.href="DemographicQuestionnaire1.php";
         }
     }
 }

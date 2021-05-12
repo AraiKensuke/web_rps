@@ -30,8 +30,16 @@ $flder = mkoutdir("TMB1", $partID_valid, $visit);
 <HTML>
 <SCRIPT>
     visitnum = <?=$visit?>;
+    sessionStorage.setItem("visitnum", visit);
     sessionStorage.setItem("partID", "<?=$partID_valid?>");
-document.location.href="rps.html";
+if (visitnum == 1)
+{
+    document.location.href="DemographicQuestionnaire1.php";
+}
+else
+{
+    document.location.href="rps.html";
+}
 </SCRIPT>
 </HTML>
 

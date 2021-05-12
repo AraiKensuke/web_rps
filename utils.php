@@ -1,4 +1,17 @@
 <?php
+function getVal($key, $default)
+{
+    if (isset($_POST[$key])) {
+        return $_POST[$key];
+    } 
+    else 
+    {
+        echo "no value for:  $key";	
+        return $default;
+    }
+}
+
+
 function check_partID($exptname, $partID_passed)
 {
     $pcs = explode("_", $partID_passed);
@@ -38,9 +51,16 @@ function mkoutdir($exptname, $partID_passed, $visit)
     {
         mkdir($part_folder);
     }
-    $visit_folder = $part_folder . "/" . $visit;
-    mkdir($visit_folder);
-    return $visit_folder;
+    if ($visit != 0)
+    {
+        $visit_folder = $part_folder . "/" . $visit;
+        mkdir($visit_folder);
+        return $visit_folder;
+    }
+    else
+    {
+        return $part_folder;
+    }
 }
 
 
