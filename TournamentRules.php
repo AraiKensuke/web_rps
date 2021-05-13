@@ -50,7 +50,7 @@ if (($visit % 3) + 1)
 <?php
 }
 ?>
-var MatchTo=5;
+var MatchTo=40;
 realtimeResults = __CWTL__;
 
 machine_and_configs = [];

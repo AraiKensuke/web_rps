@@ -11,9 +11,9 @@ if ($_GET["q"] == "AQ")
    "I find it hard to make new friends.",
    "I enjoy social occasions.",
    "I enjoy meeting new people.",
-   "English samples only: New situations make me anxious.",
+   "New situations make me anxious.",
    "I prefer to do things the same way over and over again.",
-   "It does not upset my if my daily routine is disturbed.",
+   "It does not upset me if my daily routine is disturbed.",
    "I enjoy doing things spontaneously.",
    "New situations make me anxious.",
    "I frequently get strongly absorbed in one thing.",
@@ -206,10 +206,10 @@ for ($s = 0; $s < sizeof($statements); $s++ )
     $tr_class = "tr" . (($s % 2)+1);
     print("<TR class=\"" . $tr_class . "\"><TD><DIV name=\"div" . ($s+1) . "\" &nbsp;&nbsp;<B>" . ($s + 1) . "</B>&nbsp;&nbsp;</TD><TD>" . $statements[$s] . "</TD></TR>");
     print("<TR class=\"" . $tr_class . "\"><TD></TD><TD>"); 
-    print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_1\" value=\"1\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 1);\">definitely agree</A></LABEL>");
-    print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_2\" value=\"2\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 2);\">slightly agree</A></LABEL>"); 
-    print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_3\" value=\"3\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 3);\">slightly disagree</A></LABEL>"); 
-    print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_4\" value=\"4\" checked/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 4);\">definitely disagree</A></LABEL></TR>\n"); 
+    print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_1\" value=\"1\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 1);\">Definitely Agree</A></LABEL>");
+    print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_2\" value=\"2\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 2);\">Slightly Agree</A></LABEL>"); 
+    print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_3\" value=\"3\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 3);\">Slightly Disagree</A></LABEL>"); 
+    print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_4\" value=\"4\" checked/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 4);\">Definitely Disagree</A></LABEL></TR>\n"); 
 	       print("<TR class=\"" . $tr_class . "\"><TD colspan=\"2\">&nbsp;</TD></TR>");
 
     if (((($s+1) % 5) == 0) && ($s != 0))
