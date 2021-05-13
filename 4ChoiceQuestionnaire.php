@@ -190,6 +190,7 @@ else
 <?php
 }
 ?>
+<BR>Please respond to <U>all</U> questions with the answer closest to how you feel.<BR><BR>
 <FORM name="QuestionnaireForm" action="save_questionnaire.php" method="POST">
 <INPUT type="hidden" name="number_of_questions" value="<?=sizeof($statements)?>"/>
 <INPUT type="hidden" name="ParticipantID" value=""/>
