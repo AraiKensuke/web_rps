@@ -30,15 +30,19 @@ $flder = mkoutdir("TMB1", $partID_valid, $visit);
 <HTML>
 <SCRIPT>
     visitnum = <?=$visit?>;
-    sessionStorage.setItem("visitnum", visit);
-    sessionStorage.setItem("partID", "<?=$partID_valid?>");
+    sessionStorage.setItem("visitnum", visitnum);
+    sessionStorage.setItem("ParticipantID", "<?=$partID_valid?>");
+    //alert("<?=$partID_passed?>" + "     " + "<?=$partID_valid?>");
 if (visitnum == 1)
 {
     document.location.href="DemographicQuestionnaire1.php";
+//      	setTimeout(() => { document.location.href="DemographicQuestionnaire1.php";  }, 10000);
+
 }
 else
 {
     document.location.href="rps.html";
+//      	setTimeout(() => { document.location.href="rps.html";  }, 10000);
 }
 </SCRIPT>
 </HTML>

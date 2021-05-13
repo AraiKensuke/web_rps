@@ -26,8 +26,4 @@ for ($q = 0; $q < $number_of_qs; $q++ )
 <SCRIPT>
 document.location.href="<?=$nextpageURL?>";
 </SCRIPT>
-<BODY>
-<?=$number_of_qs?><BR>
-<?=$ParticipantID?>
-</BODY>
 </HTML>

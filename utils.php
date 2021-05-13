@@ -54,7 +54,10 @@ function mkoutdir($exptname, $partID_passed, $visit)
     if ($visit != 0)
     {
         $visit_folder = $part_folder . "/" . $visit;
-        mkdir($visit_folder);
+        if (!is_dir($visit_folder))
+        {
+            mkdir($visit_folder);
+        }
         return $visit_folder;
     }
     else
