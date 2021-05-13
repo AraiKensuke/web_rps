@@ -1,4 +1,5 @@
 <HTML>
+<link rel="stylesheet" href="rps.css" type="text/css" />
 <SCRIPT>
 var visit = sessionStorage.getItem("visitnum", 1);
 var partID = sessionStorage.getItem("ParticipantID", "");
@@ -20,6 +21,9 @@ function check_and_submit()
 }
 </SCRIPT>
 <BODY>
+
+<CENTER>
+<H2>Demographic Information</H2>
 <FORM name="DemogQ1" action="save_questionnaire.php" method="POST">
 <INPUT type="hidden" name="number_of_questions" value="4"/>
 <INPUT type="hidden" name="nextpageURL" value="rps.html"/>
@@ -31,31 +35,33 @@ function check_and_submit()
 <TABLE>
 <TR><TD>What is your age?</TD>
 <TD><INPUT name="q1" value="18" type="number" min="10" max="110" size="4"/></TD></TR>
-
-<TR><TD>What is your gender</TD>
+<TR><TD colspan="2">&nbsp;</TD></TR>
+<TR><TD>What is your gender identity?</TD>
 <TD>
 <SELECT name="q2">
   <option value="Male">Male</option>
   <option selected value="Female">Female</option>
-  <option value="Non-binary">Non-binary or genderqueer</option>
+  <option value="Non-binary">Non-binary</option>
+  <option value="No answer">Prefer not to answer</option>
 </SELECT>
 </TD></TR>
-
+<TR><TD colspan="2">&nbsp;</TD></TR>
 <TR><TD>Is English your primary language</TD>
 <TD>
 <SELECT name="q3" id="cars">
-<option selected value="Yes">English is my primary language</option>
-<option value="No">English is not my primary language</option>
+<option selected value="Yes">Yes</option>
+<option value="No">No</option>
 </SELECT>
 </TD></TR>
-
+<TR><TD colspan="2">&nbsp;</TD></TR>
 <TR><TD>(Optional) comments</TD>
 <TD>
-<INPUT type="text" name="q4" value="optional" size="100"/></TD></TR>
+<TEXTAREA name="q4" rows="4" cols="40">Optional</TEXTAREA>
+<!--<INPUT type="text" name="q4" value="optional" size="100"/></TD></TR>-->
 </TABLE>
 <BR><BR>
 	    <A href="javascript:check_and_submit();"><IMG src="Next.jpg" height=40/></A>
-
+</CENTER>
 </FORM>
 </BODY>
 </HTML>

@@ -1,3 +1,7 @@
+<!--
+Website   Kensuke Arai
+-->
+
 <?php
 include "utils.php";
 
@@ -23,9 +27,6 @@ else
 }
 ?>
 <HTML>
-<!--
-Website   Kensuke Arai
--->
 <link rel="stylesheet" href="rps.css" type="text/css" />
 <SCRIPT src="util.js"></SCRIPT>
 <?php

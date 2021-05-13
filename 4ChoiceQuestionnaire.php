@@ -175,7 +175,21 @@ function check_and_submit()
 }
 </SCRIPT>
 <BODY>
-
+<CENTER>
+<?php
+if ($AQ == "true")
+{
+?>
+<H2>Tell us about your real-world social interactions:</H2>
+<?php
+}
+else
+{
+?>
+<H2>Tell us about your tournament:</H2>
+<?php
+}
+?>
 <FORM name="QuestionnaireForm" action="save_questionnaire.php" method="POST">
 <INPUT type="hidden" name="number_of_questions" value="<?=sizeof($statements)?>"/>
 <INPUT type="hidden" name="ParticipantID" value=""/>
@@ -184,7 +198,7 @@ function check_and_submit()
 <INPUT type="hidden" name="savefilename" value=""/>
 
 <INPUT type="hidden" name="nextpageURL" value=""/>
-<CENTER>
+
 <TABLE border="0">
 <?php
 for ($s = 0; $s < sizeof($statements); $s++ )
