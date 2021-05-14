@@ -24,6 +24,8 @@ function check_and_submit()
 
 <CENTER>
 <H2>Demographic Information</H2>
+<BR>
+Before we begin, we ask that you tell us a bit about yourself.<BR><BR><BR>
 <FORM name="DemogQ1" action="save_questionnaire.php" method="POST">
 <INPUT type="hidden" name="number_of_questions" value="4"/>
 <INPUT type="hidden" name="nextpageURL" value="rps.html"/>
@@ -34,7 +36,28 @@ function check_and_submit()
 
 <TABLE>
 <TR><TD>What is your age?</TD>
-<TD><INPUT name="q1" value="18" type="number" min="10" max="110" size="4"/></TD></TR>
+<TD>
+<SELECT name="q1">
+  <option value="<18">17 and under</option>
+  <option selected value="18-24">18-24</option>
+  <option value="25-29">25-29</option>
+  <option value="30-34">30-34</option>
+  <option value="35-39">35-39</option>
+  <option value="40-44">40-44</option>
+  <option value="45-49">45-49</option>
+  <option value="50-54">50-54</option>
+  <option value="55-59">55-59</option>
+  <option value="60-64">60-64</option>
+  <option value="65-69">65-69</option>
+  <option value="70-74">70-74</option>
+  <option value="75-79">75-79</option>
+  <option value="80-84">80-84</option>
+  <option value="85-89">85-89</option>
+  <option value=">90">90 and over</option>
+  <option value="No answer">Prefer not to answer</option>
+</SELECT>
+</TD>
+</TR>
 <TR><TD colspan="2">&nbsp;</TD></TR>
 <TR><TD>What is your gender identity?</TD>
 <TD>
@@ -51,6 +74,7 @@ function check_and_submit()
 <SELECT name="q3" id="cars">
 <option selected value="Yes">Yes</option>
 <option value="No">No</option>
+<option value="No answer">Prefer not to answer</option>
 </SELECT>
 </TD></TR>
 <TR><TD colspan="2">&nbsp;</TD></TR>

@@ -39,6 +39,23 @@
 
     </style>
 <SCRIPT>
+function get_ticks(minval, maxval)
+{
+    //  guaranteed minval < 0
+    //  maxval > 0
+    ticks = [];
+    AMP = Math.max(Math.abs(minval), Math.abs(maxval))
+    if (minval == -1*AMP)
+    {
+    ticks[ticks.length] = minval;
+    }
+    ticks[ticks.length] = 0;
+    if (maxval == AMP)
+    {
+    ticks[ticks.length] = maxval;
+    }
+    return ticks;
+}
   var scores_by_block = [];
   var scores_0 = [];
   var block_xs        = [];
@@ -145,6 +162,11 @@ Round 2 net wins (machine: <span name="mach2"></span>):
 Round 3 net wins (machine: <span name="mach3"></span>):
 <canvas id="myChart3" style="height:100px;"></canvas>
 </DIV>
+<BR><BR><BR>
+<HR>
+<BR>
+<IMG src="Explanation.jpg" align="left" style=”margin: 0px 80px 80px 80px;”/>
+The 3 plots above show how you were doing against the machine at each of the 40 matches during the tournament.  If you were able to learn the rules during tournament play, the line should be curving upward on the right-hand side.  Your net-wins may look very jagged.
 
 <DIV name="linksTAB" style="height:100px"></DIV>
 </BODY>
@@ -163,44 +185,111 @@ for (ii =0; ii < net_wins1.length; ii++ )
 
     games_xs[ii] = ii+1;
 }
-max1 = Math.max(Math.max.apply(Math, net_wins1))
-min1 = Math.min(Math.min.apply(Math, net_wins1))
-max2 = Math.max(Math.max.apply(Math, net_wins2))
-min2 = Math.min(Math.min.apply(Math, net_wins2))
-max3 = Math.max(Math.max.apply(Math, net_wins3))
-min3 = Math.min(Math.min.apply(Math, net_wins3))
-
-var canv_scores = document.getElementById("myChart1").getContext('2d');
-var data1 = {labels: games_xs, datasets: [{data: net_wins1, label: "net wins", borderColor: "#000000;"}, {data: scores_0, label: "tie", borderColor: "#FF3333;", borderDash: [2, 2]}]};
+max1 = Math.max(Math.max(Math.max.apply(Math, net_wins1)), 1)
+min1 = Math.min(Math.min(Math.min.apply(Math, net_wins1)), -1)
+max2 = Math.max(Math.max(Math.max.apply(Math, net_wins2)), 1)
+min2 = Math.min(Math.min(Math.min.apply(Math, net_wins2)), -1)
+max3 = Math.max(Math.max(Math.max.apply(Math, net_wins3)), 1)
+min3 = Math.min(Math.min(Math.min.apply(Math, net_wins3)), -1)
 
 var x_scales = 	{ display: true, 
 		 title: { 
 		      display:true,
-		      text: 'match #'
-                        }
+		      text: 'match #',
+		 font: { size: 18}
+                        },
+		 ticks: {
+		 		 font: { size: 16}
+}
                 };
 
+
+yticks = get_ticks(min1, max1);
 var y_scales = 	{ display: true, 
 		 title: { 
 		      display:true,
-		      text: 'net wins'
-                        }
+		      text: 'net wins',
+		 font: { size: 18}
+                        },
+		 max: max1+1,
+		 min: min1-1,
+		 ticks: {
+		 font: { size: 16},
+		 stepSize: 0.1,
+		 autoSkip: false,
+		 callback: value => yticks.includes(value) ? value : undefined,
+                 maxRotation: 0
+		 }
+		 
                 };
 
 var x_and_y_scales = {x: x_scales, y: y_scales};
-ops = {maintainAspectRatio: false,responsive: true, scales: x_and_y_scales};
+ops = {maintainAspectRatio: false,responsive: true, scales: x_and_y_scales, plugins: {legend: {display: false}}};
 
-
+var canv_scores = document.getElementById("myChart1").getContext('2d');
+var data1 = {labels: games_xs, datasets: [{data: net_wins1, label: "net wins", borderColor: 'rgb(0, 0, 0)'}, {data: scores_0, label: "tie", borderColor: 'rgb(190, 190, 190)', borderDash: [2, 2], radius: 0}]};
 var config1 = {type: 'line', data: data1, options: ops}
 var myChart = new Chart(canv_scores, config1);
 
+/////////////////////////////////////////////////////////////////////
+//data = {labels: xs, datasets: [{data: col10, borderColor: "#000000"}]};
+//options = {scales: { y: {max: 6, min: -1, ticks: { stepSize: 1}}}}
+//config = {type: 'line', data, options: options};
+//var myChart = new Chart(ct1stid, config);
+
+
+
+
+yticks = get_ticks(min2, max2);
+var y_scales = 	{ display: true, 
+		 title: { 
+		      display:true,
+		      text: 'net wins',
+		 font: { size: 18}
+                        },
+		 max: max2+1,
+		 min: min2-1,
+		 ticks: {
+		 font: { size: 16},
+		 stepSize: 0.1,
+		 autoSkip: false,
+		 callback: value => yticks.includes(value) ? value : undefined,
+                 maxRotation: 0
+		 }
+                };
+var x_and_y_scales = {x: x_scales, y: y_scales};
+ops = {maintainAspectRatio: false,responsive: true, scales: x_and_y_scales, plugins: {legend: {display: false}}};
+
+//  radius: 0  -> point style
 var canv_scores = document.getElementById('myChart2').getContext('2d');
-var data2 = {labels: games_xs, datasets: [{data: net_wins2, label: "net wins", borderColor: "#000000;"}, {data: scores_0, label: "tie", borderColor: "#FF3333;", borderDash: [2, 2]}]};
+var data2 = {labels: games_xs, datasets: [{data: net_wins2, label: "net wins", borderColor: 'rgb(0, 0, 0)'}, {data: scores_0, label: "tie", borderColor: 'rgb(190, 190, 190)', borderDash: [2, 2], radius: 0}]};
 var config2 = {type: 'line', data: data2, options: ops}
 var myChart = new Chart(canv_scores, config2);
 
+/////////////////////////////////////////////////////////////////////
+
+yticks = get_ticks(min3, max3);
+var y_scales = 	{ display: true, 
+		 title: { 
+		      display:true,
+		      text: 'net wins',
+		 font: { size: 18}
+                        },
+		 max: max3+1,
+		 min: min3-1,
+		 ticks: {
+		 font: { size: 16},
+		 stepSize: 0.1,
+		 autoSkip: false,
+		 callback: value => yticks.includes(value) ? value : undefined,
+                 maxRotation: 0
+		 }
+                };
+var x_and_y_scales = {x: x_scales, y: y_scales};
+ops = {maintainAspectRatio: false,responsive: true, scales: x_and_y_scales, plugins: {legend: {display: false}}};
+
 var canv_scores = document.getElementById('myChart3').getContext('2d');
-var data3 = {labels: games_xs, datasets: [{data: net_wins3, label: "net wins", borderColor: "#000000;"}, {label: "tie", data: scores_0, borderColor: "#FF3333;", borderDash: [2, 2]}]};
+var data3 = {labels: games_xs, datasets: [{data: net_wins3, label: "net wins", borderColor: 'rgb(0, 0, 0)'}, {label: "tie", data: scores_0, borderColor: 'rgb(190, 190, 190)', borderDash: [2, 2], radius: 0}]};
 var config3 = {type: 'line', data: data3, options: ops}
 var myChart = new Chart(canv_scores, config3);
 
