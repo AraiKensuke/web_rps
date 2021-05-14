@@ -109,7 +109,7 @@ append_to_array(scores[parseInt(aib)-1], c1);
 html4table += "</TABLE>";
 
 var html4links = "";
-html4links += "<BR><BR><BR><A href=\"TournamentRules.php?partID=" + partID + "\">Play tournament again now as a returning participant</A>.  If you do not want to be identified as a returning participant, you can follow <A href=\"TournamentRules.php\">this link to play again as a 1st time participant.</A>.  As a returning participant, w will not ask you to fill out the questionnaires again.  If you want to play again later as a returning participaant, use this participantID:<PRE>" + partID + "</PRE>To reiterate, <B>this ID does not contain any identifying information about you</B>.  It is only used to mark data in our database as being collected from the same anonymous individual, and <B>your use of it in future participation in this experiment is optional and voluntary</B>.";
+html4links += "<A href=\"TournamentRules.php?partID=" + partID + "\">Play tournament again now as a returning participant</A>.  If you do not want to be identified as a returning participant, you can follow <A href=\"TournamentRules.php\">this link to play again as a 1st time participant.</A>.  As a returning participant, w will not ask you to fill out the questionnaires again.  If you want to play again later as a returning participaant, use this participantID:<PRE>" + partID + "</PRE>To reiterate, <B>this ID does not contain any identifying information about you</B>.  It is only used to mark data in our database as being collected from the same anonymous individual, and <B>your use of it in future participation in this experiment is optional and voluntary</B>.<BR><BR>";
 
 
       function do_tables()
@@ -147,7 +147,7 @@ html4links += "<BR><BR><BR><A href=\"TournamentRules.php?partID=" + partID + "\"
 </SCRIPT>
     <BODY onload="javascript:do_tables();">
 <H1>Thank you for your participation!</H1>
-Your <SPAN name="visitSPAN"></SPAN> time participating.<BR>
+This was your <SPAN name="visitSPAN"></SPAN> time participating in this experiment.<BR><BR>
 
 <!--<DIV name="resultTAB" style="height:150px"></DIV>-->
 <DIV name="plotDIV1" style="height:150px">
@@ -166,9 +166,12 @@ Round 3 net wins (machine: <span name="mach3"></span>):
 <HR>
 <BR>
 <IMG src="Explanation.jpg" align="left" style=”margin: 0px 80px 80px 80px;”/>
-The 3 plots above show how you were doing against the machine at each of the 40 matches during the tournament.  If you were able to learn the rules during tournament play, the line should be curving upward on the right-hand side.  Your net-wins may look very jagged.
+The 3 plots above show how you were doing against the machine at each of the 40 matches during the tournament.  If you were able to learn the rules used by the machine to generate the next move, the line should be curving upward on the right-hand side.  People are able to learn about the intentions of others through social interaction, and in competitive games like repeated rock-scissors-paper, probably are able to adjust 
 
+Each of the 3 rules you payed against may require different cognitive facilities to figure out, and this research aims to see if thre
+<H3>To play again...</H3>
 <DIV name="linksTAB" style="height:100px"></DIV>
+<BR><BR><BR>
 </BODY>
 <SCRIPT>
 var s_net_wins1 = sessionStorage.getItem("net_wins1");
