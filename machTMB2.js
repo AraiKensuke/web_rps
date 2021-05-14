@@ -3,12 +3,12 @@ fxd_seq = "[3, 1, 2, 3, 2, 1, 2, 3, 3, 1, " +
            "1, 1, 2, 1, 3, 3, 2, 1, 2, 3, " + 
            "3, 1, 2, 1, 2, 1, 3, 2, 2, 3, " + 
            "2, 1, 3, 3, 2, 2, 3, 1, 3, 1]";
-var machines = [["1", "WTL1", "WTL(__moRSP__, [0.8, 0.1, 0.1], [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], false);"],
-                ["2", "WTL2", "WTL(__moRSP__, [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], false);"],
-                ["3", "WTL3", "WTL(__moRSP__, [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], [0.7, 0.25, 0.05], false);"],
+var machines = [["1", "Looks at past moves v. 4", "WTL(__moRSP__, [0.8, 0.1, 0.1], [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], false);"],
+                ["2", "Looks at past moves v. 5", "WTL(__moRSP__, [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], false);"],
+                ["3", "Looks at past moves v. 6", "WTL(__moRSP__, [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], [0.7, 0.25, 0.05], false);"],
                 //["4", "BiasRnd1", "BiasedRandom(__moRSP__, [0.75, 0.125, 0.125]);"],
-		["4", "BiasedRandom", "FixedSequence(__moRSP__, " + fxd_seq + ");"],
-		["5", "Mimic", "Mimic(__moRSP__, 1, 0.2);"]];
+		["4", "Random", "FixedSequence(__moRSP__, " + fxd_seq + ");"],
+		["5", "Mimics past moves v. 2", "Mimic(__moRSP__, 1, 0.2);"]];
 
 
 //  compare WTL and BR
