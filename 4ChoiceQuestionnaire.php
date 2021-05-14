@@ -115,6 +115,9 @@ function choose_radio(q, c)
 {
 var radio = document.getElementById("q" + q + "_" + c);
 radio.checked = true;
+	var div = document.getElementsByName("div" + q)[0];
+	      	div.style.backgroundColor="inherit";
+
 }
 
 function check_and_submit()
@@ -192,7 +195,11 @@ else
 ?>
 <BR>Please respond to <U>all</U> questions with the answer closest to how you feel.<BR><BR>
 <FORM name="QuestionnaireForm" action="save_questionnaire.php" method="POST">
-<INPUT type="hidden" name="number_of_questions" value="<?=sizeof($statements)?>"/>
+<?php
+$L = ($AQ == "true") ? sizeof($statements) : sizeof($statements) + 2;
+?>
+
+<INPUT type="hidden" name="number_of_questions" value="<?=$L?>"/>
 <INPUT type="hidden" name="ParticipantID" value=""/>
 <INPUT type="hidden" name="exptname" value=""/>
 <INPUT type="hidden" name="visitnum" value="0"/> <!-- visitnum set to 0 -->
@@ -218,6 +225,63 @@ for ($s = 0; $s < sizeof($statements); $s++ )
 	       print("<TR class=\"tr5\"><TD colspan=\"2\">&nbsp;<BR>&nbsp;</TD></TR>");
 }
 
+}
+if ($AQ == "false")
+{
+    $L = sizeof($statements);
+    $tr_class = "tr" . (($L % 2)+1);
+?>
+<TR class="<?=$tr_class?>">
+<TD>
+<DIV name="div<?=$L?>" &nbsp;&nbsp;<B><?=($L+1)?></B>&nbsp;&nbsp;
+</TD>
+<TD>
+Was there a noticeable difference in the 3 machines?
+</TD>
+</TR>
+<TR class="<?=$tr_class?>">
+<TD></TD>
+<TD>
+<SELECT name="q<?=($L+1)?>">
+  <option value="all 3 different">All Three (3) felt different</option>
+  <option value="1 stood out">One (1) of them stood out from the others</option>
+  <option value="all same">All felt the same</option>
+  <option value="don't know" selected>Don't know</option>
+  <option value="don't remember">Don't remember</option>
+</SELECT>
+</TD>
+</TR>
+<TR class="<?=$tr_class?>">
+<TD colspan="2">&nbsp;
+</TD>
+</TR>
+<!-- -->
+<?php
+$L = $L + 1;
+?>
+<TR class="<?=$tr_class?>">
+<TD>
+<DIV name="div<?=$L?>" &nbsp;&nbsp;<B><?=($L+1)?></B>&nbsp;&nbsp;
+</TD>
+<TD>
+Is this the first time you participated in this tournament?
+</TD>
+</TR>
+<TR class="<?=$tr_class?>">
+<TD></TD>
+<TD>
+<SELECT name="q<?=($L+1)?>">
+  <option value="first time" selected>1st time</option>
+  <option value="not first time">Not my first time</option>
+</SELECT>
+</TD>
+</TR>
+<TR class="<?=$tr_class?>">
+<TD colspan="2">&nbsp;
+</TD>
+</TR>
+
+<?php
 }
 ?>
 </TABLE>
