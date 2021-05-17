@@ -11,7 +11,6 @@ if ($_GET["q"] == "AQ")
    "I find it hard to make new friends.",
    "I enjoy social occasions.",
    "I enjoy meeting new people.",
-   "New situations make me anxious.",
    "I prefer to do things the same way over and over again.",
    "It does not upset me if my daily routine is disturbed.",
    "I enjoy doing things spontaneously.",
@@ -258,6 +257,7 @@ Was there a noticeable difference in the 3 machines?
 <!-- -->
 <?php
 $L = $L + 1;
+    $tr_class = "tr" . (($L % 2)+1);
 ?>
 <TR class="<?=$tr_class?>">
 <TD>

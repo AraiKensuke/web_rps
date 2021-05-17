@@ -174,6 +174,14 @@ function set_lang(jore)
 
 //初期化
 function Reset(){
+    var pgo = document.getElementById("top");
+    
+    pgo.innerHTML = '<BR><BR><BR><BR><BR><BR><BR><BR><CENTER><SPAN style="color:#FFFF00;font-size:45;">' + MatchTo + ' games against<BR>machine #' + block + '</SPAN><BR><BR><BR><SPAN style="color:#FFFF00;font-size:70;">GO!!!</SPAN></CENTER><BR>';
+    pgo.style.backgroundColor="grey";
+    pgo.style.height=window.innerHeight;
+    pgo.style.width=window.innerWidth;
+    pgo.style.opacity=0.95;
+
     stopped = false;
     //console.log("In Reset()")
 
@@ -223,6 +231,11 @@ function Reset(){
 	bottomDIV.style.top=270;
 	bottomDIV.innerHTML='<CENTER><BR><P style="color=#000000;font-size:50px">PRACTICE<BR>MODE</P></CENTER>';
     }
+    setTimeout(() => {  pgo.innerHTML = '';
+    pgo.style.backgroundColor="grey";
+    pgo.style.height=0;
+    pgo.style.width=0;
+			pgo.style.opacity=0.0;}, 1600);
 }
 
 
@@ -620,7 +633,7 @@ function You_win_or_lose(win,lose){
 	pgo.style.backgroundColor="grey";
 	pgo.style.height=600;
 	pgo.style.width=500;
-	pgo.style.opacity=0.98;
+	pgo.style.opacity=0.95;
     }
     else{
 	if (realtimeResults)

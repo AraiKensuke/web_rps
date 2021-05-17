@@ -20,8 +20,6 @@ for directory in dirlist:
                 if dat.STARTED_ROUNDS and dat.visit_status[0] >= tmbdat.COMPLETED_3_ROUNDS:
                     complete_dat.append(dat)
 
-
-
 #  now look at complete_dat
 for cd in complete_dat:
     visits = len(cd.visit_status)
@@ -30,4 +28,6 @@ for cd in complete_dat:
 wtl_all = _N.zeros((ROUNDS, tmbdat.GAMES))
 
 for cd in range(len(complete_dat)):
-    wtl_all += complete_dat[cd].player_wtl[0]
+    wtl_all += _N.cumsum(complete_dat[cd].player_wtl[0], axis=0)
+
+wtl_all /= len(complete_dat)
