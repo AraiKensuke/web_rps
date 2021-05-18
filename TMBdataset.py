@@ -17,6 +17,7 @@ class TMBdataset:
     completed_visits = None
     round_dats   = None
     player_wtl   = None
+    player_netwin   = None
     cats         = None
     
     cum_rps      = None
@@ -51,6 +52,7 @@ class TMBdataset:
 
         completed_visits = visit - 1
         self.player_wtl   = _N.zeros((completed_visits, 3, GAMES))
+        self.player_netwin   = _N.zeros((completed_visits, 3, GAMES))
         self.cum_rps   = _N.zeros((completed_visits, 3, 3, GAMES+1), dtype=_N.int)
         self.cats         = _N.zeros((completed_visits, 3))
 
@@ -118,4 +120,6 @@ class TMBdataset:
                             self.cum_rps[visit-1, cat_col, 2, g+1] = self.cum_rps[visit-1, cat_col, 2, g]+1
 
                     fp.close()
+                    for col in range(3):
+                        self.player_netwin[visit-1, col] = _N.cumsum(self.player_wtl[visit-1, col])
 
