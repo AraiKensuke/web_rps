@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<STYLE>
+<!--https://www.freecodecamp.org/news/how-to-make-your-first-javascript-chart/-->
+#figures table, th, td {
+  border: 1px solid black;
+}
+
+</STYLE>
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript" src="rpsm.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.0"></script>-->
+<!--  https://www.chartjs.org/docs/2.8.0/charts/line.html  Docs for this version of Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
+    <head>
+        <meta charset = "utf-8">
+        <title>Questions</title>
+    </head>
+
+<!--       display: inline-block; -->
+    <style>
+      table {
+      position: absolute;
+}
+
+      table td {
+      overflow: visible;
+      white-space: nowrap;
+      padding: 4px;
+      width: 100px;
+      border: 1px solid black;
+      }
+        body {	font-family: Verdana;
+	margin-top: 40px;
+	margin-left: 100px;
+	margin-right: 100px;
+	margin-bottom: 100px;
+	background-color: rgb(255, 255, 255);
+	}
+
+    </style>
+<SCRIPT>
+function get_ticks(minval, maxval)
+{
+    //  guaranteed minval < 0
+    //  maxval > 0
+    ticks = [];
+    AMP = Math.max(Math.abs(minval), Math.abs(maxval))
+    if (minval == -1*AMP)
+    {
+    ticks[ticks.length] = minval;
+    }
+    ticks[ticks.length] = 0;
+    if (maxval == AMP)
+    {
+    ticks[ticks.length] = maxval;
+    }
+    return ticks;
+}
+  var scores_by_block = [];
+  var scores_0 = [];
+  var block_xs        = [];
+
+  //  BY block
+          to_block = parseInt(getSessionStorage("to_block"));
+
+      scores = {}
+var visitnum = sessionStorage.getItem("visitnum", "");
+var partID = sessionStorage.getItem("ParticipantID", "");
+
+          var html4table = "<TABLE><TR><TH>rule ID</TH><TH>outcomes</TH></TR>";
+      for( var b = 0; b < to_block; b++)
+{
+  block_xs[b] = b+1;
+			  html4table += "<TR><TD>";
+cmp = sessionStorage.getItem("compare" + (b+1).toString());
+aib = sessionStorage.getItem("AIconfigNumIndex" + (b+1).toString());
+aiNm = sessionStorage.getItem("AIconfigNumNickname" + (b+1).toString());
+
+    resbstr   = sessionStorage.getItem("results" + (b+1).toString());
+    resb =  to_2darray_from_str(resbstr);
+
+			 win1 = parseInt(resb[0][resb[0].length-1])
+			 los1 = parseInt(resb[1][resb[1].length-1])
+
+			  c1  = win1-los1;
+			  scores_by_block[b] = c1;
+			  if (c1 > 0)
+      {
+sc1 = ("+" + c1.toString());
+}
+      else if (c1 < 0)
+{
+sc1 = c1.toString();
+}
+else
+{
+sc1 = "TIE";
+}
+
+if (scores[parseInt(aib)-1] == null)
+{
+		    scores[parseInt(aib)-1] = []
+}
+append_to_array(scores[parseInt(aib)-1], c1);
+
+			  html4table += aiNm;
+			  html4table += "</TD><TD>" + "(" +sc1+")</TD></TR>\n";
+}
+html4table += "</TABLE>";
+
+var html4links = "";
+html4links += "<A href=\"TournamentRules.php?partID=" + partID + "\">Play tournament again now as a returning participant</A>.  If you do not want to be identified as a returning participant, you can follow <A href=\"TournamentRules.php\">this link to play again as a 1st time participant.</A>.  As a returning participant, w will not ask you to fill out the questionnaires again.  If you want to play again later as a returning participaant, use this participantID:<PRE>" + partID + "</PRE>To reiterate, <B>this ID does not contain any identifying information about you</B>.  It is only used to mark data in our database as being collected from the same anonymous individual, and <B>your use of it in future participation in this experiment is optional and voluntary</B>.<BR><BR>";
+
+
+      function do_tables()
+      {
+    //divobjTAB = document.getElementsByName("resultTAB")[0];
+    divobjLINKS = document.getElementsByName("linksTAB")[0];
+      //divobjTAB.innerHTML = html4table;
+      divobjLINKS.innerHTML = html4links;
+		    spanobjMach1 = document.getElementsByName("mach1")[0];
+		    spanobjMach2 = document.getElementsByName("mach2")[0];
+		    spanobjMach3 = document.getElementsByName("mach3")[0];
+		    spanobjMach1.innerHTML = sessionStorage.getItem("AIconfigNumNickname1");
+		    spanobjMach2.innerHTML = sessionStorage.getItem("AIconfigNumNickname2");
+		    spanobjMach3.innerHTML = sessionStorage.getItem("AIconfigNumNickname3");
+		    visitnumSPAN = document.getElementsByName("visitSPAN")[0];
+		    if ((visitnum == "1") || (visitnum == "21") || (visitnum == "31") || (visitnum == "41") || (visitnum == "51"))
+		    {
+		    visitnumSPAN.innerHTML = visitnum + "st";
+		    }
+		    else if ((visitnum == "2") || (visitnum == "22") || (visitnum == "32") || (visitnum == "42") || (visitnum == "52"))
+		    {
+		    visitnumSPAN.innerHTML = visitnum + "nd";
+		    }
+		    else if ((visitnum == "3") || (visitnum == "23") || (visitnum == "33") || (visitnum == "43") || (visitnum == "53"))
+		    {
+		    visitnumSPAN.innerHTML = visitnum + "rd";
+		    }
+		    else
+		    {
+		    visitnumSPAN.innerHTML = visitnum + "th";
+		    }
+      }
+
+
+</SCRIPT>
+    <BODY onload="javascript:do_tables();">
+<H1>Thank you for your participation!</H1>
+This was your <SPAN name="visitSPAN"></SPAN> time participating in this experiment.<BR><BR>
+
+<!--<DIV name="resultTAB" style="height:150px"></DIV>-->
+<DIV name="plotDIV1" style="height:150px">
+Round 1 net wins (machine: <span name="mach1"></span>):
+<canvas id="myChart1" style="height:100px;"></canvas>
+</DIV><BR>
+<DIV name="plotDIV2" style="height:150px">
+Round 2 net wins (machine: <span name="mach2"></span>):
+<canvas id="myChart2" style="height:100px;"></canvas>
+</DIV><BR>
+<DIV name="plotDIV3" style="height:150px">
+Round 3 net wins (machine: <span name="mach3"></span>):
+<canvas id="myChart3" style="height:100px;"></canvas>
+</DIV>
+<BR><BR><BR>
+<HR>
+<BR>
+<IMG src="Explanation.jpg" align="left" style=”margin: 0px 80px 80px 80px;”/>
+The 3 plots above show how you were doing against each machine throughout the 40 matches during each round.  If you were able to learn the rules used by the machine to generate the next move, the line should be curving upward on the right-hand side, ie your net wins increased.  In interactions with people, we learn about how they respond to us through interaction.  In a competition, figuring out your opponent gives you an advantage.  In this experiment, we sought to assess how quickly a rigid rule of play would become stale through learning that takes place during repeated play, and give us a rough idea of how quickly competitiors must change their behavior in order to maintain a competitive edge.
+<H3>To play again...</H3>
+<DIV name="linksTAB" style="height:100px"></DIV>
+<BR><BR><BR>
+</BODY>
+<SCRIPT>
+var s_net_wins1 = sessionStorage.getItem("net_wins1");
+var s_net_wins2 = sessionStorage.getItem("net_wins2");
+var s_net_wins3 = sessionStorage.getItem("net_wins3");
+var net_wins1 = to_1darray_from_str(s_net_wins1);
+var net_wins2 = to_1darray_from_str(s_net_wins2);
+var net_wins3 = to_1darray_from_str(s_net_wins3);
+
+var games_xs = [];
+for (ii =0; ii < net_wins1.length; ii++ )
+{
+    scores_0[ii] = 0;
+
+    games_xs[ii] = ii+1;
+}
+max1 = Math.max(Math.max(Math.max.apply(Math, net_wins1)), 1)
+min1 = Math.min(Math.min(Math.min.apply(Math, net_wins1)), -1)
+max2 = Math.max(Math.max(Math.max.apply(Math, net_wins2)), 1)
+min2 = Math.min(Math.min(Math.min.apply(Math, net_wins2)), -1)
+max3 = Math.max(Math.max(Math.max.apply(Math, net_wins3)), 1)
+min3 = Math.min(Math.min(Math.min.apply(Math, net_wins3)), -1)
+
+  var x_scales = 	{ display: true,
+			  		 scaleLabel: { 
+		      display:true,
+		      labelString: 'match #',
+		     fontSize: 18,
+                 },
+		 ticks: {
+		 		 fontSize: 16
+}
+                };
+
+
+  var y_scales = 	{ display: true,
+			  		 scaleLabel: { 
+		      display:true,
+		      labelString: 'net # wins',
+		     fontSize: 18,
+                 },
+		  ticks: {
+		      		  max: 4,
+		      min: -4,
+		      stepSize:2,
+		      fontSize: 16,
+                 maxRotation: 0
+		 }
+		 
+                };
+
+var x_and_y_scales = {xAxes: [x_scales], yAxes: [y_scales]};
+  ops = {maintainAspectRatio: false,responsive: true, scales: x_and_y_scales, legend: {display: false}};   //  plugins: {legends  -->  legends
+
+var canv_scores = document.getElementById("myChart1").getContext('2d');
+  var data1 = {labels: games_xs, datasets: [{data: net_wins1, label: "net wins", borderColor: 'rgb(0, 0, 0)', lineTension: 0}, {data: scores_0, label: "tie", borderColor: 'rgb(190, 190, 190)', borderDash: [2, 2], radius: 0}]};
+  var config1 = {type: 'line', data: data1, options: ops, ticks: { fontSize:20}, }
+var myChart = new Chart(canv_scores, config1);
+
+/////////////////////////////////////////////////////////////////////
+//data = {labels: xs, datasets: [{data: col10, borderColor: "#000000"}]};
+//options = {scales: { y: {max: 6, min: -1, ticks: { stepSize: 1}}}}
+//config = {type: 'line', data, options: options};
+//var myChart = new Chart(ct1stid, config);
+
+
+
+
+  var y_scales = 	{ display: true,
+			  		 scaleLabel: { 
+		      display:true,
+		      labelString: 'net # wins',
+		     fontSize: 18,
+                 },
+		  ticks: {
+		      		  max: 4,
+		  min: -4,
+		      stepSize: 2,
+		      fontSize: 16,
+                 maxRotation: 0
+		 }
+                };
+var x_and_y_scales = {xAxes: [x_scales], yAxes: [y_scales]};
+  ops = {maintainAspectRatio: false,responsive: true, scales: x_and_y_scales, legend: {display: false}};
+
+//  radius: 0  -> point style
+var canv_scores = document.getElementById('myChart2').getContext('2d');
+var data2 = {labels: games_xs, datasets: [{data: net_wins2, label: "net wins", borderColor: 'rgb(0, 0, 0)', lineTension: 0}, {data: scores_0, label: "tie", borderColor: 'rgb(190, 190, 190)', borderDash: [2, 2], radius: 0}]};
+var config2 = {type: 'line', data: data2, options: ops}
+var myChart = new Chart(canv_scores, config2);
+
+/////////////////////////////////////////////////////////////////////
+
+//yticks = get_ticks(min3, max3);
+  var y_scales = 	{ display: true,
+		 scaleLabel: { 
+		      display:true,
+		      labelString: 'net # wins',
+		     fontSize: 18,
+                 },
+		  ticks: {
+		      max: 4,
+		      min: -4,
+		      stepSize: 2,
+		      fontSize: 16,
+                 maxRotation: 0
+		 }
+                };
+var x_and_y_scales = {xAxes: [x_scales], yAxes: [y_scales]};
+ops = {maintainAspectRatio: false,responsive: true, scales: x_and_y_scales, legend: {display: false}};
+
+var canv_scores = document.getElementById('myChart3').getContext('2d');
+var data3 = {labels: games_xs, datasets: [{data: net_wins3, label: "net wins", borderColor: 'rgb(0, 0, 0)', lineTension: 0}, {label: "tie", data: scores_0, borderColor: 'rgb(190, 190, 190)', borderDash: [2, 2], radius: 0}]};
+var config3 = {type: 'line', data: data3, options: ops}
+var myChart = new Chart(canv_scores, config3);
+
+</SCRIPT>
+</html>
