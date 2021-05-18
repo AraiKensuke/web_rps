@@ -22,7 +22,8 @@ function check_and_submit()
 </SCRIPT>
 <BODY>
 
-<CENTER>
+  <CENTER>
+    <P id="p1">
 <H2>Demographic Information</H2>
 <BR>
 Before we begin, we ask that you tell us a bit about yourself.<BR><BR><BR>
@@ -86,6 +87,7 @@ Before we begin, we ask that you tell us a bit about yourself.<BR><BR><BR>
 <BR><BR>
 	    <A href="javascript:check_and_submit();"><IMG src="Next.jpg" height=40/></A>
 </CENTER>
-</FORM>
+  </FORM>
+  </P>
 </BODY>
 </HTML>
