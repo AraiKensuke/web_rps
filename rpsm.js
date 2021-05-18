@@ -640,7 +640,6 @@ function practiceagain()
 }
 
 function You_win_or_lose(win,lose){
-    console.log("You_win_or_lose");
     var youwin = document.getElementById("final_result");
     if (practiceMode)
     {
@@ -667,17 +666,17 @@ function You_win_or_lose(win,lose){
 		else if (win == lose)  {imgsrc = "youtied.png";}
 		else                   {imgsrc = "youlost.png";}
 	    }
-	    youwin.innerHTML = '<img style="opacity:0.75;" src="' + imgsrc + '">';
+	    youwin.innerHTML = '<BR><BR><BR><img style="opacity:0.85;" src="' + imgsrc + '">';
 	}
 	else
 	{
 	    if (block == to_block)
 	    {
-		youwin.innerHTML = '<img style="opacity:0.5;" src="toquestionnaire.jpg"/>';
+		youwin.innerHTML = '<BR><BR><BR><img style="opacity:0.5;" src="toquestionnaire.jpg"/>';
 	    }
 	    else
 	    {
-		youwin.innerHTML = '<img style="opacity:0.5;" src="nextround.jpg"/>';
+		youwin.innerHTML = '<BR><BR><BR><img style="opacity:0.5;" src="nextround.jpg"/>';
 	    }
 	}
     }
