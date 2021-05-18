@@ -10,6 +10,7 @@ include "utils.php";
 //  DATA/RPSrules/050522/UniqueID/1
 //  DATA/RPSrules/050522/UniqueID/2
 
+$UA                    = $_SERVER['HTTP_USER_AGENT'];
 $ParticipantID         = getVal("ParticipantID", "");
 $exptname         = getVal("exptname", "");
 $visit           = getVal("visit", "");
@@ -36,6 +37,7 @@ $out_dirname = mkoutdir($exptname, $ParticipantID, $visit);
 
 $file = $out_dirname . "/block" . $block . "_AI" . ".dat";
 file_put_contents($file, "#  player hands, AI hands, mv times, inp method, ini_weight, fin_weights, paced_or_free, AI_or_RNG, rps_probs, method\n" );
+file_put_contents($file, $UA . "\n", FILE_APPEND);
 file_put_contents($file, $constructStr . "\n", FILE_APPEND);
 file_put_contents($file, $rec_hands . "\n", FILE_APPEND);
 file_put_contents($file, $rec_AI_hands . "\n", FILE_APPEND);
