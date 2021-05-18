@@ -61,6 +61,8 @@ function get_ticks(minval, maxval)
 }
   var scores_by_block = [];
   var scores_0 = [];
+  var scores_Max = [];
+  var scores_Min = [];
   var block_xs        = [];
 
   //  BY block
@@ -149,7 +151,7 @@ html4links += "<A href=\"TournamentRules.php?partID=" + partID + "\">Play tourna
 </SCRIPT>
     <BODY onload="javascript:do_tables();">
 <H1>Thank you for your participation!</H1>
-This was your <SPAN name="visitSPAN"></SPAN> time participating in this experiment.<BR><BR>
+<B>This was your <SPAN name="visitSPAN"></SPAN> time participating in this experiment.</B><BR>The plots below show how your "net wins" during the course of your rounds.  When your "net wins" is positive (green region), you've won more matches than you've lost, and when its negative (red region), you've lost more matches than you've won.  <BR><BR>
 
 <!--<DIV name="resultTAB" style="height:150px"></DIV>-->
 <DIV name="plotDIV1" style="height:175px">
@@ -169,12 +171,12 @@ Round 4 net wins (machine: <span name="mach4"></span>):
 <canvas id="myChart4" style="height:100px;"></canvas>
 </DIV>
 
-<BR><BR><BR>
+<BR><BR>
 <HR>
 <BR>
-<IMG src="Explanation.jpg" align="left" style=”margin: 0px 80px 80px 80px;”/>
-The 4 plots above show how you were doing against each machine throughout the 40 matches during each round.  If you were able to learn the rules used by the machine to generate the next move, the line should be curving upward on the right-hand side, ie your net wins increased.  In interactions with people, we learn about how they respond to us through interaction.  In a competition, figuring out your opponent gives you an advantage.  In this experiment, we sought to assess how quickly a rigid rule of play would become stale through learning that takes place during repeated play, and give us a rough idea of how quickly competitiors must change their behavior in order to maintain a competitive edge.
-<H3>To play again...</H3>
+<!--<IMG src="Explanation.jpg" align="left" style=”margin: 0px 80px 80px 80px;”/>
+The 4 plots above show how you were doing against each machine throughout the 40 matches during each round.  If you were able to learn the rules used by the machine to generate the next move, the line should be curving upward on the right-hand side, ie your net wins increased.  In interactions with people, we learn about how they respond to us through interaction.  In a competition, figuring out your opponent gives you an advantage.  In this experiment, we sought to assess how quickly a rigid rule of play would become stale through learning that takes place during repeated play, and give us a rough idea of how quickly competitiors must change their behavior in order to maintain a competitive edge.-->
+<H3>Want to try another tournament?</H3>
 <DIV name="linksTAB" style="height:100px"></DIV>
 <BR><BR><BR>
 </BODY>
@@ -192,7 +194,6 @@ var games_xs = [];
 for (ii =0; ii < net_wins1.length; ii++ )
 {
     scores_0[ii] = 0;
-
     games_xs[ii] = ii+1;
 }
 max1 = Math.max(Math.max(Math.max.apply(Math, net_wins1)), 1)
@@ -214,32 +215,50 @@ min4 = Math.min(Math.min(Math.min.apply(Math, net_wins4)), -1)
 		 		 fontSize: 16
 }
                 };
-  var y_scales = 	{ display: true,
-			  		 scaleLabel: { 
-		      display:true,
-		      labelString: 'net # wins',
-		     fontSize: 18,
-                 },
-		  ticks: {
-		      		  max: 6,
-		      min: -6,
-		      stepSize:3,
-		      fontSize: 16,
-                 maxRotation: 0
-		 }
-		 
-                };
-
-  var x_and_y_scales = {xAxes: [x_scales], yAxes: [y_scales]};
-  ops = {maintainAspectRatio: false,responsive: true, scales: x_and_y_scales, legend: {display: false}};   //  plugins: {legends  -->  legends
-
 
   for (var nn = 1; nn < 5; nn++ )
   {
+      maxY = eval("max" + nn);
+      minY = eval("min" + nn);
+      AMP  = Math.max(Math.abs(maxY), Math.abs(minY));
+      
+      var y_scales = 	{ display: true,
+			  scaleLabel: { 
+			      display:true,
+			      labelString: 'net # wins',
+			      fontSize: 22,
+			  },
+			  ticks: {
+		      	      max: AMP,
+			      min: (-1*AMP),
+			      stepSize:AMP,
+			      fontSize: 20,
+			      maxRotation: 0
+			  }
+			};
+
+      for (ii =0; ii < net_wins1.length; ii++ )
+      {
+	  scores_Max[ii] = AMP+1;
+	  scores_Min[ii] = -1*AMP-1;
+      }
+
+      var x_and_y_scales = {xAxes: [x_scales], yAxes: [y_scales]};
+      var ops = {maintainAspectRatio: false,responsive: true, scales: x_and_y_scales, legend: {display: false}};   //  plugins: {legends  -->  legends
+      
       var canv_scores = document.getElementById("myChart" + nn).getContext('2d');
       thedat = eval("net_wins" + nn);
-      var data1 = {labels: games_xs, datasets: [{data: thedat, label: "net wins", borderColor: 'rgb(0, 0, 0)', lineTension: 0}, {data: scores_0, label: "tie", borderColor: 'rgb(190, 190, 190)', borderDash: [2, 2], radius: 0}]};
-      var config1 = {type: 'line', data: data1, options: ops, ticks: { fontSize:20}, }
+      var data1 = {labels: games_xs, datasets: [
+	  {data: thedat, label: "net wins", borderColor: 'rgb(0, 0, 0)', lineTension: 0, fill: false},	  
+	  {data: scores_0, label: "tie", borderColor: 'rgb(190, 190, 190)', radius: 0},
+	  {data: scores_Max, label: "", backgroundColor: 'rgb(150, 255, 150)', radius: 0, fill: 1},
+	  {data: scores_Min, label: "", backgroundColor: 'rgb(255, 150, 150)', radius: 0, fill: 1}]};
+
+	  
+//	  {fill: {target: 'origin', above: 'rgb(255, 0, 0)', below: 'rgb(0, 0, 255)'}}]};
+
+//		  };
+      var config1 = {type: 'line', data: data1, options: ops, ticks: { fontSize:20}};
       var myChart = new Chart(canv_scores, config1);
   }
 
