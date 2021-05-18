@@ -216,7 +216,7 @@ for ($s = 0; $s < sizeof($statements); $s++ )
     print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_1\" value=\"1\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 1);\">Definitely Agree</A></LABEL>");
     print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_2\" value=\"2\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 2);\">Slightly Agree</A></LABEL>"); 
     print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_3\" value=\"3\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 3);\">Slightly Disagree</A></LABEL>"); 
-    print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_4\" value=\"4\" checked/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 4);\">Definitely Disagree</A></LABEL></TR>\n"); 
+    print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_4\" value=\"4\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 4);\">Definitely Disagree</A></LABEL></TR>\n"); 
 	       print("<TR class=\"" . $tr_class . "\"><TD colspan=\"2\">&nbsp;</TD></TR>");
 
     if (((($s+1) % 5) == 0) && ($s != 0))
@@ -242,8 +242,8 @@ Was there a noticeable difference in the 3 machines?
 <TD></TD>
 <TD>
 <SELECT name="q<?=($L+1)?>">
-  <option value="all 3 different">All Three (3) felt different</option>
-  <option value="1 stood out">One (1) of them stood out from the others</option>
+  <option value="all 4 different">All Three (3) felt different</option>
+  <option value="1 or 2 stood out">One or two of them stood out from the others</option>
   <option value="all same">All felt the same</option>
   <option value="don't know" selected>Don't know</option>
   <option value="don't remember">Don't remember</option>

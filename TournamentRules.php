@@ -30,9 +30,9 @@ else
 <link rel="stylesheet" href="rps.css" type="text/css" />
 <SCRIPT src="util.js"></SCRIPT>
 <?php
-if (($visit % 3) + 1)
+if (($visit % 2) + 1)
 {
-    $ai_js_file = "machTMB" . (($visit-1) % 3 + 1) . ".js";
+    $ai_js_file = "machTMB" . (($visit-1) % 2 + 1) . ".js";
 }
 ?>
 <SCRIPT src="<?=$ai_js_file?>"></SCRIPT>
@@ -50,7 +50,7 @@ if (($visit % 3) + 1)
 <?php
 }
 ?>
-var MatchTo=10;
+var MatchTo=32;
 realtimeResults = __CWTL_NOGRAPH__;
 
 machine_and_configs = [];
