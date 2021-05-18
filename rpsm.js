@@ -52,12 +52,13 @@ var flag = "0";
 
 var __NGAMES__  = 0;   // running number of games played
 var __CWTL__ = 1;      // cumulative win, tie, lose
+var __CWTL_NOGRAPH__ = 2;      // cumulative win, tie, lose
 
 //"The AI looks at previous game.  If human played R and AI played S there, it looks back into its record of all previous games where human played R and AI played S, and then looks to see how often human next played R, P or S.  The AI then predicts human move in proportion to how frequently that move followed human-R and AI-S.",
 //		     "The AI looks at previous game.  If human played R and AI played S there, it looks back into its record of all previous games where human played R and AI played S, and then looks to see how often human next played R, P or S.  The AI then predicts human move that's dependent on how frequently that move followed human-R and AI-S, but in a more 'greedy' fashion, ie it strongly favors moves that are more likely, even if the frequency is very close to the 2nd most likely.",
 //		     "Perceptron looks at several previous games, and ", "random"];
 
-var realtimeResultsInfo = [__NGAMES__, __CWTL__];
+var realtimeResultsInfo = [__NGAMES__, __CWTL__, __CWTL_NO_GRAPH__];
 
 //let mrkvchn = new MarkovChain(0.9);
 //let prc     = new Perceptron(prc_N);
@@ -141,10 +142,15 @@ function set_lang(jore)
     elemPERHF.innerHTML = "Machine move"
     elemDescF.innerHTML = "Play <B><U>" + MatchTo + "</U></B> games!"
     
-    if (realtimeResults == __CWTL__)
+    if ((realtimeResults == __CWTL__) || (realtimeResults == __CWTL_NOGRAPH__))
     {
+	var netWin = (results[0][game]-results[1][game]);
+	if (netWin > 0) { var sNetWin = "WINNING +" + netWin;}
+	else if (netWin < 0) { var sNetWin = "LOSING " + netWin;}
+	else { var sNetWin = "Currently tied";}
+	    
 	//console.log("CWTL");
-	elemResuF.innerHTML = "<font color='#6970e9'>Win:"+results[0][game]+"</font>, <font color='#e9473f'>Losses:"+results[1][game]+"</font>, <font color='#319e34'>Tie:"+results[2][game]+"</font>";
+	elemResuF.innerHTML = "<font color='#000000'>" + sNetWin+"</font>&nbsp;&nbsp;&nbsp;&nbsp;<font color='#6970e9'>Win:"+results[0][game]+"</font>, <font color='#e9473f'>Los:"+results[1][game]+"</font>, <font color='#319e34'>Tie:"+results[2][game]+"</font>";
     }
     else if (realtimeResults == __NGAMES__)
     {
@@ -470,7 +476,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	break;
     }
 
-    if (realtimeResults == __CWTL__)
+    if ((realtimeResults == __CWTL__) || (realtimeResults == __CWTL_NOGRAPH__))
     {
 	var text="";
 	if (JorE == __JAPANESE__)
@@ -479,7 +485,18 @@ function ShowResults(plhand,predhand,resultTimeline){
 	}
 	else
 	{
-	    text += "<font color='#6970e9'>Wins:"+results[0][game+1] + "</font>, <font color='#e9473f'>Losses:"+results[1][game+1]+"</font>, <font color='#319e34'>Ties:"+results[2][game+1]+"</font>";
+	    var netWin = (results[0][game+1]-results[1][game+1]);
+	    if (netWin > 0) { var sNetWin = "WINNING +" + netWin;}
+	    else if (netWin < 0) { var sNetWin = "LOSING " + netWin;}
+	    else { var sNetWin = "Currently tied";}
+	    
+	    //var netWin = (results[0][game]-results[1][game]);
+	    //if (netWin > 0) { var sNetWin = "+" + netWin;}
+	    //else if (netWin < 0) { var sNetWin = netWin;}
+	    //else { var sNetWin = "0";}
+	    
+	    text += "<font color='#000000'>"+sNetWin+"</font>&nbsp;&nbsp;&nbsp;&nbsp;<font color='#6970e9'>Win:"+results[0][game+1]+"</font>, <font color='#e9473f'>Los:"+results[1][game+1]+"</font>, <font color='#319e34'>Tie:"+results[2][game+1]+"</font>";
+	    //text += "<font color='#6970e9'>Win:"+results[0][game+1] + "</font>, <font color='#e9473f'>Los:"+results[1][game+1]+"</font>, <font color='#319e34'>Tie:"+results[2][game+1]+"</font>";
 	}
 	document.getElementById("results").innerHTML = text;
     }

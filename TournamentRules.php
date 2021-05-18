@@ -51,7 +51,7 @@ if (($visit % 3) + 1)
 }
 ?>
 var MatchTo=10;
-realtimeResults = __CWTL__;
+realtimeResults = __CWTL_NOGRAPH__;
 
 machine_and_configs = [];
 machine_and_configs_indices = [];
