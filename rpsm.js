@@ -58,7 +58,7 @@ var __CWTL_NOGRAPH__ = 2;      // cumulative win, tie, lose
 //		     "The AI looks at previous game.  If human played R and AI played S there, it looks back into its record of all previous games where human played R and AI played S, and then looks to see how often human next played R, P or S.  The AI then predicts human move that's dependent on how frequently that move followed human-R and AI-S, but in a more 'greedy' fashion, ie it strongly favors moves that are more likely, even if the frequency is very close to the 2nd most likely.",
 //		     "Perceptron looks at several previous games, and ", "random"];
 
-var realtimeResultsInfo = [__NGAMES__, __CWTL__, __CWTL_NO_GRAPH__];
+var realtimeResultsInfo = [__NGAMES__, __CWTL__, __CWTL_NOGRAPH__];
 
 //let mrkvchn = new MarkovChain(0.9);
 //let prc     = new Perceptron(prc_N);
@@ -140,7 +140,7 @@ function set_lang(jore)
     
     elemINSTR.innerHTML = "Your move<BR>click buttons or use keys 123"
     elemPERHF.innerHTML = "Machine move"
-    elemDescF.innerHTML = "Play <B><U>" + MatchTo + "</U></B> games!"
+    elemDescF.innerHTML = "<CENTER><H3>" + n_rps_plyd + " games of " + MatchTo + " games in round!</H3></CENTER>"            
     
     if ((realtimeResults == __CWTL__) || (realtimeResults == __CWTL_NOGRAPH__))
     {
@@ -502,8 +502,11 @@ function ShowResults(plhand,predhand,resultTimeline){
     }
     else if (realtimeResults == __NGAMES__)
     {
-	document.getElementById("results").innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";
+	document.getElementById("results").innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";	
     }
+    var elemDescF = document.getElementById("descFONT")
+    elemDescF.innerHTML = "<CENTER><H3>" + n_rps_plyd + " games of " + MatchTo + " games in round!</H3></CENTER>"        
+    
 
     var Ymax = 0;
     for(var i=0;i<3;i++){
@@ -790,6 +793,19 @@ function You_win_or_lose(win,lose){
     }
 }
 
+function frmtd_date_string(date)
+{
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    var yr    = date.getFullYear().toString().substring(2, 4)
+    var mon   = months[date.getMonth()]//.toString().padStart(2, "0");
+    var day   = date.getDate().toString().padStart(2, "0");
+    var hr    = date.getHours().toString().padStart(2, "0");
+    var min   = date.getMinutes().toString().padStart(2, "0");
+    var sec   = date.getSeconds().toString().padStart(2, "0");
+
+    return yr + mon + day + "-" + hr + min + "-" + sec;
+}
+
 function send_php(){
     // console.log("**************** send_php")
     // r_ini_weight = ini_weight.replace(/ /g, "\n")
@@ -804,22 +820,10 @@ function send_php(){
 // phpへの値の受け渡し
 
 
-    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    var yr    = startDate.getFullYear().toString().substring(2, 4)
-    var mon   = months[startDate.getMonth()]//.toString().padStart(2, "0");
-    var day   = startDate.getDate().toString().padStart(2, "0");
-    var hr    = startDate.getHours().toString().padStart(2, "0");
-    var min   = startDate.getMinutes().toString().padStart(2, "0");
-    var sec   = startDate.getSeconds().toString().padStart(2, "0");
-
-    d = yr + mon + day + "-" + hr + min + "-" + sec;
-
-    savedirname = getSessionStorage("savedirname", d);  // multiple times rounds, first time we set it by next line
-    if (savedirname == d)
-    {   //  savedirname is the default name
-	sessionStorage.setItem("savedirname", d);
-    }
-
+    var endDate = new Date();    
+    var s_start_date = frmtd_date_string(startDate);
+    var s_end_date   = frmtd_date_string(endDate);
+    
     net_wins = "";
 
     for (var ii = 0; ii < results[0].length-1; ii++ )
@@ -835,29 +839,38 @@ function send_php(){
     
     var visitnum = sessionStorage.getItem("visitnum", "");
     var partID   = sessionStorage.getItem("ParticipantID", "");
+    var partName   = sessionStorage.getItem("ParticipantName", "");    
 
     sessionStorage.setItem("results" + block, to_str_from_2darray(results));
+
+    var send_dat =  {exptname : exptname,
+		     visit : visitnum,
+		     ParticipantID : partID,
+		     start_time : s_start_date,
+		     end_time : s_end_date,		     
+    		     rec_times : rec_times,
+		     rec_hands : rec_hands,
+    		     rec_AI_hands : rec_AI_hands,
+		     rec_input_method : rec_inp_methd,
+		     AImach :  rpsAI.AImach,
+		     constructStr :  rpsAI.constructStr,
+		     AIconfigname :  rpsAI.AIconfigname,
+		     block  : block,
+		    };
+    if (partName != "")
+    {   //  for EEG sessions
+	send_dat["ParticipantName"] = partName;
+    }
+
     if (rpsAI.AImach == __SMWCA__)
     {
 	sessionStorage.setItem("move_bgrd" + block, rpsAI.fin_move_bgrd);
-
+	send_dat["move_bgrd"] = rpsAI.fin_move_bgrd;
 	$.ajax({
 	    type: 'POST',
 	    url: php_backend,
 	    dataType:'text',
-	    data: {
-		exptname : exptname,
-		visit : visitnum,
-		ParticipantID : partID,
-    		rec_AI_hands : rec_AI_hands,
-    		rec_times : rec_times,
-		rec_input_method : rec_inp_methd,
-		move_bgrd : rpsAI.fin_move_bgrd,
-		AImach :  rpsAI.AImach,
-		constructStr :  rpsAI.constructStr,
-		AIconfigname :  rpsAI.AIconfigname,
-		block  : block,
-	    },
+	    data: send_dat,
 	    success: function(data) {
 		//location.href = "./test.php";
 	    }
@@ -870,18 +883,7 @@ function send_php(){
 	    type: 'POST',
 	    url: php_backend,
 	    dataType:'text',
-	    data: {
-		exptname : exptname,
-		visit : visitnum,
-		ParticipantID : partID,
-		rec_hands : rec_hands,
-    		rec_AI_hands : rec_AI_hands,
-    		rec_times : rec_times,
-		rec_input_method : rec_inp_methd,
-		AImach :  rpsAI.AImach,
-		constructStr :  rpsAI.constructStr,
-		block  : block,
-	    },
+	    data: send_dat,
 	    success: function(data) {
 		//location.href = "./test.php";
 	    }
@@ -890,26 +892,15 @@ function send_php(){
 
     else if (rpsAI.AImach == __PRC__)
     {
+	send_dat["ini_weight"] = rpsAI.ini_prc_weight;
+	send_dat["fin_weight"] = rpsAI.fin_prc_weight;
+	send_dat["N"] = rpsAI.prc_N;
+
 	$.ajax({
 	    type: 'POST',
 	    url: php_backend,
 	    dataType:'text',
-	    data: {
-		exptname : exptname,
-		visit : visitnum,
-		ParticipantID : partID,
-		rec_hands : rec_hands,
-    		rec_AI_hands : rec_AI_hands,
-    		rec_times : rec_times,
-		rec_input_method : rec_inp_methd,
-      		ini_weight : rpsAI.ini_prc_weight,
-		fin_weight : rpsAI.fin_prc_weight,
-		AImach :  rpsAI.AImach,
-		AIconfigname :  rpsAI.AIconfigname,
-		constructStr :  rpsAI.constructStr,
-		block  : block,
-		N : rpsAI.prc_N
-	    },
+	    data: send_dat,
 	    success: function(data) {
 		//location.href = "./test.php";
 	    }
@@ -917,26 +908,15 @@ function send_php(){
     }
     else if (rpsAI.AImach == __MC__)
     {
+	send_dat["ini_weight"] = rpsAI.ini_MC_cndprob;
+	send_dat["fin_weight"] = rpsAI.fin_MC_cndprob;
+	send_dat["decay"] = rpsAI.decay;
+	
 	$.ajax({
 	    type: 'POST',
 	    url: php_backend,
 	    dataType:'text',
-	    data: {
-		exptname : exptname,
-		visit : visitnum,
-		ParticipantID : partID,
-		rec_hands : rec_hands,
-    		rec_AI_hands : rec_AI_hands,
-    		rec_times : rec_times,
-		rec_input_method : rec_inp_methd,
-      		ini_cprob : rpsAI.ini_MC_cndprob,
-		fin_cprob : rpsAI.fin_MC_cndprob,
-		AImach :  rpsAI.AImach,
-		AIconfigname :  rpsAI.AIconfigname,
-		constructStr :  rpsAI.constructStr,
-		block : block,
-                decay : rpsAI.decay
-	    },
+	    data: send_dat,
 	    success: function(data) {
 		//location.href = "./test.php";
 	    }
@@ -948,19 +928,7 @@ function send_php(){
 	    type: 'POST',
 	    url: php_backend,
 	    dataType:'text',
-	    data: {
-		exptname : exptname,
-		visit : visitnum,
-		ParticipantID : partID,
-		rec_hands : rec_hands,
-    		rec_AI_hands : rec_AI_hands,
-    		rec_times : rec_times,
-		rec_input_method : rec_inp_methd,
-		AImach :  __RND__,
-		constructStr :  rpsAI.constructStr,
-		AIconfigname :  __RND__,
-		block : block,
-	    },
+	    data: send_dat,
 	    success: function(data) {
 		//location.href = "./test.php";
 	    }

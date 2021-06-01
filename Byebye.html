@@ -113,82 +113,40 @@ append_to_array(scores[parseInt(aib)-1], c1);
 }
 html4table += "</TABLE>";
 
-var html4links = "";
-html4links += "<A href=\"TournamentRules.php?partID=" + partID + "\">Play tournament again now as a returning participant</A>.  If you do not want to be identified as a returning participant, you can follow <A href=\"TournamentRules.php\">this link to play again as a 1st time participant.</A>.  As a returning participant, w will not ask you to fill out the questionnaires again.  If you want to play again later as a returning participaant, use this participantID:<PRE>" + partID + "</PRE>To reiterate, <B>this ID does not contain any identifying information about you</B>.  It is only used to mark data in our database as being collected from the same anonymous individual, and <B>your use of it in future participation in this experiment is optional and voluntary</B>.<BR><BR>";
-
-
       function do_tables()
       {
     //divobjTAB = document.getElementsByName("resultTAB")[0];
-    divobjLINKS = document.getElementsByName("linksTAB")[0];
       //divobjTAB.innerHTML = html4table;
-	  divobjLINKS.innerHTML = html4links;
-	  for (var nn = 1; nn < to_block+1; nn++ )
+	  for (var nn = 1; nn < 2; nn++ )
 	  {
 	      spanobjMach = document.getElementsByName("mach"+nn)[0];
 	      spanobjMach.innerHTML = sessionStorage.getItem("AIconfigNumNickname"+ nn);
 	  }
 	  visitnumSPAN = document.getElementsByName("visitSPAN")[0];
-	  if ((visitnum == "1") || (visitnum == "21") || (visitnum == "31") || (visitnum == "41") || (visitnum == "51"))
-	  {
-	      visitnumSPAN.innerHTML = visitnum + "st";
-	  }
-	  else if ((visitnum == "2") || (visitnum == "22") || (visitnum == "32") || (visitnum == "42") || (visitnum == "52"))
-	  {
-	      visitnumSPAN.innerHTML = visitnum + "nd";
-	  }
-	  else if ((visitnum == "3") || (visitnum == "23") || (visitnum == "33") || (visitnum == "43") || (visitnum == "53"))
-	  {
-	      visitnumSPAN.innerHTML = visitnum + "rd";
-	  }
-	  else
-	  {
-	      visitnumSPAN.innerHTML = visitnum + "th";
-	  }
       }
 
 
 </SCRIPT>
     <BODY onload="javascript:do_tables();">
 <H1>Thank you for your participation!</H1>
-<B>This was your <SPAN name="visitSPAN"></SPAN> time participating in this experiment.</B><BR>The plots below show your how you were during the course of your rounds.  Your "net wins" is positive (green region) when you are winning more matches than you're losing, and in the red region (negative), you're losing more matches than you're winning.  <BR><BR>
+The plots below show your how you were during the course of your rounds.  Your "net wins" is positive (green region) when you are winning more matches than you're losing, and in the red region (negative), you're losing more matches than you're winning.  <BR><BR>
 
 <!--<DIV name="resultTAB" style="height:150px"></DIV>-->
-<DIV name="plotDIV1" style="height:175px">
+<DIV name="plotDIV1" style="height:300px">
 Round 1 net wins (machine: <span name="mach1"></span>):
-<canvas id="myChart1" style="height:100px;"></canvas>
+<canvas id="myChart1" style="height:300px;"></canvas>
 </DIV><BR>
-<DIV name="plotDIV2" style="height:175px">
-Round 2 net wins (machine: <span name="mach2"></span>):
-<canvas id="myChart2" style="height:100px;"></canvas>
-</DIV><BR>
-<DIV name="plotDIV3" style="height:175px">
-Round 3 net wins (machine: <span name="mach3"></span>):
-<canvas id="myChart3" style="height:100px;"></canvas>
-</DIV><BR>
-<DIV name="plotDIV4" style="height:175px">
-Round 4 net wins (machine: <span name="mach4"></span>):
-<canvas id="myChart4" style="height:100px;"></canvas>
-</DIV>
 
 <BR><BR>
 <HR>
 <BR>
 <!--<IMG src="Explanation.jpg" align="left" style=”margin: 0px 80px 80px 80px;”/>
 The 4 plots above show how you were doing against each machine throughout the 40 matches during each round.  If you were able to learn the rules used by the machine to generate the next move, the line should be curving upward on the right-hand side, ie your net wins increased.  In interactions with people, we learn about how they respond to us through interaction.  In a competition, figuring out your opponent gives you an advantage.  In this experiment, we sought to assess how quickly a rigid rule of play would become stale through learning that takes place during repeated play, and give us a rough idea of how quickly competitiors must change their behavior in order to maintain a competitive edge.-->
-<H3>Want to try another tournament?</H3>
-<DIV name="linksTAB" style="height:100px"></DIV>
 <BR><BR><BR>
 </BODY>
 <SCRIPT>
-  var s_net_wins1 = getSessionStorage("net_wins1", "");
-  var s_net_wins2 = getSessionStorage("net_wins2", "");
-  var s_net_wins3 = getSessionStorage("net_wins3", "");
-  var s_net_wins4 = getSessionStorage("net_wins4", "");
+var s_net_wins1 = sessionStorage.getItem("net_wins1");
 var net_wins1 = to_1darray_from_str(s_net_wins1);
-var net_wins2 = to_1darray_from_str(s_net_wins2);
-  var net_wins3 = to_1darray_from_str(s_net_wins3);
-  var net_wins4 = to_1darray_from_str(s_net_wins4);
 
 var games_xs = [];
 for (ii =0; ii < net_wins1.length; ii++ )
@@ -198,12 +156,6 @@ for (ii =0; ii < net_wins1.length; ii++ )
 }
 max1 = Math.max(Math.max(Math.max.apply(Math, net_wins1)), 1)
 min1 = Math.min(Math.min(Math.min.apply(Math, net_wins1)), -1)
-max2 = Math.max(Math.max(Math.max.apply(Math, net_wins2)), 1)
-min2 = Math.min(Math.min(Math.min.apply(Math, net_wins2)), -1)
-max3 = Math.max(Math.max(Math.max.apply(Math, net_wins3)), 1)
-min3 = Math.min(Math.min(Math.min.apply(Math, net_wins3)), -1)
-  max4 = Math.max(Math.max(Math.max.apply(Math, net_wins4)), 1)
-  min4 = Math.min(Math.min(Math.min.apply(Math, net_wins4)), -1)
 
   var x_scales = 	{ display: true,
 			  		 scaleLabel: { 
@@ -215,7 +167,8 @@ min3 = Math.min(Math.min(Math.min.apply(Math, net_wins3)), -1)
 		 		 fontSize: 16
 }
                 };
-  for (var nn = 1; nn < to_block+1; nn++ )
+
+  for (var nn = 1; nn < 2; nn++ )
   {
       maxY = eval("max" + nn);
       minY = eval("min" + nn);

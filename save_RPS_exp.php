@@ -12,10 +12,12 @@ include "utils.php";
 
 $UA                    = $_SERVER['HTTP_USER_AGENT'];
 $ParticipantID         = getVal("ParticipantID", "");
+$ParticipantName         = getVal("ParticipantName", "");
 $exptname         = getVal("exptname", "");
 $visit           = getVal("visit", "");
 $constructStr         = getVal("constructStr", "");
-//$savedirname      = getVal("savedirname", "");
+$start_time      = getVal("start_time", "");
+$end_time        = getVal("end_time", "");
 $rec_hands        = getVal("rec_hands", "");
 $rec_AI_hands     = getVal("rec_AI_hands", "");
 $rec_times        = getVal("rec_times", "");
@@ -35,9 +37,18 @@ $out_dirname = mkoutdir($exptname, $ParticipantID, $visit);
 //     }
 // }
 
-$file = $out_dirname . "/block" . $block . "_AI" . ".dat";
+if ($ParticipantName == "")
+{
+   $file = $out_dirname . "/block" . $block . "_AI" . ".dat";
+}
+else
+{
+   $file = $out_dirname . "/" . $ParticipantName . ".dat";
+}
 file_put_contents($file, "#  player hands, AI hands, mv times, inp method, ini_weight, fin_weights, paced_or_free, AI_or_RNG, rps_probs, method\n" );
 file_put_contents($file, $UA . "\n", FILE_APPEND);
+file_put_contents($file, $start_time . "\n", FILE_APPEND);
+file_put_contents($file, $end_time . "\n", FILE_APPEND);
 file_put_contents($file, $constructStr . "\n", FILE_APPEND);
 file_put_contents($file, $rec_hands . "\n", FILE_APPEND);
 file_put_contents($file, $rec_AI_hands . "\n", FILE_APPEND);

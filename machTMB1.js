@@ -1,8 +1,8 @@
-//  fxd_seq has 5 2's, 5 3's and 30 1's
-fxd_seqB = "[1, 1, 2, 1, 1, 1, 1, 3, 1, 1, " +
-           "1, 1, 2, 1, 1, 3, 2, 1, 1, 3, " + 
-           "1, 1, 2, 1, 1, 1, 3, 1, 1, 1, " + 
-    "2, 1, 1, 3, 1, 1, 1, 1, 1, 1]";
+//  fxd_seq has 7 2's, 7 3's and 26 1's
+fxd_seqB = "[1, 1, 2, 1, 3, 1, 1, 1, 1, 3, " +
+            "2, 1, 2, 1, 1, 3, 2, 1, 1, 3, " + 
+            "1, 1, 2, 1, 1, 3, 1, 2, 1, 1, " + 
+            "2, 1, 1, 3, 3, 1, 1, 1, 1, 1]";
 
 //  fxd_seq has 13 2's, 14 3's and 13 1's
 fxd_seqU = "[3, 1, 2, 3, 2, 1, 2, 3, 3, 1, " +
@@ -10,22 +10,22 @@ fxd_seqU = "[3, 1, 2, 3, 2, 1, 2, 3, 3, 1, " +
            "3, 1, 2, 1, 2, 1, 3, 2, 2, 3, " + 
            "2, 1, 3, 3, 2, 2, 3, 1, 3, 1]";
 
-var machines = [["1", "Looks at past moves ver. 1", "WTL(__moRSP__, [0.8, 0.1, 0.1], [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], false);"],
-                ["2", "Looks at past moves ver. 2", "WTL(__moRSP__, [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], false);"],
-                ["3", "Looks at past moves ver. 3", "WTL(__moRSP__, [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], [0.7, 0.25, 0.05], false);"],
-                //["4", "BiasRnd1", "BiasedRandom(__moRSP__, [0.75, 0.125, 0.125]);"],
+//["4", "Human can exploit post-WIN (easier)", "WTL(__moRSP__, [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], [0.6, 0.2, 0.2], false);"],
+
+var machines = [["1", "Human can exploit post-LOSS (harder)", "WTL(__moRSP__, [0.2, 0.4, 0.4], [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], false);"],
+		["2", "Human can exploit post-LOSS (easier)", "WTL(__moRSP__, [0.05, 0.55, 0.4], [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], false);"],   // [0.05, 0.55, 0.4] means staying produces more wins than ties
+		["3", "Looks at past moves ver. 1", "WTL(__moRSP__, [0.7, 0.15, 0.15], [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], false);"],
 		["4", "Ignores past moves, but biased ver. 1", "FixedSequence(__moRSP__, " + fxd_seqB + ");"],
 		["5", "Ignores past moves, unbiased", "FixedSequence(__moRSP__, " + fxd_seqU + ");"],
 
 		["6", "Mimics past moves v. 1", "Mimic(__moRSP__, 0, 0.2);"]];
-
 
 //  compare WTL and BR
 //  compare Mimic and BR
 //  compare WTL and Mimic
 
 var rnd = Math.random();
-var machines_use_these = [0, 3, 4, 5];
+var machines_use_these = [0, 1, 2, 3];
 
 /*
 if ((rnd > 0) && (rnd < 0.333))

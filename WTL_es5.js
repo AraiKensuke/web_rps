@@ -124,7 +124,7 @@ function WTL(move_order, pW, pT, pL, doCounter) {
 	//
 	var last_outcome;
 	var rule;
-	console.log("in predict 1");
+
 	if ( ((this.my_last_play == 1) && (player == 2)) ||
 	     ((this.my_last_play == 2) && (player == 3)) ||
 	     ((this.my_last_play == 3) && (player == 1)) )
@@ -145,7 +145,7 @@ function WTL(move_order, pW, pT, pL, doCounter) {
 	    // (AI=S, HUM=R) or (AI=P, HUM=S) or or (AI=R, HUM=P)
 	    last_outcome = __AI_TIE__;
 	}
-	console.log("in predict 2");
+
 	if (last_outcome == __AI_WIN__)
 	{
 	    rule = this.pickAction(this.cum_W_rule);
@@ -169,7 +169,7 @@ function WTL(move_order, pW, pT, pL, doCounter) {
 	    //this.my_last_play = this.upgrade(this.my_last_play);
 	    this.my_last_play = this.downgrade(this.my_last_play);
 	}
-	console.log("in predict 3");
+
 	if (this.doCounter)
 	{
 	    if ( (this.consecutive_losses > 2) && (this.counter_mode == 0) )

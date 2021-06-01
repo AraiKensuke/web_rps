@@ -24,7 +24,7 @@
 <!--  SMWCA    code from kaggle -->
 <!--<script type="text/javascript" src="SMWCA.js"></script>-->
 <!--  PRCPTRN    code from kaggle -->
-<!--<script type="text/javascript" src="PRCPTRN.js"></script>-->
+<script type="text/javascript" src="PRCPTRN_es5.js"></script>
 <!--  MC       code from kaggle -->
 <!--<script type="text/javascript" src="MC.js"></script>-->
 <script type="text/javascript" src="rpsm.js"></script>
@@ -50,7 +50,6 @@ Q.html
   var refr_period_dur = 2000;
   var refractory_period_start = -1;
 
-  var N = 2;
   var Match;
 
   var nextpageURL = "rps.html";     //
@@ -96,6 +95,7 @@ Q.html
 
   var AIconfig           = getSessionStorage("AIconfigNum" + block, __PRC__);
 
+  console.log(AIconfig);
   rpsAI               = eval("new " + AIconfig)
   rpsAI.setConstructStr(AIconfig)
 
@@ -104,11 +104,11 @@ Q.html
        document.location.href=url_after_blocks;   //  beyond where we need to be
   }
 
-
   if (practiceMode)
   {
+
     real_MatchTo = MatchTo;
-    MatchTo = 10;
+      MatchTo = sessionStorage.getItem("practice_MatchTo", 10);
     sessionStorage.setItem("block", block-1);
     var __block           = parseInt(getSessionStorage("block", 0));
     var bottomDIV = parent.document.getElementById("bottom");
@@ -215,7 +215,7 @@ charfield.onkeypress = function(e) {
 <table>
   <tbody>
       <tr>
-        <td bgcolor="#ffffcc" width="440" height="45"><font size="-1" id="descFONT"></td>
+        <td bgcolor="#ffffcc" width="440" height="45"><font size="+1" id="descFONT"></font></td>
       </tr>
     </tbody>
   </table>

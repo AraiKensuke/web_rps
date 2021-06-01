@@ -1,47 +1,9 @@
 <?php
-$AQ = "false";
-if ($_GET["q"] == "AQ")
-{
-   $AQ = "true";
-   $statements = [
-   "I prefer to do things with others rather than on my own.",
-   "I find social situations easy.",
-   "I would rather go to a library than to a party.",
-   "I find myself drawn more strongly to people than to things.",
-   "I find it hard to make new friends.",
-   "I enjoy social occasions.",
-   "I enjoy meeting new people.",
-   "I prefer to do things the same way over and over again.",
-   "It does not upset me if my daily routine is disturbed.",
-   "I enjoy doing things spontaneously.",
-   "New situations make me anxious.",
-   "I frequently get strongly absorbed in one thing.",
-   "I can easily keep track of several different people's conversations.",
-   "I find it easy to do more than one thing at once.",
-   "If there is an interruption, I can switch back very quickly.",
-   "Trying to imagine something, I find it easy to create a picture in my mind.",
-   "Reading a story, I can easily imagine what the characters might look like.",
-   "I find making up stories easy.",
-   "Reading a story, I find it difficult to work out the character's intentions.",
-   "I find it easy to work out what someone is thinking or feeling.",
-   "I find it difficult to imagine what it would be like to be someone else.",
-   "I find it difficult to work out people's intentions.",
-   "I find it easy to play games with children that involve pretending.",
-   "I usually notice car number plates or similar strings of information.",
-   "I am fascinated by dates.",
-   "I am fascinated by numbers.",
-   "I notice patterns in things all the time.",
-   "I like to collect information about categories of things."
-   ];
-}
-else
-{
-   $statements = [
+$statements = [
    "I was distracted during the experiemnt",
    "I am feel fatigued",
    "I found the experiment engaging and enjoyable"
    ];
-}
 ?>
 <HTML>
 <link rel="stylesheet" href="rps.css" type="text/css" />
@@ -90,25 +52,9 @@ border-collapse: collapse;
 <SCRIPT>
 var partID = sessionStorage.getItem("ParticipantID", "");
 var exptname = sessionStorage.getItem("exptname", "TMB1");
-
-var AQ = <?=$AQ?>;
 var visitnum = parseInt(sessionStorage.getItem("visitnum", "1"));
 
-if (AQ)
-{
-    var nextpageURL = "TournamentResults_es5.html";
-}
-else
-{         //  Mental state questionnaire.
-    if (visitnum == 1)
-    {   
-        var nextpageURL = "4ChoiceQuestionnaire.php?q=AQ";
-    }  
-    else
-    {
-        var nextpageURL = "TournamentResults_es5.html";
-    }
-}
+var nextpageURL = "ByeBye.html";
 
 function choose_radio(q, c)
 {
@@ -116,7 +62,6 @@ var radio = document.getElementById("q" + q + "_" + c);
 radio.checked = true;
 	var div = document.getElementsByName("div" + q)[0];
 	      	div.style.backgroundColor="inherit";
-
 }
 
 function check_and_submit()
@@ -161,14 +106,8 @@ function check_and_submit()
 
         exptnameelem.value = exptname;
         partIDelem.value   = partID;
-        if (AQ) {    
-            visitelem.value    = 0;
-            savefilenameelem.value = "AQ29.txt";
-        }
-        else {    
-            visitelem.value    = visitnum;
-            savefilenameelem.value = "MentalState.txt";
-        }
+	visitelem.value    = visitnum;
+        savefilenameelem.value = "SimpleExitQuestionnaire.txt";
 
         hidd.value = nextpageURL;
         var form = document.getElementsByName("QuestionnaireForm")[0];
@@ -178,26 +117,12 @@ function check_and_submit()
 </SCRIPT>
 <BODY>
 <CENTER>
-<?php
-if ($AQ == "true")
-{
-?>
-<H2>Tell us about your real-world social interactions:</H2>
-<?php
-}
-else
-{
-?>
-<H2>Tell us about your tournament:</H2>
-<?php
-}
-?>
+<H2>Tell us about your RPS games:</H2>
 <BR>Please respond to <U>all</U> questions with the answer closest to how you feel.<BR><BR>
 <FORM name="QuestionnaireForm" action="save_questionnaire.php" method="POST">
 <?php
-$L = ($AQ == "true") ? sizeof($statements) : sizeof($statements) + 2;
+$L = sizeof($statements)
 ?>
-
 <INPUT type="hidden" name="number_of_questions" value="<?=$L?>"/>
 <INPUT type="hidden" name="ParticipantID" value=""/>
 <INPUT type="hidden" name="exptname" value=""/>
@@ -216,72 +141,13 @@ for ($s = 0; $s < sizeof($statements); $s++ )
     print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_1\" value=\"1\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 1);\">Definitely Agree</A></LABEL>");
     print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_2\" value=\"2\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 2);\">Slightly Agree</A></LABEL>"); 
     print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_3\" value=\"3\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 3);\">Slightly Disagree</A></LABEL>"); 
-    print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_4\" value=\"4\" checked/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 4);\">Definitely Disagree</A></LABEL></TR>\n"); 
-	       print("<TR class=\"" . $tr_class . "\"><TD colspan=\"2\">&nbsp;</TD></TR>");
+    print("<INPUT type=\"radio\" name=\"q" . ($s+1) . "\" id=\"q" . ($s+1) . "_4\" value=\"4\"/><LABEL><A href=\"javascript:choose_radio(" . ($s+1) . ", 4);\">Definitely Disagree</A></LABEL></TR>\n");
+    print("<TR class=\"" . $tr_class . "\"><TD colspan=\"2\">&nbsp;</TD></TR>");
 
     if (((($s+1) % 5) == 0) && ($s != 0))
 		  {
 	       print("<TR class=\"tr5\"><TD colspan=\"2\">&nbsp;<BR>&nbsp;</TD></TR>");
 }
-
-}
-if ($AQ == "false")
-{
-    $L = sizeof($statements);
-    $tr_class = "tr" . (($L % 2)+1);
-?>
-<TR class="<?=$tr_class?>">
-<TD>
-<DIV name="div<?=$L?>" &nbsp;&nbsp;<B><?=($L+1)?></B>&nbsp;&nbsp;
-</TD>
-<TD>
-Was there a noticeable difference in the 4 machines?
-</TD>
-</TR>
-<TR class="<?=$tr_class?>">
-<TD></TD>
-<TD>
-<SELECT name="q<?=($L+1)?>">
-  <option value="all 4 different">All Four (4) felt different</option>
-  <option value="1 or 2 stood out">One (1) or two (2) of them stood out from the others</option>
-  <option value="all same">All felt the same</option>
-  <option value="don't know" selected>Don't know</option>
-  <option value="don't remember">Don't remember</option>
-</SELECT>
-</TD>
-</TR>
-<TR class="<?=$tr_class?>">
-<TD colspan="2">&nbsp;
-</TD>
-</TR>
-<!-- -->
-<?php
-$L = $L + 1;
-    $tr_class = "tr" . (($L % 2)+1);
-?>
-<TR class="<?=$tr_class?>">
-<TD>
-<DIV name="div<?=$L?>" &nbsp;&nbsp;<B><?=($L+1)?></B>&nbsp;&nbsp;
-</TD>
-<TD>
-Is this the first time you participated in this tournament?
-</TD>
-</TR>
-<TR class="<?=$tr_class?>">
-<TD></TD>
-<TD>
-<SELECT name="q<?=($L+1)?>">
-  <option value="first time" selected>1st time</option>
-  <option value="not first time">Not my first time</option>
-</SELECT>
-</TD>
-</TR>
-<TR class="<?=$tr_class?>">
-<TD colspan="2">&nbsp;
-</TD>
-</TR>
-
-<?php
 }
 ?>
 </TABLE>
