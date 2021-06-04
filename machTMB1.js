@@ -13,7 +13,7 @@ fxd_seqU = "[3, 1, 2, 3, 2, 1, 2, 3, 3, 1, " +
 //["4", "Human can exploit post-WIN (easier)", "WTL(__moRSP__, [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], [0.6, 0.2, 0.2], false);"],
 
 var machines = [["1", "Human can exploit post-LOSS (harder)", "WTL(__moRSP__, [0.2, 0.4, 0.4], [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], false);"],
-		["2", "Human can exploit post-LOSS (easier)", "WTL(__moRSP__, [0.05, 0.55, 0.4], [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], false);"],   // [0.05, 0.55, 0.4] means staying produces more wins than ties
+		["2", "Human can exploit post-LOSS (easier)", "WTL(__moRSP__, [0.05, 0.6, 0.35], [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], false);"],   // If HUM loses and stays (repeat press of key) and machine upgrades, then it will lose next round.   [0.05, 0., 0.95]  -->  always TIES following loss.  
 		["3", "Looks at past moves ver. 1", "WTL(__moRSP__, [0.7, 0.15, 0.15], [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], false);"],
 		["4", "Ignores past moves, but biased ver. 1", "FixedSequence(__moRSP__, " + fxd_seqB + ");"],
 		["5", "Ignores past moves, unbiased", "FixedSequence(__moRSP__, " + fxd_seqU + ");"],
