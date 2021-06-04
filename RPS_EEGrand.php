@@ -38,6 +38,7 @@ for (i = 0; i < nmachines; i++ )
 }
 to_block = nmachines;
 sessionStorage.setItem("exptname", "EEG1");
+sessionStorage.setItem("vsRand", true);
 sessionStorage.setItem("block", 0);
 sessionStorage.setItem("to_block", to_block);
 sessionStorage.setItem("MatchTo", MatchTo);

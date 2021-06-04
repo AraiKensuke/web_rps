@@ -242,6 +242,17 @@ function Reset(){
     pgo.style.height=0;
     pgo.style.width=0;
 			pgo.style.opacity=0.0;}, 1600);
+
+    autoVsRand = getSessionStorage("vsRand", "false");
+    if (autoVsRand == "true")
+    {
+	for( var g = 0; g < MatchTo; g++ )
+	{
+	    RPS_nodisp(Math.floor(Math.random() * 3)+1);
+	}
+    }
+
+    send_php();
 }
 
 
@@ -307,7 +318,7 @@ function RPS(plhand, key_or_mouse) {
     ShowResults(plhand,AIhand);
 }
 
-function RPS_nodisp(plhand, game) {
+function RPS_nodisp(plhand) {
     var pre;
     predWhatHumanWillPlay = AI(plhand_prev);  // plhand_prev = 1, 2, 3   //  prediction of HUMAN
     plhand_prev = plhand
@@ -338,6 +349,11 @@ function RPS_nodisp(plhand, game) {
 	results[2][game+1]=results[2][game];
 	break;
     }
+    rec_inp_methd += "1 ";
+    rec_hands += toRPSstr(plhand) + " ";
+    rec_AI_hands += toRPSstr(AIhand) + " ";
+    rec_times += "1 ";
+    last_time_now = time_now;
 }
 
 
