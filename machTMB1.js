@@ -25,7 +25,7 @@ var machines = [["1", "Human can exploit post-LOSS (harder)", "WTL(__moRSP__, [0
 //  compare WTL and Mimic
 
 var rnd = Math.random();
-var machines_use_these = [0, 1, 3, 4];
+var machines_use_these = [1, 3, 4];
 
 /*
 if ((rnd > 0) && (rnd < 0.333))
