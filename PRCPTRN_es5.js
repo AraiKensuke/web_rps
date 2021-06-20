@@ -72,7 +72,7 @@ function Perceptron(N) {
 		maxnum = i;
 	    }
 	}
-	console.log("maxnum   " + maxnum)
+	//console.log("maxnum   " + maxnum)
 	return(maxnum+1);
     }
 

@@ -14,6 +14,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
+<SCRIPT type="text/javascript" src="pctl.js"></script>
     <head>
         <meta charset = "utf-8">
         <title>Questions</title>
@@ -151,24 +152,24 @@ html4links += "<A href=\"TournamentRules.php?partID=" + partID + "\">Play tourna
 </SCRIPT>
     <BODY onload="javascript:do_tables();">
 <H1>Thank you for your participation!</H1>
-<B>This was your <SPAN name="visitSPAN"></SPAN> time participating in this experiment.</B><BR>The plots below show your how you were during the course of your rounds.  Your "net wins" is positive (green region) when you are winning more matches than you're losing, and in the red region (negative), you're losing more matches than you're winning.  <BR><BR>
+<B>This was your <SPAN name="visitSPAN"></SPAN> time participating in this experiment.</B><BR>The plots below show your how you were during the course of your rounds.  If your "net wins" is positive (above red line), you are winning more matches than you're losing.  The blue region is the region between the 5th and 95th percentile we've compiled from the games of other participants.  If your performance falls outside this region, your performance is somewhat exceptional.<BR><BR>
 
 <!--<DIV name="resultTAB" style="height:150px"></DIV>-->
-<DIV name="plotDIV1" style="height:175px">
+<DIV name="plotDIV1" style="height:200px">
 Round 1 net wins (machine: <span name="mach1"></span>):
-<canvas id="myChart1" style="height:100px;"></canvas>
+<canvas id="myChart1" style="height:125px;"></canvas>
 </DIV><BR>
-<DIV name="plotDIV2" style="height:175px">
+<DIV name="plotDIV2" style="height:200px">
 Round 2 net wins (machine: <span name="mach2"></span>):
-<canvas id="myChart2" style="height:100px;"></canvas>
+<canvas id="myChart2" style="height:125px;"></canvas>
 </DIV><BR>
-<DIV name="plotDIV3" style="height:175px">
+<DIV name="plotDIV3" style="height:200px">
 Round 3 net wins (machine: <span name="mach3"></span>):
-<canvas id="myChart3" style="height:100px;"></canvas>
+<canvas id="myChart3" style="height:125px;"></canvas>
 </DIV><BR>
-<DIV name="plotDIV4" style="height:175px">
+<DIV name="plotDIV4" style="height:200px">
 Round 4 net wins (machine: <span name="mach4"></span>):
-<canvas id="myChart4" style="height:100px;"></canvas>
+<canvas id="myChart4" style="height:125px;"></canvas>
 </DIV>
 
 <BR><BR>
@@ -196,14 +197,15 @@ for (ii =0; ii < net_wins1.length; ii++ )
     scores_0[ii] = 0;
     games_xs[ii] = ii+1;
 }
-max1 = Math.max(Math.max(Math.max.apply(Math, net_wins1)), 1)
-min1 = Math.min(Math.min(Math.min.apply(Math, net_wins1)), -1)
-max2 = Math.max(Math.max(Math.max.apply(Math, net_wins2)), 1)
-min2 = Math.min(Math.min(Math.min.apply(Math, net_wins2)), -1)
-max3 = Math.max(Math.max(Math.max.apply(Math, net_wins3)), 1)
-min3 = Math.min(Math.min(Math.min.apply(Math, net_wins3)), -1)
-  max4 = Math.max(Math.max(Math.max.apply(Math, net_wins4)), 1)
-  min4 = Math.min(Math.min(Math.min.apply(Math, net_wins4)), -1)
+
+  max1 = Math.max(Math.max(Math.max.apply(Math, net_wins1)), 1);
+  min1 = Math.min(Math.min(Math.min.apply(Math, net_wins1)), -1);
+  max2 = Math.max(Math.max(Math.max.apply(Math, net_wins2)), 1);
+  min2 = Math.min(Math.min(Math.min.apply(Math, net_wins2)), -1);
+  max3 = Math.max(Math.max(Math.max.apply(Math, net_wins3)), 1);
+  min3 = Math.min(Math.min(Math.min.apply(Math, net_wins3)), -1);
+  max4 = Math.max(Math.max(Math.max.apply(Math, net_wins4)), 1);
+  min4 = Math.min(Math.min(Math.min.apply(Math, net_wins4)), -1);
 
   var x_scales = 	{ display: true,
 			  		 scaleLabel: { 
@@ -217,8 +219,13 @@ min3 = Math.min(Math.min(Math.min.apply(Math, net_wins3)), -1)
                 };
   for (var nn = 1; nn < to_block+1; nn++ )
   {
-      maxY = eval("max" + nn);
-      minY = eval("min" + nn);
+      var p95  = pctls_95[getSessionStorage("AIconfigNum" + nn)];
+      var p05  = pctls_05[getSessionStorage("AIconfigNum" + nn)];      
+
+      max95 = Math.max(Math.max(Math.max.apply(Math, p95)), 1);
+      min05 = Math.min(Math.min(Math.min.apply(Math, p05)), 1);      
+      maxY = Math.max(eval("max" + nn), max95);
+      minY = Math.min(eval("min" + nn), min05);
       AMP  = Math.max(Math.abs(maxY), Math.abs(minY));
       
       var y_scales = 	{ display: true,
@@ -248,10 +255,14 @@ min3 = Math.min(Math.min(Math.min.apply(Math, net_wins3)), -1)
       var canv_scores = document.getElementById("myChart" + nn).getContext('2d');
       thedat = eval("net_wins" + nn);
       var data1 = {labels: games_xs, datasets: [
-	  {data: thedat, label: "net wins", borderColor: 'rgb(0, 0, 0)', lineTension: 0, fill: false},	  
-	  {data: scores_0, label: "tie", borderColor: 'rgb(190, 190, 190)', radius: 0},
-	  {data: scores_Max, label: "", backgroundColor: 'rgb(150, 255, 150)', radius: 0, fill: 1},
-	  {data: scores_Min, label: "", backgroundColor: 'rgb(255, 150, 150)', radius: 0, fill: 1}]};
+	  {data: thedat, label: "net wins", borderColor: 'rgb(0, 0, 0)', lineTension: 0, fill: false},
+	  {data: scores_0, label: "tie", borderColor: 'rgb(255, 0, 0)', radius: 0},	  
+	  {data: p05, label: "5th percentile", borderColor: 'rgb(255, 255, 255)', lineTension: 0, fill: 1, backgroundColor: 'rgb(130, 130, 255)', radius: 0},
+	  {data: p95, label: "95th percentile", borderColor: 'rgb(255, 255, 255)', lineTension: 0, fill: 1, backgroundColor: 'rgb(130, 130, 255)', radius: 0}]};	  
+//	  {data: scores_0, label: "tie", borderColor: 'rgb(190, 190, 190)', radius: 0},
+//	  {data: scores_Max, label: "", backgroundColor: 'rgb(150, 255, 150)', radius: 0, fill: 1},
+	  //	  {data: scores_Min, label: "", backgroundColor: 'rgb(255, 150, 150)', radius: 0, fill: 1}
+//      ]};
 
 	  
 //	  {fill: {target: 'origin', above: 'rgb(255, 0, 0)', below: 'rgb(0, 0, 255)'}}]};

@@ -12,6 +12,7 @@ include "utils.php";
 $ai_js_file = "machEEG1";
 ?>
 <SCRIPT src="<?=$ai_js_file?>"></SCRIPT>
+<SCRIPT src="playerMachines.js"></SCRIPT>
 
 <SCRIPT src="rpsm.js"></SCRIPT>
 <STYLE>
@@ -22,7 +23,7 @@ $ai_js_file = "machEEG1";
 <?php
     $partID = generate_partID(false);
 ?>
-var MatchTo=550;
+var MatchTo=500;
 realtimeResults = __CWTL_NOGRAPH__;
 
 machine_and_configs = [];
@@ -38,12 +39,12 @@ for (i = 0; i < nmachines; i++ )
 }
 to_block = nmachines;
 sessionStorage.setItem("exptname", "EEG1");
-sessionStorage.setItem("vsRand", true);
+sessionStorage.setItem("playerMachineConstr", pm[20]);
 sessionStorage.setItem("block", 0);
 sessionStorage.setItem("to_block", to_block);
 sessionStorage.setItem("MatchTo", MatchTo);
 sessionStorage.setItem("practice_MatchTo", 30);
-sessionStorage.setItem("url_after_blocks", "SimpleExitQuestionnaire.php");
+sessionStorage.setItem("url_after_blocks", "Byebye.html");
 
 inds = [];
 for (blk = 0; blk < to_block; blk++ )

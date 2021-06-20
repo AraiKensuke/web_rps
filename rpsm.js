@@ -21,6 +21,7 @@ var rec_inp_methd="";	// 記録用
 var rec_AI_hands="";	// 記録用
 var rec_times="";	// 記録用
 var plhand_prev;
+var aihand_prev;
 var results=[];	// [0]勝ち、[1]負け、[2]あいこ
 
 //  input method   x 2
@@ -241,18 +242,30 @@ function Reset(){
     pgo.style.backgroundColor="grey";
     pgo.style.height=0;
     pgo.style.width=0;
-			pgo.style.opacity=0.0;}, 1600);
+    pgo.style.opacity=0.0;}, 1600);
 
-    autoVsRand = getSessionStorage("vsRand", "false");
-    if (autoVsRand == "true")
+    //  If pitting AI vs another algorithm (not human)
+    //aihand_prev = parseInt(3*Math.random()+1);
+    aihand_prev   = 1;
+    if (playerAI != null)
     {
 	for( var g = 0; g < MatchTo; g++ )
 	{
-	    RPS_nodisp(Math.floor(Math.random() * 3)+1);
+	    plyrHand = playerAI.upgrade(playerAI.predict(aihand_prev));
+	    //console.log("player " + plyrHand);
+	    aihand_prev = RPS_nodisp(plyrHand);
 	}
-    }
 
-    send_php();
+	send_php();
+	win = results[0][game]
+	lose = results[1][game]
+	tie = results[2][game]
+	sessionStorage.setItem("bl" + block + "win", win);
+	sessionStorage.setItem("bl" + block + "lose", lose);
+	sessionStorage.setItem("bl" + block + "tie", tie);
+	//console.log("going to nextpageURL   " + nextpageURL);
+	setTimeout(() => {  location.href=nextpageURL; }, 1000);
+    }
 }
 
 
@@ -349,11 +362,14 @@ function RPS_nodisp(plhand) {
 	results[2][game+1]=results[2][game];
 	break;
     }
+    game += 1;
     rec_inp_methd += "1 ";
     rec_hands += toRPSstr(plhand) + " ";
     rec_AI_hands += toRPSstr(AIhand) + " ";
     rec_times += "1 ";
     last_time_now = time_now;
+
+    return AIhand;
 }
 
 

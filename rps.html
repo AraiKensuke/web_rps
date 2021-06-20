@@ -99,6 +99,13 @@ Q.html
   rpsAI               = eval("new " + AIconfig)
   rpsAI.setConstructStr(AIconfig)
 
+  playerMachineConstr = getSessionStorage("playerMachineConstr", "");
+  playerAI = null;
+  if (playerMachineConstr != "")
+  {
+      playerAI = eval("new " + playerMachineConstr);
+  }
+
   if (block > to_block)
   {  // reloaded during transition?  just go to last page
        document.location.href=url_after_blocks;   //  beyond where we need to be

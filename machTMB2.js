@@ -10,11 +10,11 @@ fxd_seqU = "[3, 1, 2, 3, 2, 1, 2, 3, 3, 1, " +
            "2, 1, 3, 3, 2, 2, 3, 1, 3, 1]";
 
 
-var machines = [["1", "Looks at past moves ver. 2", "WTL(__moRSP__, [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], [0.65, 0.25, 0.1], false);"],
+var machines = [["1", "Rule based on last outcome, ver 2.", "WTL(__moRSP__, [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], [0.65, 0.25, 0.1], false);"],
                 //["4", "BiasRnd1", "BiasedRandom(__moRSP__, [0.75, 0.125, 0.125]);"],
-		["2", "Ignores past moves, but biased ver. 2", "FixedSequence(__moRSP__, " + fxd_seqB + ");"],
-		["3", "Ignores past moves, unbiased", "FixedSequence(__moRSP__, " + fxd_seqU + ");"],
-		["4", "Mimics past moves ver. 2", "Mimic(__moRSP__, 2, 0.2);"]];
+		["2", "Random, but unequal RPS probabilities, ver 2.", "FixedSequence(__moRSP__, " + fxd_seqB + ");"],
+		["3", "Random, equal probabilities.", "FixedSequence(__moRSP__, " + fxd_seqU + ");"],
+		["4", "Mimics player's past move, ver. 2.", "Mimic(__moRSP__, 2, 0.2);"]];
 
 
 //  compare WTL and BR

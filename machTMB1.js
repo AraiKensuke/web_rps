@@ -12,20 +12,19 @@ fxd_seqU = "[3, 1, 2, 3, 2, 1, 2, 3, 3, 1, " +
 
 //["4", "Human can exploit post-WIN (easier)", "WTL(__moRSP__, [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], [0.6, 0.2, 0.2], false);"],
 
-var machines = [["1", "Human can exploit post-LOSS (harder)", "WTL(__moRSP__, [0.2, 0.4, 0.4], [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], false);"],
-		["2", "Human can exploit post-LOSS (easier)", "WTL(__moRSP__, [0.05, 0.6, 0.35], [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], false);"],   // If HUM loses and stays (repeat press of key) and machine upgrades, then it will lose next round.   [0.05, 0., 0.95]  -->  always TIES following loss.  
-		["3", "Looks at past moves ver. 1", "WTL(__moRSP__, [0.7, 0.15, 0.15], [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], false);"],
-		["4", "Ignores past moves, but biased ver. 1", "FixedSequence(__moRSP__, " + fxd_seqB + ");"],
-		["5", "Ignores past moves, unbiased", "FixedSequence(__moRSP__, " + fxd_seqU + ");"],
+var machines = [["1", "Rule based on last outcome, ver 1.", "WTL(__moRSP__, [0.05, 0.7, 0.25], [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], false);"],   // If HUM loses and stays (repeat press of key) and machine upgrades, then it will lose next round.   [0.05, 0., 0.95]  -->  always TIES following loss.  
+		["2", "Looks at past moves ver. 1", "WTL(__moRSP__, [0.7, 0.15, 0.15], [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], false);"],
+		["3", "Random, but unequal RPS probabilities, ver 1.", "FixedSequence(__moRSP__, " + fxd_seqB + ");"],
+		["4", "Random, equal probabilities.", "FixedSequence(__moRSP__, " + fxd_seqU + ");"],
 
-		["6", "Mimics past moves v. 1", "Mimic(__moRSP__, 0, 0.2);"]];
+		["5", "Mimics player's past move, ver. 1.", "Mimic(__moRSP__, 0, 0.2);"]];
 
 //  compare WTL and BR
 //  compare Mimic and BR
 //  compare WTL and Mimic
 
 var rnd = Math.random();
-var machines_use_these = [1, 3, 4];
+var machines_use_these = [0, 2, 3, 4];
 
 /*
 if ((rnd > 0) && (rnd < 0.333))

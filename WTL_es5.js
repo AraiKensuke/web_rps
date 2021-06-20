@@ -1,6 +1,6 @@
-var __ST__ = 0;
-var __UP__ = 1;
-var __DN__ = 2;
+var __DN__ = 0;
+var __ST__ = 1;
+var __UP__ = 2;
 var __CH__ = 3;
 var __AI_WIN__ = 0;
 var __AI_TIE__ = 1;
@@ -31,8 +31,6 @@ function WTL(move_order, pW, pT, pL, doCounter) {
 
     this.doCounter = false;
     this.constructStr;
-
-
 
     this.AImach = __WTL__;
     this.doCounter = doCounter;
@@ -129,6 +127,7 @@ function WTL(move_order, pW, pT, pL, doCounter) {
 	     ((this.my_last_play == 2) && (player == 3)) ||
 	     ((this.my_last_play == 3) && (player == 1)) )
 	{  // (AI=R, HUM=S) or (AI=S, HUM=P) or or (AI=P, HUM=R)
+	    //console.log("last outcome:  AI win")
 	    last_outcome=__AI_WIN__;
 	    this.consecutive_losses = 0;
 	}
@@ -137,12 +136,14 @@ function WTL(move_order, pW, pT, pL, doCounter) {
 		  ((this.my_last_play == 1) && (player == 3)) )
 	{
 	    // (AI=S, HUM=R) or (AI=P, HUM=S) or or (AI=R, HUM=P)
+	    //console.log("last outcome:  AI los")
 	    last_outcome = __AI_LOS__;
 	    this.consecutive_losses += 1;
 	}
 	else   // TIE
 	{
 	    // (AI=S, HUM=R) or (AI=P, HUM=S) or or (AI=R, HUM=P)
+	    //console.log("last outcome:  AI tie")
 	    last_outcome = __AI_TIE__;
 	}
 
@@ -162,12 +163,18 @@ function WTL(move_order, pW, pT, pL, doCounter) {
 	if (rule == __UP__)
 	{
 	    //this.my_last_play = this.downgrade(this.my_last_play);
+	    //console.log("Rule is UP");
 	    this.my_last_play = this.upgrade(this.my_last_play);
 	}
 	else if (rule == __DN__)
 	{
 	    //this.my_last_play = this.upgrade(this.my_last_play);
+	    //console.log("Rule is DOWN");
 	    this.my_last_play = this.downgrade(this.my_last_play);
+	}
+	else
+	{
+	    //console.log("Rule is STAY");	    
 	}
 
 	if (this.doCounter)

@@ -9,7 +9,7 @@ include "utils.php";
 <link rel="stylesheet" href="rps.css" type="text/css" />
 <SCRIPT src="util.js"></SCRIPT>
 <?php
-$ai_js_file = "machEEG1";
+$ai_js_file = "machEEG1.js";
 ?>
 <SCRIPT src="<?=$ai_js_file?>"></SCRIPT>
 
@@ -22,7 +22,7 @@ $ai_js_file = "machEEG1";
 <?php
     $partID = generate_partID(false);
 ?>
-var MatchTo=550;
+var MatchTo=300;
 realtimeResults = __CWTL_NOGRAPH__;
 
 machine_and_configs = [];
