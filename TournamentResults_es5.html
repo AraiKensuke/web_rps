@@ -14,7 +14,12 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
-<SCRIPT type="text/javascript" src="pctl.js"></script>
+<SCRIPT>
+  var pctls_05 = {};
+var pctls_95 = {};
+  </SCRIPT>
+<SCRIPT type="text/javascript" src="pctl1.js"></script>
+<SCRIPT type="text/javascript" src="pctl2.js"></script>
     <head>
         <meta charset = "utf-8">
         <title>Questions</title>
@@ -220,7 +225,9 @@ for (ii =0; ii < net_wins1.length; ii++ )
   for (var nn = 1; nn < to_block+1; nn++ )
   {
       var p95  = pctls_95[getSessionStorage("AIconfigNum" + nn)];
-      var p05  = pctls_05[getSessionStorage("AIconfigNum" + nn)];      
+      var p05  = pctls_05[getSessionStorage("AIconfigNum" + nn)];
+      //alert(p95);
+      //alert(p05);
 
       max95 = Math.max(Math.max(Math.max.apply(Math, p95)), 1);
       min05 = Math.min(Math.min(Math.min.apply(Math, p05)), 1);      
@@ -254,11 +261,13 @@ for (ii =0; ii < net_wins1.length; ii++ )
       
       var canv_scores = document.getElementById("myChart" + nn).getContext('2d');
       thedat = eval("net_wins" + nn);
+      //{data: scores_0, label: "tie", borderColor: 'rgb(255, 0, 0)', radius: 0, fill: false},	  
       var data1 = {labels: games_xs, datasets: [
 	  {data: thedat, label: "net wins", borderColor: 'rgb(0, 0, 0)', lineTension: 0, fill: false},
-	  {data: scores_0, label: "tie", borderColor: 'rgb(255, 0, 0)', radius: 0},	  
-	  {data: p05, label: "5th percentile", borderColor: 'rgb(255, 255, 255)', lineTension: 0, fill: 1, backgroundColor: 'rgb(130, 130, 255)', radius: 0},
-	  {data: p95, label: "95th percentile", borderColor: 'rgb(255, 255, 255)', lineTension: 0, fill: 1, backgroundColor: 'rgb(130, 130, 255)', radius: 0}]};	  
+	  {data: scores_0, label: "tie", borderColor: 'rgb(255, 0, 0)', radius: 0, fill: false, lineTension: 0},	  	  
+	  {data: p95, label: "95th percentile", borderColor: 'rgb(255, 255, 255)', lineTension: 0, fill: false, backgroundColor: 'rgb(130, 130, 255)', radius: 0},
+	  {data: p05, label: "5th percentile", borderColor: 'rgb(255, 255, 255)', lineTension: 0, fill: 2, backgroundColor: 'rgb(130, 130, 255)', radius: 0}]};
+	  //  the fill: 2 means fill from this data set (p05) to data set #2 (p95)
 //	  {data: scores_0, label: "tie", borderColor: 'rgb(190, 190, 190)', radius: 0},
 //	  {data: scores_Max, label: "", backgroundColor: 'rgb(150, 255, 150)', radius: 0, fill: 1},
 	  //	  {data: scores_Min, label: "", backgroundColor: 'rgb(255, 150, 150)', radius: 0, fill: 1}

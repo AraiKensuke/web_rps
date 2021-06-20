@@ -10,6 +10,18 @@ $end_yr   = 2021;
 $end_mn   = 6;
 $end_dy   = 22;
 
+if ( $#ARGV >=  0)
+{
+    $game_12  = $ARGV[0];
+    if (($game_12 != 1) && ($game_12 != 2))
+    {
+	die "TMB_population_stat.pl <1 or 2>\n";
+    }
+}
+else
+{
+    die "TMB_population_stat.pl <1 or 2>\n";
+}
 $nGames = 40;
 
 ##  
@@ -54,10 +66,20 @@ sub return_cnstr_and_netwins
     return ($cnstr, \@netwin);
 }
 
-@cnstrcts = ("WTL(__moRSP__, [0.05, 0.7, 0.25], [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], false);",
-	     "Mimic(__moRSP__, 0, 0.2);",
-	     "FixedSequence(__moRSP__, [1, 1, 2, 1, 3, 1, 1, 1, 1, 3, 2, 1, 2, 1, 1, 3, 2, 1, 1, 3, 1, 1, 2, 1, 1, 3, 1, 2, 1, 1, 2, 1, 1, 3, 3, 1, 1, 1, 1, 1]);",
-	     "FixedSequence(__moRSP__, [3, 1, 2, 3, 2, 1, 2, 3, 3, 1, 1, 1, 2, 1, 3, 3, 2, 1, 2, 3, 3, 1, 2, 1, 2, 1, 3, 2, 2, 3, 2, 1, 3, 3, 2, 2, 3, 1, 3, 1]);");
+if ($game_12 == 1)
+{
+    @cnstrcts = ("WTL(__moRSP__, [0.05, 0.7, 0.25], [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], false);",
+		 "Mimic(__moRSP__, 0, 0.2);",
+		 "FixedSequence(__moRSP__, [1, 1, 2, 1, 3, 1, 1, 1, 1, 3, 2, 1, 2, 1, 1, 3, 2, 1, 1, 3, 1, 1, 2, 1, 1, 3, 1, 2, 1, 1, 2, 1, 1, 3, 3, 1, 1, 1, 1, 1]);",
+		 "FixedSequence(__moRSP__, [3, 1, 2, 3, 2, 1, 2, 3, 3, 1, 1, 1, 2, 1, 3, 3, 2, 1, 2, 3, 3, 1, 2, 1, 2, 1, 3, 2, 2, 3, 2, 1, 3, 3, 2, 2, 3, 1, 3, 1]);");
+}
+else
+{
+    @cnstrcts = ("WTL(__moRSP__, [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], [0.65, 0.25, 0.1], false);",
+		 "Mimic(__moRSP__, 2, 0.2);",
+		 "FixedSequence(__moRSP__, [1, 1, 1, 3, 2, 1, 2, 2, 1, 1, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 3, 1, 2, 1, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 1]);",
+		 "FixedSequence(__moRSP__, [3, 1, 2, 3, 2, 1, 2, 3, 3, 1, 1, 1, 2, 2, 3, 3, 1, 1, 2, 3, 3, 1, 2, 3, 2, 1, 1, 2, 2, 3, 2, 1, 3, 3, 2, 2, 3, 1, 3, 1]);");
+}
 	     
 @months      = ("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12");
 @days        = ("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31");
@@ -120,7 +142,7 @@ for ($i = 0; $i <= $#these_dates; $i++ )
 	    $nExists = 0;
 	    for ($e = 1; $e <= $#cnstrcts+1; $e++ )
 	    {
-		$fn = $date . "/" . $partdirs[$pd] . "/1/block" . $e . "_AI.dat";
+		$fn = $date . "/" . $partdirs[$pd] . "/" . $game_12 . "/block" . $e . "_AI.dat";
 		if (-e $fn)
 		{
 		    $nExists += 1;
@@ -131,7 +153,7 @@ for ($i = 0; $i <= $#these_dates; $i++ )
 	    {   #  this participant has done all blocks (complete)
 		for ($e = 1; $e <= $#cnstrcts + 1; $e++ )
 		{   #  open each data file from participant
-		    $fn = $date . "/" . $partdirs[$pd] . "/1/block" . $e . "_AI.dat";		    
+		    $fn = $date . "/" . $partdirs[$pd] . "/" . $game_12 . "/block" . $e . "_AI.dat";		    
 		    ($cstr, $ref_netwins) = return_cnstr_and_netwins($fn);
 		    
 		    my @netw = @$ref_netwins;
@@ -172,9 +194,10 @@ for ($i = 0; $i <= $#these_dates; $i++ )
 
 #print($ruleX_net_wins[$c][$r][$n]);
 #print($ruleX_net_wins[0][0][10] . "  " . $ruleX_net_wins[0][1][10] . "  " . $ruleX_net_wins[0][2][10] . "  " . $ruleX_net_wins[0][3][10] . "\n");
-open(JSOUT, ">", "pctl.js");
-print JSOUT "var pctls_05 = {};\n";
-print JSOUT "var pctls_95 = {};\n\n\n";
+$outfn = "pctl" . $game_12 . ".js";
+open(JSOUT, ">", $outfn);
+#print JSOUT "var pctls_05 = {};\n";
+#print JSOUT "var pctls_95 = {};\n\n\n";
 for ($c = 0; $c <= $#cnstrcts; $c++ )
 {
     @all_data_at_n = ();
@@ -206,3 +229,5 @@ for ($c = 0; $c <= $#cnstrcts; $c++ )
     print JSOUT "pctls_95[\"" . $cnstrcts[$c] . "\"] = [" . $pctl_95 . "];\n\n";
 }
 close(JSOUT);
+
+print("OUTPUTed " . $outfn . "\n");
