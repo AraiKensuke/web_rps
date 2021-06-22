@@ -235,35 +235,6 @@ if ($AQ == "false")
 <DIV name="div<?=$L?>" &nbsp;&nbsp;<B><?=($L+1)?></B>&nbsp;&nbsp;
 </TD>
 <TD>
-Was there a noticeable difference in the 4 machines?
-</TD>
-</TR>
-<TR class="<?=$tr_class?>">
-<TD></TD>
-<TD>
-<SELECT name="q<?=($L+1)?>">
-  <option value="all 4 different">All Four (4) felt different</option>
-  <option value="1 or 2 stood out">One (1) or two (2) of them stood out from the others</option>
-  <option value="all same">All felt the same</option>
-  <option value="don't know" selected>Don't know</option>
-  <option value="don't remember">Don't remember</option>
-</SELECT>
-</TD>
-</TR>
-<TR class="<?=$tr_class?>">
-<TD colspan="2">&nbsp;
-</TD>
-</TR>
-<!-- -->
-<?php
-$L = $L + 1;
-    $tr_class = "tr" . (($L % 2)+1);
-?>
-<TR class="<?=$tr_class?>">
-<TD>
-<DIV name="div<?=$L?>" &nbsp;&nbsp;<B><?=($L+1)?></B>&nbsp;&nbsp;
-</TD>
-<TD>
 Is this the first time you participated in this tournament?
 </TD>
 </TR>
