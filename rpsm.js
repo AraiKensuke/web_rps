@@ -28,7 +28,7 @@ var results=[];	// [0]勝ち、[1]負け、[2]あいこ
 //  paced or free  x 2
 //  AI or RNG      x 2
 
-var wait_next    = 4000;
+var wait_next    = 2500;
 var update_evry  = 1
 var n_rps_plyd   = 0
 var __JAPANESE__ = 0
@@ -139,8 +139,8 @@ function set_lang(jore)
     }
     elemTITLE.innerHTML = tit;
     
-    elemINSTR.innerHTML = "Your move<BR>click buttons or use keys 123"
-    elemPERHF.innerHTML = "Machine move"
+    elemINSTR.innerHTML = "<B>Your move</B><BR>click buttons<BR>or use keys 123"
+    elemPERHF.innerHTML = "<B>Machine move</B>"
     elemDescF.innerHTML = "<CENTER><H3>" + n_rps_plyd + " games of " + MatchTo + " games in round!</H3></CENTER>"            
     
     if ((realtimeResults == __CWTL__) || (realtimeResults == __CWTL_NOGRAPH__))
@@ -212,13 +212,14 @@ function Reset(){
     /* 勝敗表示を消す */
     var win_elem = document.getElementById("win");
     win_elem.style.opacity = 0;
-
+    //var los_elem = document.getElementById("los");
+    //los_elem.style.opacity = 0;
 
     do1st = anime.timeline()
     do1st.add({
     	targets: ['.m_rock_copy', '.m_scissors_copy', '.m_paper_copy', '.rock_copy', '.scissors_copy', '.paper_copy'],
     	translateY: 0, translateX:0,
-    	scale: 1, duration: 1, easing: 'linear'
+    	scale: 0.1, duration: 1000, easing: 'linear'
     });
 
     var retry = document.getElementById("final_result2")
@@ -273,13 +274,16 @@ function Reset(){
 function RPS(plhand, key_or_mouse) {
     var win_elem = document.getElementById("win");
     win_elem.style.opacity = 0;
+    //var los_elem = document.getElementById("los");
+    //los_elem.style.opacity = 0;
+    
 
     do1st = anime.timeline()
     do1st.add({
     	targets: ['.m_rock_copy', '.m_scissors_copy', '.m_paper_copy', '.rock_copy', '.scissors_copy', '.paper_copy'],
     	translateY: 0, translateX:0,
-    	scale: 1, duration: 1, easing: 'linear'
-    });
+    	scale: 1, duration: 0, easing: 'linear'
+    });  //  make hands disappear.  duration set to > 0 makes this not show when playing repeated hands
 
     //console.log("RPS  " + String(stopped))
     var theDate = new Date()
@@ -328,7 +332,11 @@ function RPS(plhand, key_or_mouse) {
     rec_AI_hands += toRPSstr(AIhand) + " ";
     rec_times += String(time_now - last_time_now) + " ";
     last_time_now = time_now;
+
+    //if (game < 2)
+    //{
     ShowResults(plhand,AIhand);
+    //}
 }
 
 function RPS_nodisp(plhand) {
@@ -390,7 +398,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	    translateX:trX,
 	    translateY: -trY,
 	    scale: 2,
-	    duration: 300,
+	    duration: 220,
 	    easing: 'easeInOutQuart'
 	});
 	break;
@@ -399,7 +407,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	    targets: '.scissors_copy',
 	    translateY: -trY,
 	    scale: 2,
-	    duration: 300,
+	    duration: 220,
 	    easing: 'easeInOutQuart'
 	});
 	break;
@@ -409,7 +417,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	    translateX:-trX,
 	    translateY: -trY,
 	    scale: 2,
-	    duration: 300,
+	    duration: 220,
 	    easing: 'easeInOutQuart'
 	});
 	break;
@@ -422,7 +430,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	    translateY: trY,
 	    translateX:-trX,
 	    scale: 2,
-	    duration: 300,
+	    duration: 220,
 	    offset: '-=100',
 	    easing: 'easeInOutQuart'
 	});
@@ -432,7 +440,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	    targets: '.m_scissors_copy',
 	    translateY: trY,
 	    scale: 2,
-	    duration: 300,
+	    duration: 220,
 	    offset: '-=100',
 	    easing: 'easeInOutQuart'
 	});
@@ -443,7 +451,7 @@ function ShowResults(plhand,predhand,resultTimeline){
 	    translateY: trY,
 	    translateX:trX,
 	    scale: 2,
-	    duration: 300,
+	    duration: 220,
 	    offset: '-=100',
 	    easing: 'easeInOutQuart'
 	});
@@ -456,7 +464,7 @@ function ShowResults(plhand,predhand,resultTimeline){
      * 1 : プレイヤーの勝ち
      * 2 : マシンの勝ち */
     switch((3+predhand-plhand)%3){
-    case 0:
+    case 0:   //  TIED TIED TIED TIED
 	consec_wins = 0;
 	resultTimeline.add({
 	    targets: '#win',
@@ -464,11 +472,18 @@ function ShowResults(plhand,predhand,resultTimeline){
 	    opacity: 0,
 	    easing: 'easeInOutQuart'
 	});
+	resultTimeline.add({
+	    targets: '#los',
+	    duration: 100,
+	    opacity: 0,
+	    easing: 'easeInOutQuart'
+	});
+	
 	results[0][game+1]=results[0][game];
 	results[1][game+1]=results[1][game];
 	results[2][game+1]=results[2][game]+1;
 	break;
-    case 1:
+    case 1:   //  YOU WIN YOU WIN YOU WIN
 	consec_wins += 1;
 	resultTimeline.add({
 	    targets: '#win',
@@ -487,13 +502,13 @@ function ShowResults(plhand,predhand,resultTimeline){
 	results[1][game+1]=results[1][game];
 	results[2][game+1]=results[2][game];
 	break;
-    case 2:
+    case 2:   //  YOU LOS YOU LOS YOU LOS
 	consec_wins = 0;
 	resultTimeline.add({
 	    targets: '#win',
 	    offset: '-=100',
 	    duration: 1,
-	    translateY:-16
+	    translateY:-16,
 	});
 	resultTimeline.add({
 	    targets: '#win',
@@ -530,14 +545,18 @@ function ShowResults(plhand,predhand,resultTimeline){
 	    text += "<font color='#000000'>"+sNetWin+"</font>&nbsp;&nbsp;&nbsp;&nbsp;<font color='#6970e9'>Win:"+results[0][game+1]+"</font>, <font color='#e9473f'>Los:"+results[1][game+1]+"</font>, <font color='#319e34'>Tie:"+results[2][game+1]+"</font>";
 	    //text += "<font color='#6970e9'>Win:"+results[0][game+1] + "</font>, <font color='#e9473f'>Los:"+results[1][game+1]+"</font>, <font color='#319e34'>Tie:"+results[2][game+1]+"</font>";
 	}
-	document.getElementById("results").innerHTML = text;
+	//setTimeout(() => {  
+	//pgo.style.opacity=0.0;}, 1600);
+	
+	setTimeout(() => {document.getElementById("results").innerHTML = text;}, 520);
     }
     else if (realtimeResults == __NGAMES__)
     {
 	document.getElementById("results").innerHTML = "<font color='#6970e9'>Games played: "+n_rps_plyd+"/" + MatchTo + "</font>";	
     }
-    var elemDescF = document.getElementById("descFONT")
-    elemDescF.innerHTML = "<CENTER><H3>" + n_rps_plyd + " games of " + MatchTo + " games in round!</H3></CENTER>"        
+    
+    setTimeout(() => {var elemDescF = document.getElementById("descFONT");elemDescF.innerHTML = "<CENTER><H3>" + n_rps_plyd + " games of " + MatchTo + " games in round!</H3></CENTER>";}, 520);
+    //elemDescF.innerHTML = "<CENTER><H3>" + n_rps_plyd + " games of " + MatchTo + " games in round!</H3></CENTER>"        
     
 
     var Ymax = 0;

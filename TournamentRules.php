@@ -69,6 +69,7 @@ sessionStorage.setItem("exptname", "TMB1");
 sessionStorage.setItem("block", 0);
 sessionStorage.setItem("to_block", to_block);
 sessionStorage.setItem("MatchTo", MatchTo);
+sessionStorage.setItem("practice_MatchTo", 10);
 sessionStorage.setItem("url_after_blocks", "4ChoiceQuestionnaire.php");
 //sessionStorage.setItem("stop_after_n_consec_wins", 6);
 
@@ -130,7 +131,7 @@ function nextpage(dopractice)
 <BODY onload="javascript:setGameNums();">
         <p id="p1">In the repeated rock-scissor-paper (RPS) game, players accumulate knowledge about their opponent's playing strategies over many back-to-back games, and advantages are gained and lost as each player tries to outsmart the other.  This experiment seeks to understand whether players can gain an advantage against opponents playing RPS according to a simple rule unknown to the player.
 <br><br>
-        You'll play against <SPAN id="nbots1">3</SPAN> bots in <SPAN id="nbots2">3</SPAN> <SPAN id="ngames1">10</SPAN>-match rounds.  <U>Each bot has its own rules for deciding the next move.  It might play like a 2 year-old that really likes to play rock, or the outcome of the last match might influence its next move.</U>  You likely won't completely figure out a rule, but might learn enough to gain an advantage.</U>  <BR><BR>
+        You'll play against <SPAN id="nbots1">3</SPAN> bots in <SPAN id="nbots2">3</SPAN> <SPAN id="ngames1">10</SPAN>-match rounds.  <U>Each bot has its own rules for deciding the next move.  It might play like a 2 year-old that really likes to play rock, or the outcome of the last match might influence its next move.</U>  You might not completely figure out a rule, but might learn enough to gain an advantage.</U>  <BR><BR>
 
 You can go straight to the tournament, or you can first practice playing RPS against the computer in a short 10 game round.
 </p>
@@ -141,7 +142,7 @@ You can go straight to the tournament, or you can first practice playing RPS aga
 // if valid, dont show ID input box
 if (!$valid_id)
 {
-     print("<DIV style=\"background-color:#DADADA;\"><FORM name=\"partIDform\">Please enter Participant ID:  <INPUT name=\"partID\" type=\"text\" value=\"IGNORE IF YOU DON'T KNOW WHAT THIS IS\" size=40/></FORM>We'll tell you your participant ID after you finish the tournament.  If you enjoyed the experiment and choose to participate again, this ID allows us to compare your results across multiple tournaments and assess how reproducible and consistent they are.  We don't collect any identifying information from you, so the randomly generated participant ID you <B>voluntarily</B> tell us is the only way we can identify experimental data that are from the same participant.  Sharing your ID with us is <B>optional</B>, but adds value in our analysis of the data.</DIV><BR><BR>");
+     print("<DIV style=\"background-color:#DADADA;\"><FORM name=\"partIDform\">Please enter Participant ID:  <INPUT name=\"partID\" type=\"text\" value=\"IGNORE IF YOU DON'T KNOW WHAT THIS IS\" size=50/></FORM>We'll tell you your participant ID after you finish the tournament.  If you enjoyed the experiment and choose to participate again, this ID allows us to compare your results across multiple tournaments and assess how reproducible and consistent they are.  We don't collect any identifying information from you, so the randomly generated participant ID you <B>voluntarily</B> tell us is the only way we can identify experimental data that are from the same participant.  Sharing your ID with us is <B>optional</B>, but adds value in our analysis of the data.</DIV><BR><BR>");
 }
 ?>
 <CENTER>
