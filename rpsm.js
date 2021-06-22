@@ -615,18 +615,9 @@ function redraw_graph(Ymax)
     // ラベル
     svg.append("line").attr("x1", graph_base+graph_width*0.1).attr("x2", graph_base+graph_width*0.3).attr("y1", graph_height*0.2).attr("y2",graph_height*0.2).attr("stroke","#00A0E9").attr("stroke-width",8);
 
-    if( JorE == __JAPANESE__ )
-    {
-	txtWIN  = "あなたの勝ち";
-	txtLOSE = "マシンの勝ち"
-	txtTIE  = "　あいこ　"
-    }
-    else
-    {
-	txtWIN  = "   Your win    "
-	txtLOSE = "Machine win"
-	txtTIE  = "     Tie      "
-    }
+    txtWIN  = "   Your win    "
+    txtLOSE = "Machine win"
+    txtTIE  = "     Tie      "
 
     svg.append("text").text(txtWIN).attr("x",graph_base+graph_width*0.3+10).attr("y",graph_height*0.2).attr({'dy': ".35em", 'fill': "black" });
     svg.append("line").attr("x1", graph_base+graph_width*0.1).attr("x2", graph_base+graph_width*0.3).attr("y1", graph_height*0.2+20).attr("y2",graph_height*0.2+20).attr("stroke","#E60012").attr("stroke-width",8);

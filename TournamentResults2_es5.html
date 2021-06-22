@@ -120,7 +120,7 @@ append_to_array(scores[parseInt(aib)-1], c1);
 html4table += "</TABLE>";
 
 var html4links = "";
-html4links += "<A href=\"TournamentRules1.php?partID=" + partID + "\">Play tournament again now as a returning participant</A>.  If you do not want to be identified as a returning participant, you can follow <A href=\"TournamentRules1.php\">this link to play again as a 1st time participant.</A>.  As a returning participant, w will not ask you to fill out the questionnaires again.  If you want to play again later as a returning participaant, use this participantID:<PRE>" + partID + "</PRE>To reiterate, <B>this ID does not contain any identifying information about you</B>.  It is only used to mark data in our database as being collected from the same anonymous individual, and <B>your use of it in future participation in this experiment is optional and voluntary</B>.<BR><BR>";
+html4links += "<A href=\"TournamentRules2.php?partID=" + partID + "\">Play tournament again now as a returning participant</A>.  If you do not want to be identified as a returning participant, you can follow <A href=\"TournamentRules2.php\">this link to play again as a 1st time participant.</A>.  As a returning participant, w will not ask you to fill out the questionnaires again.  If you want to play again later as a returning participaant, use this participantID:<PRE>" + partID + "</PRE>To reiterate, <B>this ID does not contain any identifying information about you</B>.  It is only used to mark data in our database as being collected from the same anonymous individual, and <B>your use of it in future participation in this experiment is optional and voluntary</B>.<BR><BR>";
 
 
       function do_tables()
@@ -164,18 +164,6 @@ html4links += "<A href=\"TournamentRules1.php?partID=" + partID + "\">Play tourn
 Round 1 net wins (machine: <span name="mach1"></span>):
 <canvas id="myChart1" style="height:125px;"></canvas>
 </DIV><BR>
-<DIV name="plotDIV2" style="height:200px">
-Round 2 net wins (machine: <span name="mach2"></span>):
-<canvas id="myChart2" style="height:125px;"></canvas>
-</DIV><BR>
-<DIV name="plotDIV3" style="height:200px">
-Round 3 net wins (machine: <span name="mach3"></span>):
-<canvas id="myChart3" style="height:125px;"></canvas>
-</DIV><BR>
-<DIV name="plotDIV4" style="height:200px">
-Round 4 net wins (machine: <span name="mach4"></span>):
-<canvas id="myChart4" style="height:125px;"></canvas>
-</DIV>
 
 <BR><BR>
 <HR>
@@ -188,13 +176,7 @@ The 4 plots above show how you were doing against each machine throughout the 40
 </BODY>
 <SCRIPT>
   var s_net_wins1 = getSessionStorage("net_wins1", "");
-  var s_net_wins2 = getSessionStorage("net_wins2", "");
-  var s_net_wins3 = getSessionStorage("net_wins3", "");
-  var s_net_wins4 = getSessionStorage("net_wins4", "");
 var net_wins1 = to_1darray_from_str(s_net_wins1);
-var net_wins2 = to_1darray_from_str(s_net_wins2);
-  var net_wins3 = to_1darray_from_str(s_net_wins3);
-  var net_wins4 = to_1darray_from_str(s_net_wins4);
 
 var games_xs = [];
 for (ii =0; ii < net_wins1.length; ii++ )
@@ -205,12 +187,6 @@ for (ii =0; ii < net_wins1.length; ii++ )
 
   max1 = Math.max(Math.max(Math.max.apply(Math, net_wins1)), 1);
   min1 = Math.min(Math.min(Math.min.apply(Math, net_wins1)), -1);
-  max2 = Math.max(Math.max(Math.max.apply(Math, net_wins2)), 1);
-  min2 = Math.min(Math.min(Math.min.apply(Math, net_wins2)), -1);
-  max3 = Math.max(Math.max(Math.max.apply(Math, net_wins3)), 1);
-  min3 = Math.min(Math.min(Math.min.apply(Math, net_wins3)), -1);
-  max4 = Math.max(Math.max(Math.max.apply(Math, net_wins4)), 1);
-  min4 = Math.min(Math.min(Math.min.apply(Math, net_wins4)), -1);
 
   var x_scales = 	{ display: true,
 			  		 scaleLabel: { 
