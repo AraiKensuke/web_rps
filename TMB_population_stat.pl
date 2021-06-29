@@ -2,27 +2,43 @@
 
 #  RUN THIS periodically to update the population statistics of game performance
 
-$strt_yr   = 2021;
-$strt_mn   = 6;
-$strt_dy   = 19;
-
-$end_yr   = 2021;
-$end_mn   = 6;
-$end_dy   = 22;
-
-if ( $#ARGV >=  0)
+if ( $#ARGV == 7)
 {
-    $game_12  = $ARGV[0];
-    if (($game_12 != 1) && ($game_12 != 2))
+    $expt     = $ARGV[0];
+
+    $game_12  = $ARGV[1];
+    if (($game_12 != 1) && ($game_12 != 2) && ($expt eq "TMB1") )
     {
-	die "TMB_population_stat.pl <1 or 2>\n";
+	#  game_12 = 1, 2 for TMB1
+	#  game_12 = 3    for TMB2
+	die "TMB_population_stat.pl TMB1 <1, 2, ...> <strt_yr> <strt_mn> <strt_dy> <to_yr> <to_mn> <to_dy>\n";
+	$out_12 = $game_12;
     }
+    if (($game_12 != 1) && ($expt eq "TMB2") )
+    {
+	die "TMB_population_stat.pl TMB2 <3> <1, 2 or 3> <strt_yr> <strt_mn> <strt_dy> <to_yr> <to_mn> <to_dy>\n";
+    }
+    $strt_yr   = $ARGV[2];
+    $strt_mn   = $ARGV[3];
+    $strt_dy   = $ARGV[4];
+
+    $end_yr    = $ARGV[5];
+    $end_mn    = $ARGV[6];
+    $end_dy    = $ARGV[7];
 }
 else
 {
-    die "TMB_population_stat.pl <1 or 2>\n";
+    die "TMB_population_stat.pl <TMB1 or TMB2> <1, 2 or 3> <strt_yr> <strt_mn> <strt_dy> <to_yr> <to_mn> <to_dy>\n";
 }
-$nGames = 40;
+
+if ( $expt eq "TMB1" )
+{
+    $nGames = 40;
+}
+else
+{
+    $nGames = 300;
+}
 
 ##  
 sub return_cnstr_and_netwins
@@ -66,32 +82,37 @@ sub return_cnstr_and_netwins
     return ($cnstr, \@netwin);
 }
 
-if ($game_12 == 1)
+####  CONSTRUCTORS we expect
+if (($expt eq "TMB1") && ($game_12 == 1) )
 {
     @cnstrcts = ("WTL(__moRSP__, [0.05, 0.7, 0.25], [1/3, 1/3, 1/3], [1/3, 1/3, 1/3], false);",
 		 "Mimic(__moRSP__, 0, 0.2);",
 		 "FixedSequence(__moRSP__, [1, 1, 2, 1, 3, 1, 1, 1, 1, 3, 2, 1, 2, 1, 1, 3, 2, 1, 1, 3, 1, 1, 2, 1, 1, 3, 1, 2, 1, 1, 2, 1, 1, 3, 3, 1, 1, 1, 1, 1]);",
 		 "FixedSequence(__moRSP__, [3, 1, 2, 3, 2, 1, 2, 3, 3, 1, 1, 1, 2, 1, 3, 3, 2, 1, 2, 3, 3, 1, 2, 1, 2, 1, 3, 2, 2, 3, 2, 1, 3, 3, 2, 2, 3, 1, 3, 1]);");
 }
-else
+elsif (($expt eq "TMB1") && ($game_12 == 2) )
 {
     @cnstrcts = ("WTL(__moRSP__, [0.1, 0.45, 0.45], [0.1, 0.45, 0.45], [0.65, 0.25, 0.1], false);",
 		 "Mimic(__moRSP__, 2, 0.2);",
 		 "FixedSequence(__moRSP__, [1, 1, 1, 3, 2, 1, 2, 2, 1, 1, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 3, 1, 2, 1, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 1]);",
 		 "FixedSequence(__moRSP__, [3, 1, 2, 3, 2, 1, 2, 3, 3, 1, 1, 1, 2, 2, 3, 3, 1, 1, 2, 3, 3, 1, 2, 3, 2, 1, 1, 2, 2, 3, 2, 1, 3, 3, 2, 2, 3, 1, 3, 1]);");
 }
+elsif (($expt eq "TMB2") && ($game_12 == 1) )
+{
+    @cnstrcts = ("Perceptron(2);");
+}
+
 	     
 @months      = ("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12");
 @days        = ("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31");
 
 @ruleX_net_wins = ();
 
-$nRules = 4;
+$nRules = $#cnstrcts+1;
 for ($r = 0; $r < $nRules; $r++ )
 {
     $ruleX_net_wins[$r] = ();
 }
-
 
 #open(FILE, "<", "hey");
 #$line = <FILE>;
@@ -130,7 +151,7 @@ $records = 0;
 for ($i = 0; $i <= $#these_dates; $i++ )
 {
     $skip = 0;
-    $date = "/Users/arai/Sites/taisen/DATA/TMB1/" . $these_dates[$i];
+    $date = "/Users/arai/Sites/taisen/DATA/" . $expt . "/" . $these_dates[$i];
     
     opendir(DIR, $date) || ($skip = 1);
 
@@ -182,7 +203,7 @@ for ($i = 0; $i <= $#these_dates; $i++ )
 	closedir(DIR);
     }
 }
-
+print("data found:  ${records}\n");
 
 #var pctls_05 = {};
 #var pctls_95 = {};
@@ -194,7 +215,7 @@ for ($i = 0; $i <= $#these_dates; $i++ )
 
 #print($ruleX_net_wins[$c][$r][$n]);
 #print($ruleX_net_wins[0][0][10] . "  " . $ruleX_net_wins[0][1][10] . "  " . $ruleX_net_wins[0][2][10] . "  " . $ruleX_net_wins[0][3][10] . "\n");
-$outfn = "pctl" . $game_12 . ".js";
+$outfn = "${expt}_pctl" . $game_12 . ".js";
 open(JSOUT, ">", $outfn);
 #print JSOUT "var pctls_05 = {};\n";
 #print JSOUT "var pctls_95 = {};\n\n\n";
